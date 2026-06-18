@@ -1,0 +1,23 @@
+<!--
+ - Created by asen on 5.09.25.
+ -->
+
+<!-- Wizard Page 3 -->
+<template>
+  <article class="eh-page">
+    <h2 class="eh-header">{name}</h2>
+    <c-input-tabset value={activeTab} onchange={handleTabChange}>
+      <div data-role="tab" data-value="firstTab" data-label="First Tab">
+        <p>Tabset example first tab</p>
+        <section>
+          <p lwc:if={prop1}>{prop1}</p>
+          <p lwc:if={prop2}>{prop2}</p>
+        </section>
+      </div>
+      <div data-role="tab" data-value="secondTab" data-label="Second Tab">
+        <p>Tabset example second tab</p>
+      </div>
+    </c-input-tabset>
+    <p>Active tab: {activeTab}</p>
+  </article>
+</template>

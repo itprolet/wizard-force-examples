@@ -1,0 +1,96 @@
+<template>
+  <article class="eh-page">
+    <section>
+      <div class="slds-grid slds-gutters_x-small slds-wrap">
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-text
+            label={_l.Wizard_lbl_first_name}
+            name="firstName"
+            value={data.firstName}
+            onchange={changeHandler}
+            required={_required.firstName}
+            read-only={_readOnly.firstName}
+            error={_errors.firstName}
+            message={_messages.firstName}
+          ></c-input-text>
+        </div>
+
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-text
+            label={_l.Wizard_lbl_last_name}
+            name="lastName"
+            value={data.lastName}
+            onchange={changeHandler}
+            required={_required.lastName}
+            read-only={_readOnly.lastName}
+            error={_errors.lastName}
+            message={_messages.lastName}
+          ></c-input-text>
+        </div>
+
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-text
+            label={_l.Wizard_lbl_email}
+            name="email"
+            type="email"
+            value={data.email}
+            onchange={changeHandler}
+            pattern={_patterns.email}
+            required={_required.email}
+            read-only={_readOnly.email}
+            error={_errors.email}
+            message={_messages.email}
+            hint={_hints.email}
+          ></c-input-text>
+        </div>
+
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-text
+            label={_l.Wizard_lbl_phone}
+            name="phone"
+            type="tel"
+            value={data.phone}
+            onchange={changeHandler}
+            pattern={_patterns.phone}
+            required={_required.phone}
+            read-only={_readOnly.phone}
+            error={_errors.phone}
+            message={_messages.phone}
+          ></c-input-text>
+        </div>
+
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-combobox
+            label={_l.Wizard_lbl_complaint_preferred_contact}
+            name="preferredContact"
+            items={preferredContactOptions}
+            value={data.preferredContact}
+            onchange={changeHandler}
+            required={_required.preferredContact}
+            read-only={_readOnly.preferredContact}
+            error={_errors.preferredContact}
+            message={_messages.preferredContact}
+          ></c-input-combobox>
+        </div>
+
+        <!-- preferredTime: visible only for preferredContact='phone' -->
+        <div
+          lwc:if={isPreferredTimeVisible}
+          class="slds-col slds-size_1-of-1 slds-large-size_1-of-2"
+        >
+          <c-input-combobox
+            label={_l.Wizard_lbl_complaint_preferred_time}
+            name="preferredTime"
+            items={preferredTimeOptions}
+            value={data.preferredTime}
+            onchange={changeHandler}
+            required={_required.preferredTime}
+            read-only={_readOnly.preferredTime}
+            error={_errors.preferredTime}
+            message={_messages.preferredTime}
+          ></c-input-combobox>
+        </div>
+      </div>
+    </section>
+  </article>
+</template>

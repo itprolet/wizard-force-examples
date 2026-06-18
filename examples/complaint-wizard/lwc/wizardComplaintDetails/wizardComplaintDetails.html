@@ -1,0 +1,63 @@
+<template>
+  <article class="eh-page">
+    <section>
+      <div class="slds-grid slds-gutters_x-small slds-wrap">
+        <div class="slds-col slds-size_1-of-1">
+          <c-input-text
+            label={_l.Wizard_lbl_complaint_description}
+            name="description"
+            value={data.description}
+            onchange={changeHandler}
+            required={_required.description}
+            read-only={_readOnly.description}
+            error={_errors.description}
+            message={_hints.description}
+          ></c-input-text>
+        </div>
+
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-text
+            label={_l.Wizard_lbl_complaint_incident_date}
+            name="incidentDate"
+            type="date"
+            value={data.incidentDate}
+            onchange={changeHandler}
+            required={_required.incidentDate}
+            read-only={_readOnly.incidentDate}
+            error={_errors.incidentDate}
+          ></c-input-text>
+        </div>
+
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-text
+            label={_l.Wizard_lbl_complaint_reference_number}
+            name="referenceNumber"
+            value={data.referenceNumber}
+            onchange={changeHandler}
+            pattern={_patterns.referenceNumber}
+            read-only={_readOnly.referenceNumber}
+            error={_errors.referenceNumber}
+            message={_hints.referenceNumber}
+          ></c-input-text>
+        </div>
+
+        <!-- affectedService: visible only for category='technical' (cross-page hidden) -->
+        <div
+          lwc:if={isAffectedServiceVisible}
+          class="slds-col slds-size_1-of-1 slds-large-size_1-of-2"
+        >
+          <c-input-combobox
+            label={_l.Wizard_lbl_complaint_affected_service}
+            name="affectedService"
+            items={affectedServiceOptions}
+            value={data.affectedService}
+            onchange={changeHandler}
+            required={_required.affectedService}
+            read-only={_readOnly.affectedService}
+            error={_errors.affectedService}
+          ></c-input-combobox>
+        </div>
+      </div>
+    </section>
+  </article>
+</template>

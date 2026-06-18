@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <defaultLandingTab>Complaint__c</defaultLandingTab>
+    <description>Lightning app for the Complaint wizard example. Provides a list view of all Complaint records and access to individual record pages.</description>
+    <formFactors>Large</formFactors>
+    <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
+    <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
+    <isNavTabPersistenceDisabled>false</isNavTabPersistenceDisabled>
+    <isOmniPinnedViewEnabled>false</isOmniPinnedViewEnabled>
+    <label>Complaint</label>
+    <navType>Standard</navType>
+    <tabs>Complaint__c</tabs>
+    <uiType>Lightning</uiType>
+</CustomApplication>

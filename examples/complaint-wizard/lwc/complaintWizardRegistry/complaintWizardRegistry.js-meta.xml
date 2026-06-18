@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>64.0</apiVersion>
+    <description>Registers the Complaint example pages with the wizard runtime registry. Place on the same Experience Builder page as &lt;c-wizard&gt;.</description>
+    <isExposed>true</isExposed>
+    <masterLabel>Complaints — Page Registry</masterLabel>
+    <targets>
+        <target>lightningCommunity__Page</target>
+    </targets>
+</LightningComponentBundle>

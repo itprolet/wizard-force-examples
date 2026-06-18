@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Sub_Category__c</fullName>
+    <label>Sub Category</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>Category__c</controllingField>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>wrong_amount</fullName>
+                <default>false</default>
+                <label>Грешна сума</label>
+            </value>
+            <value>
+                <fullName>double_charge</fullName>
+                <default>false</default>
+                <label>Двойно таксуване</label>
+            </value>
+            <value>
+                <fullName>no_invoice</fullName>
+                <default>false</default>
+                <label>Неполучена фактура</label>
+            </value>
+            <value>
+                <fullName>outage</fullName>
+                <default>false</default>
+                <label>Прекъсване на услугата</label>
+            </value>
+            <value>
+                <fullName>slow</fullName>
+                <default>false</default>
+                <label>Бавна услуга</label>
+            </value>
+            <value>
+                <fullName>damage</fullName>
+                <default>false</default>
+                <label>Повреда</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>billing</controllingFieldValue>
+            <valueName>wrong_amount</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>billing</controllingFieldValue>
+            <valueName>double_charge</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>billing</controllingFieldValue>
+            <valueName>no_invoice</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>technical</controllingFieldValue>
+            <valueName>outage</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>technical</controllingFieldValue>
+            <valueName>slow</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>technical</controllingFieldValue>
+            <valueName>damage</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

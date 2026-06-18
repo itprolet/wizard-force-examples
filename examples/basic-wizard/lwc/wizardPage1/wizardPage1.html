@@ -1,0 +1,21 @@
+<!--
+ - Created by asen on 5.09.25.
+ -->
+
+<!-- Wizard Page 1 -->
+<template>
+  <div class="slds-m-around_medium">
+    <p class="slds-m-vertical_medium content">{name}</p>
+    <c-input-checkbox
+      name="flag1"
+      label="flag1"
+      onchange={changeHandler}
+      checked={data.flag1}
+    ></c-input-checkbox>
+    <c-elem-tooltip
+      content="Controls <strong>next</strong> page."
+    ></c-elem-tooltip>
+    <p class="slds-m-vertical_medium content" lwc:if={prop1}>{prop1}</p>
+    <p class="slds-m-vertical_medium content" lwc:if={prop2}>{prop2}</p>
+  </div>
+</template>

@@ -1,0 +1,41 @@
+<template>
+    <div class="slds-grid slds-grid_vertical slds-gutters_direct-medium slds-p-around_medium">
+        <c-input-text
+            label="Name"
+            name="name"
+            value={data.name}
+            required={required.name}
+            read-only={readOnly.name}
+            error={nameError}
+            onchange={changeHandler}>
+        </c-input-text>
+        <c-input-text
+            label="Email"
+            type="email"
+            name="email"
+            value={data.email}
+            required={required.email}
+            read-only={readOnly.email}
+            error={emailError}
+            onchange={changeHandler}>
+        </c-input-text>
+        <c-input-text
+            label="Message"
+            name="message"
+            value={data.message}
+            required={required.message}
+            read-only={readOnly.message}
+            error={messageError}
+            onchange={changeHandler}>
+        </c-input-text>
+        <!-- Send button hidden for now — completion logic TBD. submitHandler kept in JS. -->
+        <!-- <div class="slds-m-top_medium">
+            <c-input-button
+                classname="active"
+                disabled={isSubmitDisabled}
+                onclicked={submitHandler}>
+                Send
+            </c-input-button>
+        </div> -->
+    </div>
+</template>

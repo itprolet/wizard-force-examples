@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Preferred_Time__c</fullName>
+    <label>Preferred Time</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>morning</fullName>
+                <default>false</default>
+                <label>09:00 – 12:00</label>
+            </value>
+            <value>
+                <fullName>noon</fullName>
+                <default>false</default>
+                <label>12:00 – 15:00</label>
+            </value>
+            <value>
+                <fullName>afternoon</fullName>
+                <default>false</default>
+                <label>15:00 – 18:00</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,18 @@
+# Documentation and repo files
+README.md
+PUBLICATION_CHECKLIST.md
+docs/**
+config/**
+package.json
+package-lock.json
+
+# Local artifacts
+.git/**
+.github/**
+.sf/**
+.sfdx/**
+node_modules/**
+docs/_site/**
+.DS_Store
+**/jsconfig.json
+**/.eslintrc.json

@@ -1,0 +1,20 @@
+{
+  "packageDirectories": [
+    {
+      "path": "examples/basic-wizard",
+      "default": true
+    },
+    {
+      "path": "examples/feedback-wizard"
+    },
+    {
+      "path": "examples/embedded-form"
+    },
+    {
+      "path": "examples/complaint-wizard"
+    }
+  ],
+  "name": "wizard-force-examples",
+  "sfdcLoginUrl": "https://login.salesforce.com",
+  "sourceApiVersion": "63.0"
+}

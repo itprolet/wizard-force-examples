@@ -1,0 +1,81 @@
+<template>
+  <article class="eh-page slds-m-around_medium">
+    <section>
+      <h2 class="eh-header eh-divider">Your feedback</h2>
+      <div class="slds-grid slds-gutters_x-small slds-wrap">
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-text
+            label="Rating (1–5)"
+            value={ratingData.rating}
+            read-only
+            readonly-textlike
+          ></c-input-text>
+        </div>
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-text
+            label="Would recommend"
+            value={recommendLabel}
+            read-only
+            readonly-textlike
+          ></c-input-text>
+        </div>
+        <div class="slds-col slds-size_1-of-1">
+          <c-input-text
+            label="Comment"
+            value={commentData.comment}
+            read-only
+            readonly-textlike
+          ></c-input-text>
+        </div>
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-text
+            label="Email"
+            value={commentData.email}
+            read-only
+            readonly-textlike
+          ></c-input-text>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">Таблица с данни</h2>
+      <c-elem-datatable
+        columns={tableColumns}
+        data={tableData}
+      ></c-elem-datatable>
+    </section>
+
+    <c-input-checkbox
+      label="I agree to the processing of my personal data (GDPR)."
+      name="feedbackAgreeGdpr"
+      data-name="feedbackAgreeGdpr"
+      checked={isAgreeGdprChecked}
+      onchange={changeHandler}
+    >
+    </c-input-checkbox>
+    <template lwc:if={errors.feedbackAgreeGdpr}>
+      <p class="slds-text-color_error slds-m-top_xx-small">
+        {errors.feedbackAgreeGdpr}
+      </p>
+    </template>
+
+    <template lwc:if={submitError}>
+      <c-elem-alert type="error" message={submitError}></c-elem-alert>
+    </template>
+
+    <div
+      class="eh-wizard-buttons slds-grid slds-grid_align-spread slds-m-top_large"
+    >
+      <c-input-button onclicked={handleBack} disabled={isSubmitting}
+        >{labels.Wizard_act_back}</c-input-button
+      >
+      <c-input-button
+        classname="active"
+        onclicked={handleSubmit}
+        disabled={isSubmitting}
+        >Submit feedback</c-input-button
+      >
+    </div>
+  </article>
+</template>

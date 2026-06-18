@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>Wizard_act_complaint_submit</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Wizard Complaint submit complaint action label</shortDescription>
+        <value>Подай жалбата</value>
+    </labels>
+    <labels>
+        <fullName>Wizard_err_complaint_amount_zero</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Wizard Complaint zero amount error</shortDescription>
+        <value>Оспорваната сума не може да бъде 0</value>
+    </labels>
+    <labels>
+        <fullName>Wizard_lbl_complaint_affected_service</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Wizard Complaint affected service field label</shortDescription>
+        <value>Засегната услуга</value>
+    </labels>
+    <labels>
+        <fullName>Wizard_lbl_complaint_agree</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Wizard Complaint agree checkbox label</shortDescription>
+        <value>Съгласен съм с политиката за обработка на данни</value>
+    </labels>
+    <labels>
+        <fullName>Wizard_lbl_complaint_category</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Wzzard Complaint category field label</shortDescription>
+        <value>Категория</value>
+    </labels>
+    <labels>
+        <fullName>Wizard_lbl_complaint_description</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Wzzard Complaint description field label</shortDescription>
+        <value>Описание на проблема</value>
+    </labels>
+    <labels>
+        <fullName>Wizard_lbl_complaint_disputed_amount</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Wizard Complaint disputed ammount field label</shortDescription>
+        <value>Оспорвана сума (BGN)</value>
+    </labels>
+    <labels>
+        <fullName>Wizard_lbl_complaint_incident_date</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Wizard Complaint incident date field label</shortDescription>
+        <value>Дата на инцидента</value>
+    </labels>
+    <labels>
+        <fullName>Wizard_lbl_complaint_invoice_number</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Wizard Complaint invoice number field label</shortDescription>
+        <value>Номер на фактура</value>
+    </labels>
+    <labels>
+        <fullName>Wizard_lbl_complaint_preferred_contact</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Wizard Complaint preferred contact field label</shortDescription>
+        <value>Предпочитан начин за контакт</value>
+    </labels>
+    <labels>
+        <fullName>Wizard_lbl_complaint_preferred_time</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Wizard Complaint preferred contact time field label</shortDescription>
+        <value>Предпочитано време за връзка</value>
+    </labels>
+    <labels>
+        <fullName>Wizard_lbl_complaint_reference_number</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Wizard Complaint reference number field label</shortDescription>
+        <value>Референтен номер</value>
+    </labels>
+    <labels>
+        <fullName>Wizard_lbl_complaint_section_billing</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Wizard Complaint summary billing section title</shortDescription>
+        <value>Данни за фактурата</value>
+    </labels>
+    <labels>
+        <fullName>Wizard_lbl_complaint_section_complaint</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Wizard Complaint summary complaint section title</shortDescription>
+        <value>Данни за оплакването</value>
+    </labels>
+    <labels>
+        <fullName>Wizard_lbl_complaint_section_contact</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Wizard Complaint summary contact section title</shortDescription>
+        <value>Контактни данни</value>
+    </labels>
+    <labels>
+        <fullName>Wizard_lbl_complaint_sub_category</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Wizard Compaint Sub category field title</shortDescription>
+        <value>Подкатегория</value>
+    </labels>
+    <labels>
+        <fullName>Wizard_lbl_email</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Wizard Equipment Request - Email field label</shortDescription>
+        <value>Имейл</value>
+    </labels>
+    <labels>
+        <fullName>Wizard_lbl_first_name</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Wizard Equipment Request - First name field label</shortDescription>
+        <value>Собствено име</value>
+    </labels>
+    <labels>
+        <fullName>Wizard_lbl_last_name</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Wizard Equipment Request - Last name field label</shortDescription>
+        <value>Фамилия</value>
+    </labels>
+    <labels>
+        <fullName>Wizard_lbl_phone</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Wizard Equipment Request - Phone field label</shortDescription>
+        <value>Телефон</value>
+    </labels>
+    <labels>
+        <fullName>Wizard_pag_ComplaintAttachment</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Wzzard Complaint Documents page title</shortDescription>
+        <value>Документи за фактура</value>
+    </labels>
+    <labels>
+        <fullName>Wizard_pag_ComplaintCategory</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Wzzard Complaint Category page title</shortDescription>
+        <value>Категория на оплакването</value>
+    </labels>
+    <labels>
+        <fullName>Wizard_pag_ComplaintContact</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Wzzard Complaint Contact details page title</shortDescription>
+        <value>Контактни данни</value>
+    </labels>
+    <labels>
+        <fullName>Wizard_pag_ComplaintDetails</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Wzzard Complaint Details page title</shortDescription>
+        <value>Детайли</value>
+    </labels>
+    <labels>
+        <fullName>Wizard_pag_ComplaintSummary</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Wzzard Complaint Summary page title</shortDescription>
+        <value>Преглед и изпращане</value>
+    </labels>
+    <labels>
+        <fullName>Wizard_title_ComplaintRegistration</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Wizard Complaint title</shortDescription>
+        <value>Регистрация на оплакване/жалба</value>
+    </labels>
+</CustomLabels>

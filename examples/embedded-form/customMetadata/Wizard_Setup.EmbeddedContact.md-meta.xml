@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Embedded Contact Form</label>
+    <protected>false</protected>
+    <values>
+        <field>Title__c</field>
+        <value xsi:type="xsd:string" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">Contact us</value>
+    </values>
+    <values>
+        <field>Plan__c</field>
+        <value xsi:type="xsd:string" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">{
+  "ContactForm": "EmbeddedContactForm"
+}</value>
+    </values>
+    <values>
+        <field>Rules__c</field>
+        <value xsi:type="xsd:string" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">{
+  "EmbeddedContactForm": {
+    "navigationByChild": true,
+    "hideProgress": true,
+    "saveOnChange": true,
+    "required": ["name", "email", "message"],
+    "validators": {
+      "email": [
+        {
+          "validator": "validateEmbeddedEmail",
+          "message": "Please enter a valid email address"
+        }
+      ]
+    }
+  }
+}</value>
+    </values>
+</CustomMetadata>

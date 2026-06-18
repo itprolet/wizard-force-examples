@@ -1,0 +1,27 @@
+<template>
+  <article class="eh-page">
+    <section>
+      <div class="slds-m-around_medium">
+        <c-input-text
+          type="number"
+          label="How would you rate us? (1–5)"
+          name="rating"
+          min="1"
+          max="5"
+          value={data.rating}
+          required={required.rating}
+          error={errors.rating}
+          onchange={changeHandler}
+        >
+        </c-input-text>
+        <c-input-checkbox
+          label="Would you recommend us?"
+          name="wouldRecommend"
+          checked={data.wouldRecommend}
+          onchange={changeHandler}
+        >
+        </c-input-checkbox>
+      </div>
+    </section>
+  </article>
+</template>

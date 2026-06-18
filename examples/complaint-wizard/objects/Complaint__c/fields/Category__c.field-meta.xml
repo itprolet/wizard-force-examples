@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Category__c</fullName>
+    <label>Category</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>billing</fullName>
+                <default>false</default>
+                <label>Фактура</label>
+            </value>
+            <value>
+                <fullName>technical</fullName>
+                <default>false</default>
+                <label>Технически проблем</label>
+            </value>
+            <value>
+                <fullName>service</fullName>
+                <default>false</default>
+                <label>Качество на услугата</label>
+            </value>
+            <value>
+                <fullName>other</fullName>
+                <default>false</default>
+                <label>Друго</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

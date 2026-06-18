@@ -1,0 +1,181 @@
+<template>
+  <article class="eh-page">
+    <!-- Section: Complaint data -->
+    <section>
+      <h2 class="eh-header eh-divider">
+        {_l.Wizard_lbl_complaint_section_complaint}
+      </h2>
+      <div class="slds-grid slds-gutters_x-small slds-wrap">
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-text
+            label={_l.Wizard_lbl_complaint_category}
+            value={categoryLabel}
+            read-only
+            readonly-textlike
+          ></c-input-text>
+        </div>
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-text
+            label={_l.Wizard_lbl_complaint_sub_category}
+            value={subCategoryLabel}
+            read-only
+            readonly-textlike
+          ></c-input-text>
+        </div>
+        <div class="slds-col slds-size_1-of-1">
+          <c-input-text
+            label={_l.Wizard_lbl_complaint_description}
+            value={detailsData.description}
+            read-only
+            readonly-textlike
+          ></c-input-text>
+        </div>
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-text
+            label={_l.Wizard_lbl_complaint_incident_date}
+            value={detailsData.incidentDate}
+            read-only
+            readonly-textlike
+          ></c-input-text>
+        </div>
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-text
+            label={_l.Wizard_lbl_complaint_reference_number}
+            value={detailsData.referenceNumber}
+            read-only
+            readonly-textlike
+          ></c-input-text>
+        </div>
+        <template lwc:if={detailsData.affectedService}>
+          <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+            <c-input-text
+              label={_l.Wizard_lbl_complaint_affected_service}
+              value={affectedServiceLabel}
+              read-only
+              readonly-textlike
+            ></c-input-text>
+          </div>
+        </template>
+      </div>
+    </section>
+
+    <!-- Section: Billing documents (only for billing category) -->
+    <template lwc:if={hasBillingData}>
+      <section>
+        <h2 class="eh-header eh-divider">
+          {_l.Wizard_lbl_complaint_section_billing}
+        </h2>
+        <div class="slds-grid slds-gutters_x-small slds-wrap">
+          <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+            <c-input-text
+              label={_l.Wizard_lbl_complaint_invoice_number}
+              value={attachmentData.invoiceNumber}
+              read-only
+              readonly-textlike
+            ></c-input-text>
+          </div>
+          <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+            <c-input-text
+              label={_l.Wizard_lbl_complaint_disputed_amount}
+              value={attachmentData.disputedAmount}
+              read-only
+              readonly-textlike
+            ></c-input-text>
+          </div>
+        </div>
+      </section>
+    </template>
+
+    <!-- Section: Contact details -->
+    <section>
+      <h2 class="eh-header eh-divider">
+        {_l.Wizard_lbl_complaint_section_contact}
+      </h2>
+      <div class="slds-grid slds-gutters_x-small slds-wrap">
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-text
+            label={_l.Wizard_lbl_first_name}
+            value={contactData.firstName}
+            read-only
+            readonly-textlike
+          ></c-input-text>
+        </div>
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-text
+            label={_l.Wizard_lbl_last_name}
+            value={contactData.lastName}
+            read-only
+            readonly-textlike
+          ></c-input-text>
+        </div>
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-text
+            label={_l.Wizard_lbl_email}
+            value={contactData.email}
+            read-only
+            readonly-textlike
+          ></c-input-text>
+        </div>
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-text
+            label={_l.Wizard_lbl_phone}
+            value={contactData.phone}
+            read-only
+            readonly-textlike
+          ></c-input-text>
+        </div>
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-text
+            label={_l.Wizard_lbl_complaint_preferred_contact}
+            value={preferredContactLabel}
+            read-only
+            readonly-textlike
+          ></c-input-text>
+        </div>
+        <template lwc:if={hasPreferredTime}>
+          <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+            <c-input-text
+              label={_l.Wizard_lbl_complaint_preferred_time}
+              value={preferredTimeLabel}
+              read-only
+              readonly-textlike
+            ></c-input-text>
+          </div>
+        </template>
+      </div>
+    </section>
+
+    <c-input-checkbox
+      label={_l.Wizard_lbl_complaint_agree}
+      name="complaintAgreeGdpr"
+      data-name="complaintAgreeGdpr"
+      checked={isAgreeGdprChecked}
+      onchange={changeHandler}
+    >
+    </c-input-checkbox>
+    <template lwc:if={errors.complaintAgreeGdpr}>
+      <p class="slds-text-color_error slds-m-top_xx-small">
+        {errors.complaintAgreeGdpr}
+      </p>
+    </template>
+
+    <template lwc:if={submitError}>
+      <c-elem-alert type="error" message={submitError}></c-elem-alert>
+    </template>
+
+    <!-- Buttons — navigationByChild: this page manages its own navigation -->
+    <div
+      class="eh-wizard-buttons slds-grid slds-grid_align-spread slds-m-top_large"
+    >
+      <c-input-button onclicked={handleBack} disabled={isSubmitting}
+        >{_l.Wizard_act_back}</c-input-button
+      >
+      <c-input-button
+        classname="active"
+        onclicked={handleSubmit}
+        disabled={isSubmitting}
+        >{_l.Wizard_act_complaint_submit}</c-input-button
+      >
+    </div>
+  </article>
+</template>

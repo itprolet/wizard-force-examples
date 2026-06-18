@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <defaultLandingTab>Wizard_TEST_Smoke</defaultLandingTab>
+    <description>Lightning app hosting the Wizard TEST smoke-test FlexiPage. Used for manual verification during scratch-org testing of the wizard framework.</description>
+    <formFactors>Large</formFactors>
+    <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
+    <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
+    <isNavTabPersistenceDisabled>false</isNavTabPersistenceDisabled>
+    <isOmniPinnedViewEnabled>false</isOmniPinnedViewEnabled>
+    <label>Wizard Smoke</label>
+    <navType>Standard</navType>
+    <tabs>Wizard_TEST_Smoke</tabs>
+    <tabs>Style_Showcase</tabs>
+    <uiType>Lightning</uiType>
+</CustomApplication>

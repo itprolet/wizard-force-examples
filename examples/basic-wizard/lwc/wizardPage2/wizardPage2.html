@@ -1,0 +1,14 @@
+<!--
+ - Created by asen on 5.09.25.
+ -->
+
+<!-- Wizard Page 2 -->
+<template>
+    <div class="slds-m-around_medium">
+        <p class="slds-m-vertical_medium content">{name}</p>
+        <lightning-input type="checkbox" label="flag2" name="flag2" onchange={changeHandler} checked={data.flag2}></lightning-input>
+        <lightning-input type="checkbox" label="flag21" name="flag21" onchange={changeHandler} checked={data.subobject.flag21}></lightning-input>
+        <p class="slds-m-vertical_medium content" lwc:if={prop1}>{prop1}</p>
+        <p class="slds-m-vertical_medium content" lwc:if={prop2}>{prop2}</p>
+    </div>
+</template>

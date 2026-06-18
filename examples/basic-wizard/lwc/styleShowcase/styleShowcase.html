@@ -1,0 +1,621 @@
+<template>
+  <div class="showcase-page">
+    <!-- ═══════════════════════════════════════════
+         SHAPE-INSENSITIVE SECTIONS
+    ═══════════════════════════════════════════ -->
+
+    <!-- COLORS -->
+    <section class="showcase-section">
+      <h2 class="section-title">Цветова палитра</h2>
+      <div class="swatch-grid">
+        <div
+          class="swatch"
+          style="
+            background-color: var(--color-primary-default);
+            color: var(--color-secondary-default);
+          "
+        >
+          <strong>primary-default</strong><span>#c8f27e</span>
+        </div>
+        <div
+          class="swatch"
+          style="
+            background-color: var(--color-secondary-default);
+            color: var(--color-primary-default);
+          "
+        >
+          <strong>secondary-default</strong><span>#053027</span>
+        </div>
+        <div
+          class="swatch"
+          style="
+            background-color: var(--color-primary-muted);
+            color: var(--color-secondary-default);
+          "
+        >
+          <strong>primary-muted</strong><span>#effcd8</span>
+        </div>
+        <div
+          class="swatch"
+          style="background-color: var(--color-error); color: #fff"
+        >
+          <strong>error</strong><span>#cb321e</span>
+        </div>
+        <div
+          class="swatch"
+          style="
+            background-color: var(--color-success);
+            color: var(--color-secondary-default);
+          "
+        >
+          <strong>success</strong><span>#37d46c</span>
+        </div>
+        <div
+          class="swatch"
+          style="
+            background-color: var(--color-bgr);
+            color: var(--color-text-regular);
+          "
+        >
+          <strong>bgr</strong><span>#f5f5f5</span>
+        </div>
+        <div
+          class="swatch"
+          style="
+            background-color: var(--color-bgr-dark);
+            color: var(--color-text-regular);
+          "
+        >
+          <strong>bgr-dark</strong><span>#e8e8e8</span>
+        </div>
+        <div
+          class="swatch swatch-bordered"
+          style="
+            background-color: var(--color-bgr-err);
+            color: var(--color-error);
+          "
+        >
+          <strong>bgr-err</strong><span>#fbe8e6</span>
+        </div>
+        <div
+          class="swatch swatch-bordered"
+          style="
+            background-color: var(--color-white);
+            color: var(--color-text-regular);
+          "
+        >
+          <strong>white</strong><span>#ffffff</span>
+        </div>
+        <div
+          class="swatch"
+          style="background-color: var(--color-backdrop); color: #fff"
+        >
+          <strong>backdrop</strong><span>#53535380</span>
+        </div>
+        <div
+          class="swatch"
+          style="
+            background-color: var(--color-border-light);
+            color: var(--color-text-regular);
+          "
+        >
+          <strong>border-light</strong><span>#d7d7d7</span>
+        </div>
+        <div
+          class="swatch"
+          style="background-color: var(--color-border); color: #fff"
+        >
+          <strong>border</strong><span>#a7a7a7</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- TYPOGRAPHY -->
+    <section class="showcase-section">
+      <h2 class="section-title">Типография</h2>
+      <p class="slds-text-heading_large slds-m-bottom_small">Heading Large</p>
+      <p class="slds-text-heading_medium slds-m-bottom_small">Heading Medium</p>
+      <p class="slds-text-heading_small slds-m-bottom_small">Heading Small</p>
+      <p class="eh-input-label slds-m-bottom_small">
+        Input Label (eh-input-label)
+      </p>
+      <p
+        class="slds-form-element__help eh-input-hint-message slds-m-bottom_small"
+      >
+        Hint text (eh-input-hint-message)
+      </p>
+      <p
+        class="slds-form-element__help eh-input-hint-message eh-input-error-message"
+      >
+        Error text (eh-input-error-message)
+      </p>
+    </section>
+
+    <!-- CHECKBOX (fixed 4px radius — not shape-sensitive) -->
+    <section class="showcase-section">
+      <h2 class="section-title">inputCheckbox</h2>
+      <div class="component-row">
+        <c-input-checkbox label="Неотметнат" name="ch1"></c-input-checkbox>
+        <c-input-checkbox
+          label="Отметнат"
+          name="ch2"
+          checked
+        ></c-input-checkbox>
+        <c-input-checkbox
+          label="Disabled неотм."
+          name="ch3"
+          disabled
+        ></c-input-checkbox>
+        <c-input-checkbox
+          label="Disabled отм."
+          name="ch4"
+          checked
+          disabled
+        ></c-input-checkbox>
+      </div>
+    </section>
+
+    <!-- PRELOADER -->
+    <section class="showcase-section">
+      <h2 class="section-title">elemPreloader</h2>
+      <div class="component-row">
+        <c-elem-preloader></c-elem-preloader>
+        <c-elem-preloader text="Зареждане..."></c-elem-preloader>
+        <c-elem-preloader large></c-elem-preloader>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SHAPE VARIANTS — ROUND vs SHARP
+    ═══════════════════════════════════════════ -->
+
+    <section class="showcase-section">
+      <h2 class="section-title">elemMarquee (банер)</h2>
+
+      <div class="shape-grid">
+        <div class="shape-panel">
+          <div class="component-col">
+            <c-elem-marquee status="warning"
+              >Важна информация: системата ще бъде в режим на поддръжка на 15-ти
+              юни от 22:00 ч.</c-elem-marquee
+            >
+            <c-elem-marquee status="error" prefix="Критична грешка!"
+              >Моля свържете се незабавно с администратора на
+              системата.</c-elem-marquee
+            >
+          </div>
+        </div>
+        <div class="shape-panel" style={sharpStyle}>
+          <div class="component-col">
+            <c-elem-marquee status="warning"
+              >Важна информация: системата ще бъде в режим на поддръжка на 15-ти
+              юни от 22:00 ч.</c-elem-marquee
+            >
+            <c-elem-marquee status="error" prefix="Критична грешка!"
+              >Моля свържете се незабавно с администратора на
+              системата.</c-elem-marquee
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOAST -->
+    <section class="showcase-section">
+      <h2 class="section-title">elemToast</h2>
+
+      <div class="shape-grid">
+        <div class="shape-panel">
+          <c-elem-toast lwc:ref="toast"></c-elem-toast>
+          <div class="component-row">
+            <c-input-button onclick={showToastError}
+              >Error toast</c-input-button
+            >
+            <c-input-button onclick={showToastSuccess}
+              >Success toast</c-input-button
+            >
+            <c-input-button onclick={showToastWarning}
+              >Warning toast</c-input-button
+            >
+          </div>
+        </div>
+        <div class="shape-panel" style={sharpStyle}>
+          <c-elem-toast lwc:ref="toastSharp"></c-elem-toast>
+          <div class="component-row">
+            <c-input-button onclick={showToastErrorSharp}
+              >Error toast</c-input-button
+            >
+            <c-input-button onclick={showToastSuccessSharp}
+              >Success toast</c-input-button
+            >
+            <c-input-button onclick={showToastWarningSharp}
+              >Warning toast</c-input-button
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="showcase-section">
+      <h2 class="section-title">Shape варианти — Round vs Sharp</h2>
+
+      <!-- Column headers -->
+      <div class="shape-grid shape-headers">
+        <div>
+          <span class="shape-header shape-header-round">Round (default)</span>
+        </div>
+        <div><span class="shape-header shape-header-sharp">Sharp</span></div>
+      </div>
+
+      <!-- BORDER RADIUS TOKENS -->
+      <p class="shape-row-label">Border Radius tokens</p>
+      <div class="shape-grid">
+        <div class="shape-panel">
+          <div class="component-row">
+            <div
+              class="radius-demo"
+              style="border-radius: var(--border-input-radius)"
+            >
+              input<br />9999px
+            </div>
+            <div
+              class="radius-demo"
+              style="border-radius: var(--border-button-radius)"
+            >
+              button<br />100px
+            </div>
+            <div
+              class="radius-demo"
+              style="border-radius: var(--border-box-radius)"
+            >
+              box<br />1rem
+            </div>
+            <div
+              class="radius-demo"
+              style="border-radius: var(--border-step-radius)"
+            >
+              step<br />50%
+            </div>
+          </div>
+        </div>
+        <div class="shape-panel" style={sharpStyle}>
+          <div class="component-row">
+            <div
+              class="radius-demo"
+              style="border-radius: var(--border-input-radius)"
+            >
+              input<br />6px
+            </div>
+            <div
+              class="radius-demo"
+              style="border-radius: var(--border-button-radius)"
+            >
+              button<br />8px
+            </div>
+            <div
+              class="radius-demo"
+              style="border-radius: var(--border-box-radius)"
+            >
+              box<br />4px
+            </div>
+            <div
+              class="radius-demo"
+              style="border-radius: var(--border-step-radius)"
+            >
+              step<br />30%
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BUTTONS -->
+      <p class="shape-row-label">Бутони — inputButton</p>
+      <div class="shape-grid">
+        <div class="shape-panel">
+          <div class="component-row">
+            <c-input-button>Default</c-input-button>
+            <c-input-button classname="active">Active</c-input-button>
+            <c-input-button disabled>Disabled</c-input-button>
+            <c-input-button loading>Loading</c-input-button>
+            <c-input-button size="small">Small</c-input-button>
+          </div>
+          <div class="component-row">
+            <c-input-button-icon
+              icon="eye"
+              title="Преглед"
+            ></c-input-button-icon>
+            <c-input-button-icon
+              icon="eye"
+              title="Disabled"
+              disabled
+            ></c-input-button-icon>
+          </div>
+        </div>
+        <div class="shape-panel" style={sharpStyle}>
+          <div class="component-row">
+            <c-input-button>Default</c-input-button>
+            <c-input-button classname="active">Active</c-input-button>
+            <c-input-button disabled>Disabled</c-input-button>
+            <c-input-button loading>Loading</c-input-button>
+            <c-input-button size="small">Small</c-input-button>
+          </div>
+          <div class="component-row">
+            <c-input-button-icon
+              icon="eye"
+              title="Преглед"
+            ></c-input-button-icon>
+            <c-input-button-icon
+              icon="eye"
+              title="Disabled"
+              disabled
+            ></c-input-button-icon>
+          </div>
+        </div>
+      </div>
+
+      <!-- TEXT INPUTS -->
+      <p class="shape-row-label">inputText</p>
+      <div class="shape-grid">
+        <div class="shape-panel">
+          <c-input-text
+            label="Нормално"
+            name="t1_r"
+            placeholder="Въведи текст..."
+          ></c-input-text>
+          <c-input-text
+            label="Required"
+            name="t2_r"
+            required
+            placeholder="Задължително поле"
+          ></c-input-text>
+          <c-input-text
+            label="С грешка"
+            name="t3_r"
+            error="Полето е задължително."
+          ></c-input-text>
+          <c-input-text
+            label="Disabled"
+            name="t4_r"
+            disabled
+            value="Disabled стойност"
+          ></c-input-text>
+        </div>
+        <div class="shape-panel" style={sharpStyle}>
+          <c-input-text
+            label="Нормално"
+            name="t1_s"
+            placeholder="Въведи текст..."
+          ></c-input-text>
+          <c-input-text
+            label="Required"
+            name="t2_s"
+            required
+            placeholder="Задължително поле"
+          ></c-input-text>
+          <c-input-text
+            label="С грешка"
+            name="t3_s"
+            error="Полето е задължително."
+          ></c-input-text>
+          <c-input-text
+            label="Disabled"
+            name="t4_s"
+            disabled
+            value="Disabled стойност"
+          ></c-input-text>
+        </div>
+      </div>
+
+      <!-- COMBOBOX -->
+      <p class="shape-row-label">inputCombobox</p>
+      <div class="shape-grid">
+        <div class="shape-panel">
+          <c-input-combobox
+            label="Нормален"
+            name="c1_r"
+            items={comboItems}
+            placeholder="Избери..."
+          ></c-input-combobox>
+          <c-input-combobox
+            label="С грешка"
+            name="c2_r"
+            items={comboItems}
+            error="Моля изберете стойност"
+            placeholder="Избери..."
+          ></c-input-combobox>
+          <c-input-combobox
+            label="Disabled"
+            name="c3_r"
+            items={comboItems}
+            disabled
+            placeholder="Disabled"
+          ></c-input-combobox>
+        </div>
+        <div class="shape-panel" style={sharpStyle}>
+          <c-input-combobox
+            label="Нормален"
+            name="c1_s"
+            items={comboItems}
+            placeholder="Избери..."
+          ></c-input-combobox>
+          <c-input-combobox
+            label="С грешка"
+            name="c2_s"
+            items={comboItems}
+            error="Моля изберете стойност"
+            placeholder="Избери..."
+          ></c-input-combobox>
+          <c-input-combobox
+            label="Disabled"
+            name="c3_s"
+            items={comboItems}
+            disabled
+            placeholder="Disabled"
+          ></c-input-combobox>
+        </div>
+      </div>
+
+      <!-- TABSET -->
+      <p class="shape-row-label">inputTabset</p>
+      <div class="shape-grid">
+        <div class="shape-panel">
+          <c-input-tabset value={tabValue} onchange={handleTabChange}>
+            <div data-role="tab" data-label="Първи таб" data-value="tab1">
+              <p class="slds-p-around_medium">Съдържание на първи таб.</p>
+            </div>
+            <div data-role="tab" data-label="Втори таб" data-value="tab2">
+              <p class="slds-p-around_medium">Съдържание на втори таб.</p>
+            </div>
+          </c-input-tabset>
+        </div>
+        <div class="shape-panel" style={sharpStyle}>
+          <c-input-tabset value={tabValue}>
+            <div data-role="tab" data-label="Първи таб" data-value="tab1">
+              <p class="slds-p-around_medium">Съдържание на първи таб.</p>
+            </div>
+            <div data-role="tab" data-label="Втори таб" data-value="tab2">
+              <p class="slds-p-around_medium">Съдържание на втори таб.</p>
+            </div>
+          </c-input-tabset>
+        </div>
+      </div>
+
+      <!-- ALERTS -->
+      <p class="shape-row-label">elemAlert</p>
+      <div class="shape-grid">
+        <div class="shape-panel">
+          <c-elem-alert type="error">Грешка: нещо се обърка.</c-elem-alert>
+          <c-elem-alert type="warning"
+            >Предупреждение: прегледайте данните.</c-elem-alert
+          >
+          <c-elem-alert type="success"
+            >Успешно: записът е запазен.</c-elem-alert
+          >
+          <c-elem-alert type="info"
+            >Информация: данните се обработват.</c-elem-alert
+          >
+        </div>
+        <div class="shape-panel" style={sharpStyle}>
+          <c-elem-alert type="error">Грешка: нещо се обърка.</c-elem-alert>
+          <c-elem-alert type="warning"
+            >Предупреждение: прегледайте данните.</c-elem-alert
+          >
+          <c-elem-alert type="success"
+            >Успешно: записът е запазен.</c-elem-alert
+          >
+          <c-elem-alert type="info"
+            >Информация: данните се обработват.</c-elem-alert
+          >
+        </div>
+      </div>
+
+      <!-- CHIPS -->
+      <p class="shape-row-label">elemChip</p>
+      <div class="shape-grid">
+        <div class="shape-panel">
+          <div class="component-row">
+            <c-elem-chip color="var(--color-primary-default)"
+              >Primary</c-elem-chip
+            >
+            <c-elem-chip color="var(--color-secondary-default)"
+              >Secondary</c-elem-chip
+            >
+            <c-elem-chip color="var(--color-primary-muted)">Muted</c-elem-chip>
+            <c-elem-chip color="var(--color-error)">Error</c-elem-chip>
+            <c-elem-chip color="var(--color-success)">Success</c-elem-chip>
+          </div>
+        </div>
+        <div class="shape-panel" style={sharpStyle}>
+          <div class="component-row">
+            <c-elem-chip color="var(--color-primary-default)"
+              >Primary</c-elem-chip
+            >
+            <c-elem-chip color="var(--color-secondary-default)"
+              >Secondary</c-elem-chip
+            >
+            <c-elem-chip color="var(--color-primary-muted)">Muted</c-elem-chip>
+            <c-elem-chip color="var(--color-error)">Error</c-elem-chip>
+            <c-elem-chip color="var(--color-success)">Success</c-elem-chip>
+          </div>
+        </div>
+      </div>
+
+      <!-- TILES -->
+      <p class="shape-row-label">elemTile</p>
+      <div class="shape-grid">
+        <div class="shape-panel">
+          <c-elem-tile>Inactive (default)</c-elem-tile>
+          <c-elem-tile state="white">White</c-elem-tile>
+          <c-elem-tile state="active">Active</c-elem-tile>
+          <c-elem-tile state="done">Done</c-elem-tile>
+        </div>
+        <div class="shape-panel" style={sharpStyle}>
+          <c-elem-tile>Inactive (default)</c-elem-tile>
+          <c-elem-tile state="white">White</c-elem-tile>
+          <c-elem-tile state="active">Active</c-elem-tile>
+          <c-elem-tile state="done">Done</c-elem-tile>
+        </div>
+      </div>
+
+      <!-- TOOLTIP -->
+      <p class="shape-row-label">elemTooltip</p>
+      <div class="shape-grid">
+        <div class="shape-panel">
+          <div class="component-row">
+            <span>Задръж върху иконата →</span>
+            <c-elem-tooltip
+              type="success"
+              content="Tooltip с &lt;strong&gt;HTML&lt;/strong&gt; съдържание."
+            ></c-elem-tooltip>
+            <span class="slds-m-left_medium">Тип info →</span>
+            <c-elem-tooltip
+              type="info"
+              content="Информационен tooltip."
+            ></c-elem-tooltip>
+          </div>
+        </div>
+        <div class="shape-panel" style={sharpStyle}>
+          <div class="component-row">
+            <span>Задръж върху иконата →</span>
+            <c-elem-tooltip
+              content="Tooltip с &lt;strong&gt;HTML&lt;/strong&gt; съдържание."
+            ></c-elem-tooltip>
+            <span class="slds-m-left_medium">Тип info →</span>
+            <c-elem-tooltip
+              type="info"
+              content="Информационен tooltip."
+            ></c-elem-tooltip>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAGE PROGRESS -->
+      <p class="shape-row-label">pageProgress (навигационни стъпки)</p>
+      <div class="shape-grid">
+        <div class="shape-panel">
+          <c-page-progress pages={mockPages} read-only></c-page-progress>
+        </div>
+        <div class="shape-panel" style={sharpStyle}>
+          <c-page-progress pages={mockPages} read-only></c-page-progress>
+        </div>
+      </div>
+
+      <!-- DATATABLE -->
+      <p class="shape-row-label">elemDatatable</p>
+      <div class="shape-grid">
+        <div class="shape-panel">
+          <c-elem-datatable
+            columns={tableColumns}
+            data={tableData}
+          ></c-elem-datatable>
+        </div>
+        <div class="shape-panel" style={sharpStyle}>
+          <c-elem-datatable
+            columns={tableColumns}
+            data={tableData}
+          ></c-elem-datatable>
+        </div>
+      </div>
+    </section>
+  </div>
+</template>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Complaint Registration</label>
+    <protected>false</protected>
+    <values>
+        <field>Plan__c</field>
+        <value xsi:type="xsd:string">{
+  &quot;Wizard_pag_ComplaintCategory&quot;: &quot;WizardComplaintCategory&quot;,
+  &quot;Wizard_pag_ComplaintDetails&quot;: &quot;WizardComplaintDetails&quot;,
+  &quot;if (WizardComplaintCategory.category=&apos;billing&apos;)&quot;: {
+    &quot;Wizard_pag_ComplaintAttachment&quot;: &quot;WizardComplaintAttachment&quot;
+  },
+  &quot;Wizard_pag_ComplaintContact&quot;: &quot;WizardComplaintContact&quot;,
+  &quot;Wizard_pag_ComplaintSummary&quot;: &quot;WizardComplaintSummary&quot;
+}</value>
+    </values>
+    <values>
+        <field>Rules__c</field>
+        <value xsi:type="xsd:string">{
+    &quot;WizardComplaintCategory&quot;:{
+        &quot;required&quot;:&quot;category&quot;,
+        &quot;if (or(category=&apos;billing&apos;, category=&apos;technical&apos;))&quot;:{
+            &quot;required&quot;:&quot;subCategory&quot;
+        },
+        &quot;if (not(or(category=&apos;billing&apos;, category=&apos;technical&apos;)))&quot;:{
+            &quot;hidden&quot;:&quot;subCategory&quot;
+        }
+    },
+    &quot;WizardComplaintDetails&quot;:{
+        &quot;required&quot;:[
+            &quot;description&quot;,
+            &quot;incidentDate&quot;
+        ],
+        &quot;patterns&quot;:{
+            &quot;referenceNumber&quot;:&quot;[A-Z]{2}-[0-9]{5}&quot;
+        },
+        &quot;hints&quot;:{
+            &quot;description&quot;:&quot;Опишете проблема подробно — кога, какво и как се е случило&quot;,
+            &quot;referenceNumber&quot;:&quot;Намирате го в горния десен ъгъл на документа. Формат: AB-12345&quot;
+        },
+        &quot;if (WizardComplaintCategory.category=&apos;technical&apos;)&quot;:{
+            &quot;required&quot;:&quot;affectedService&quot;
+        },
+        &quot;if (not(WizardComplaintCategory.category=&apos;technical&apos;))&quot;:{
+            &quot;hidden&quot;:&quot;affectedService&quot;
+        }
+    },
+    &quot;WizardComplaintAttachment&quot;:{
+        &quot;required&quot;:&quot;invoiceNumber&quot;,
+        &quot;patterns&quot;:{
+            &quot;invoiceNumber&quot;:&quot;INV-[0-9]{5}&quot;
+        },
+        &quot;if (and(not(isEmpty(disputedAmount)), disputedAmount=&apos;0&apos;))&quot;:{
+            &quot;pageErrors&quot;:&quot;Wizard_err_complaint_amount_zero&quot;
+        }
+    },
+    &quot;WizardComplaintContact&quot;:{
+        &quot;required&quot;:[
+            &quot;firstName&quot;,
+            &quot;lastName&quot;,
+            &quot;email&quot;,
+            &quot;phone&quot;,
+            &quot;preferredContact&quot;
+        ],
+        &quot;patterns&quot;:{
+            &quot;email&quot;:&quot;[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}&quot;,
+            &quot;phone&quot;:&quot;(\\+359|0)?\\d{9}&quot;
+        },
+        &quot;hints&quot;:{
+            &quot;email&quot;:&quot;На този адрес ще получите потвърждение за регистрираното оплакване&quot;
+        },
+        &quot;if (preferredContact=&apos;phone&apos;)&quot;:{
+            &quot;required&quot;:&quot;preferredTime&quot;
+        },
+        &quot;if (not(preferredContact=&apos;phone&apos;))&quot;:{
+            &quot;hidden&quot;:&quot;preferredTime&quot;
+        }
+    },
+    &quot;WizardComplaintSummary&quot;:{
+        &quot;navigationByChild&quot;:true,
+        &quot;required&quot;:[
+            &quot;complaintAgreeGdpr&quot;
+        ]
+    }
+}</value>
+    </values>
+    <values>
+        <field>Title__c</field>
+        <value xsi:type="xsd:string">Wizard_title_ComplaintRegistration</value>
+    </values>
+</CustomMetadata>

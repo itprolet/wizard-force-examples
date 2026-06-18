@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>64.0</apiVersion>
+    <description>Field validator: checks that a value is a valid e-mail address. Registered in feedbackWizardRegistry and referenced from Wizard_Setup.Feedback Rules__c.</description>
+    <isExposed>false</isExposed>
+    <masterLabel>Feedback Email Validator</masterLabel>
+</LightningComponentBundle>

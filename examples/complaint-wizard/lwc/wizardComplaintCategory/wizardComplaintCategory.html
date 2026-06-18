@@ -1,0 +1,37 @@
+<template>
+  <article class="eh-page">
+    <section>
+      <div class="slds-grid slds-gutters_x-small slds-wrap">
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-combobox
+            label={_l.Wizard_lbl_complaint_category}
+            name="category"
+            items={categoryOptions}
+            value={data.category}
+            onchange={changeHandler}
+            required={_required.category}
+            read-only={_readOnly.category}
+            error={_errors.category}
+          ></c-input-combobox>
+        </div>
+
+        <!-- subCategory visible only for billing and technical -->
+        <div
+          lwc:if={isSubCategoryVisible}
+          class="slds-col slds-size_1-of-1 slds-large-size_1-of-2"
+        >
+          <c-input-combobox
+            label={_l.Wizard_lbl_complaint_sub_category}
+            name="subCategory"
+            items={subCategoryOptions}
+            value={data.subCategory}
+            onchange={changeHandler}
+            required={_required.subCategory}
+            read-only={_readOnly.subCategory}
+            error={_errors.subCategory}
+          ></c-input-combobox>
+        </div>
+      </div>
+    </section>
+  </article>
+</template>

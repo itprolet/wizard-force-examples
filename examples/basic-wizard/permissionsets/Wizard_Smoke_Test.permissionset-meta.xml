@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Grants visibility to the Wizard TEST Smoke tab so the wizard host page can be reached from the App Launcher / tab URL during scratch-org verification.</description>
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>Wizard Smoke Test</label>
+    <applicationVisibilities>
+        <application>Wizard_Smoke</application>
+        <visible>true</visible>
+    </applicationVisibilities>
+    <tabSettings>
+        <tab>Wizard_TEST_Smoke</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
+    <tabSettings>
+          <tab>Style_Showcase</tab>
+          <visibility>Visible</visibility>
+      </tabSettings>
+</PermissionSet>

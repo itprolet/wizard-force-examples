@@ -1,0 +1,11 @@
+title: Wizard Framework Documentation
+description: Public developer documentation for the Wizard Framework Salesforce managed package.
+theme: minima
+markdown: kramdown
+permalink: pretty
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "default"
