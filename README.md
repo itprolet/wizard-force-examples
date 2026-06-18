@@ -24,7 +24,6 @@ The documentation is designed to be published with GitHub Pages from the `docs/`
 
 Before deploying an example into an org, install the Wizard Framework managed package and assign the package permission set to the users who will run the wizard.
 
-These examples are a public extraction draft. Before publishing, run the namespace pass described in [PUBLICATION_CHECKLIST.md](PUBLICATION_CHECKLIST.md) so subscriber-org references point to the installed managed package namespace instead of same-repo source modules.
 
 ## Repository Shape
 
