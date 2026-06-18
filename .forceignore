@@ -16,3 +16,4 @@ docs/_site/**
 .DS_Store
 **/jsconfig.json
 **/.eslintrc.json
+scripts/**

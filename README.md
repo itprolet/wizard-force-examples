@@ -10,8 +10,6 @@ The documentation is designed to be published with GitHub Pages from the `docs/`
 
 - Start here: [docs/index.md](docs/index.md)
 - GitHub Pages setup: [docs/github-pages-setup.md](docs/github-pages-setup.md)
-- Progress tracker: [DOCS_PROGRESS.md](DOCS_PROGRESS.md)
-- Publication checklist: [PUBLICATION_CHECKLIST.md](PUBLICATION_CHECKLIST.md)
 
 ## Examples
 
@@ -32,7 +30,6 @@ These examples are a public extraction draft. Before publishing, run the namespa
 
 ```text
 README.md
-PUBLICATION_CHECKLIST.md
 docs/
 examples/
 config/

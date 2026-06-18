@@ -16,8 +16,11 @@ yarn-error.log*
 
 # GitHub Pages / Jekyll output
 docs/_site/
+docs/.sass-cache/
 .jekyll-cache/
 
 # Local environment
 .env
 *.log
+scripts/**
+
