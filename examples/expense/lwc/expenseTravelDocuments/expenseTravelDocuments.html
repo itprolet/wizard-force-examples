@@ -1,0 +1,55 @@
+<template>
+  <article class="eh-page">
+    <section>
+      <div class="slds-grid slds-gutters_x-small slds-wrap">
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-text
+            label={_l.Expense_lbl_passportNumber}
+            name="passportNumber"
+            value={data.passportNumber}
+            onchange={changeHandler}
+            required={_required.passportNumber}
+            read-only={_readOnly.passportNumber}
+            error={_errors.passportNumber}
+          ></c-input-text>
+        </div>
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <!-- errors.passportExpiry is set by the JS page validator ValidatePassportValidity -->
+          <c-input-text
+            type="date"
+            label={_l.Expense_lbl_passportExpiry}
+            name="passportExpiry"
+            value={data.passportExpiry}
+            onchange={changeHandler}
+            required={_required.passportExpiry}
+            read-only={_readOnly.passportExpiry}
+            error={_errors.passportExpiry}
+          ></c-input-text>
+        </div>
+        <div class="slds-col slds-size_1-of-1">
+          <!-- c-input-checkbox has no read-only property, use disabled -->
+          <c-input-checkbox
+            label={_l.Expense_lbl_visaRequired}
+            name="visaRequired"
+            checked={data.visaRequired}
+            onchange={changeHandler}
+            disabled={_readOnly.visaRequired}
+          ></c-input-checkbox>
+        </div>
+        <template lwc:if={showVisaNumber}>
+          <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+            <c-input-text
+              label={_l.Expense_lbl_visaNumber}
+              name="visaNumber"
+              value={data.visaNumber}
+              onchange={changeHandler}
+              required={_required.visaNumber}
+              read-only={_readOnly.visaNumber}
+              error={_errors.visaNumber}
+            ></c-input-text>
+          </div>
+        </template>
+      </div>
+    </section>
+  </article>
+</template>

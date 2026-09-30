@@ -1,0 +1,31 @@
+<template>
+  <article class="eh-page">
+    <section>
+      <div class="slds-grid slds-gutters_x-small slds-wrap">
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-text
+            label={_l.Expense_lbl_ehicNumber}
+            name="ehicNumber"
+            value={data.ehicNumber}
+            onchange={changeHandler}
+            required={_required.ehicNumber}
+            read-only={_readOnly.ehicNumber}
+            error={_errors.ehicNumber}
+          ></c-input-text>
+        </div>
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-text
+            type="date"
+            label={_l.Expense_lbl_ehicExpiry}
+            name="ehicExpiry"
+            value={data.ehicExpiry}
+            onchange={changeHandler}
+            required={_required.ehicExpiry}
+            read-only={_readOnly.ehicExpiry}
+            error={_errors.ehicExpiry}
+          ></c-input-text>
+        </div>
+      </div>
+    </section>
+  </article>
+</template>

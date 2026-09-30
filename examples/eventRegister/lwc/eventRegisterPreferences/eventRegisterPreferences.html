@@ -1,0 +1,61 @@
+<template>
+  <article class="eh-page">
+    <section>
+      <div class="slds-m-around_medium">
+        
+        <c-input-combobox
+          label="T-shirt size"
+          name="tshirtSize"
+          items={tshirtSizeOptions}
+          value={data.tshirtSize}
+          required={required.tshirtSize}
+          error={errors.tshirtSize}
+          onchange={changeHandler}
+        ></c-input-combobox>
+
+        <c-input-combobox
+          label="Dietary restrictions"
+          name="dietary"
+          items={dietaryOptions}
+          value={data.dietary}
+          required={required.dietary}
+          error={errors.dietary}
+          onchange={changeHandler}
+        ></c-input-combobox>
+
+        <template lwc:if={isOther}>
+          <c-input-text
+          type="text"
+          label="Dietary details"
+          name="dietaryDetails"
+          value={data.dietaryDetails}
+          required={required.dietaryDetails}
+          error={errors.dietaryDetails}
+          onchange={changeHandler}
+        ></c-input-text>
+        </template>
+
+        <c-input-checkbox
+          label="I will bring a guest"
+          name="bringGuest"
+          checked={data.bringGuest}
+          error={errors.bringGuest}
+          onchange={changeHandler}
+        ></c-input-checkbox>
+
+        <template lwc:if={isBringGuest}>
+          <c-input-text
+            type="text"
+            label="Guest name"
+            name="guestName"
+            value={data.guestName}
+            required={required.guestName}
+            error={errors.guestName}
+            onchange={changeHandler}
+        ></c-input-text>
+        
+        </template>
+      </div>
+    </section>
+  </article>
+</template>

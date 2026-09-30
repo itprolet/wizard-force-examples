@@ -1,0 +1,47 @@
+<template>
+  <article class="eh-page">
+    <section>
+      <div class="slds-m-around_medium">
+        <c-input-text
+          type="date"
+          label="Start date"
+          name="startDate"
+          value={data.startDate}
+          required={required.startDate}
+          error={errors.startDate}
+          onchange={changeHandler}
+        ></c-input-text>
+
+        <c-input-text
+          type="date"
+          label="End date"
+          name="endDate"
+          value={data.endDate}
+          required={required.endDate}
+          error={errors.endDate}
+          onchange={changeHandler}
+        ></c-input-text>
+
+        <c-input-combobox
+          label="Vacation type"
+          name="type"
+          items={typeOptions}
+          value={data.type}
+          required={required.type}
+          error={errors.type}
+          onchange={changeHandler}
+        ></c-input-combobox>
+
+        <c-input-text
+          type="text"
+          label="Comment"
+          name="comment"
+          value={data.comment}
+          required={required.comment}
+          error={errors.comment}
+          onchange={changeHandler}
+        ></c-input-text>
+      </div>
+    </section>
+  </article>
+</template>

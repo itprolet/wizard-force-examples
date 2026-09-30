@@ -1,0 +1,85 @@
+<template>
+  <article class="eh-page">
+    <section>
+      <div class="slds-grid slds-gutters_x-small slds-wrap">
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-combobox
+            label={_l.Expense_lbl_destinationType}
+            name="destinationType"
+            items={destinationTypeOptions}
+            value={data.destinationType}
+            onchange={changeHandler}
+            required={_required.destinationType}
+            read-only={_readOnly.destinationType}
+            error={_errors.destinationType}
+          ></c-input-combobox>
+        </div>
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-text
+            label={_l.Expense_lbl_destination}
+            name="destination"
+            value={data.destination}
+            onchange={changeHandler}
+            required={_required.destination}
+            read-only={_readOnly.destination}
+            error={_errors.destination}
+          ></c-input-text>
+        </div>
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-text
+            type="date"
+            label={_l.Expense_lbl_dateFrom}
+            name="dateFrom"
+            value={data.dateFrom}
+            onchange={changeHandler}
+            required={_required.dateFrom}
+            read-only={_readOnly.dateFrom}
+            error={_errors.dateFrom}
+          ></c-input-text>
+        </div>
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <!-- errors.dateTo is set by the JS page validator ValidateTripDates -->
+          <c-input-text
+            type="date"
+            label={_l.Expense_lbl_dateTo}
+            name="dateTo"
+            value={data.dateTo}
+            onchange={changeHandler}
+            required={_required.dateTo}
+            read-only={_readOnly.dateTo}
+            error={_errors.dateTo}
+          ></c-input-text>
+        </div>
+        <div class="slds-col slds-size_1-of-1">
+          <!-- mode 1 suggester: SELECT Id, Name FROM Account WHERE Name LIKE :search LIMIT 30 -->
+          <c-input-suggester
+            label={_l.Expense_lbl_account}
+            object-name="Account"
+            search-key="Name"
+            key-field="Id"
+            name-field="Name"
+            selected-id={data.accountId}
+            selected-name={data.accountName}
+            onsmartlookupselected={accountSelected}
+            required={_required.accountId}
+            read-only={_readOnly.accountId}
+            error={_errors.accountId}
+          ></c-input-suggester>
+        </div>
+        <div class="slds-col slds-size_1-of-1">
+          <c-input-text
+            multiline
+            label={_l.Expense_lbl_purpose}
+            name="purpose"
+            value={data.purpose}
+            onchange={changeHandler}
+            required={_required.purpose}
+            read-only={_readOnly.purpose}
+            error={_errors.purpose}
+            message={_hints.purpose}
+          ></c-input-text>
+        </div>
+      </div>
+    </section>
+  </article>
+</template>

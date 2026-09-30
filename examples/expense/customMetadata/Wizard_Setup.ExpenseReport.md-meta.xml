@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Expense Report</label>
+    <protected>false</protected>
+    <values>
+        <field>Title__c</field>
+        <value xsi:type="xsd:string">Expense_title</value>
+    </values>
+    <values>
+        <field>Plan__c</field>
+        <value xsi:type="xsd:string">{
+  "Expense_pag_trip": "ExpenseTripInfo",
+  "if (ExpenseTripInfo.destinationType='international')": {
+    "Expense_pag_documents": "ExpenseTravelDocuments"
+  },
+  "else if (ExpenseTripInfo.destinationType='eu')": {
+    "Expense_pag_health": "ExpenseEuHealthCard"
+  },
+  "Expense_pag_items": "ExpenseItems",
+  "Expense_pag_reimbursement": "ExpenseReimbursement",
+  "Expense_pag_summary": "ExpenseSummary"
+}</value>
+    </values>
+    <values>
+        <field>Rules__c</field>
+        <value xsi:type="xsd:string">{
+  "ExpenseTripInfo": {
+    "required": ["destinationType", "destination", "dateFrom", "dateTo", "purpose", "accountId"],
+    "hints": { "purpose": "Expense_hint_purpose" },
+    "pageValidators": [
+      { "validator": "ValidateTripDates", "message": "Expense_err_dates" }
+    ]
+  },
+  "ExpenseTravelDocuments": {
+    "required": ["passportNumber", "passportExpiry"],
+    "if (visaRequired)": { "required": "visaNumber" },
+    "else": { "hidden": "visaNumber" },
+    "pageValidators": [
+      { "validator": "ValidatePassportValidity", "message": "Expense_err_passport" }
+    ]
+  },
+  "ExpenseEuHealthCard": {
+    "required": ["ehicNumber", "ehicExpiry"]
+  },
+  "ExpenseItems": {
+    "required": ["expenses"],
+    "pageValidators": [
+      { "validator": "ValidateExpenseLimit", "limit": "$con.Expense_Trip_Limit", "message": "Expense_err_limit" }
+    ],
+    "pageFieldMapping": {
+      "expenses": {
+        "id": "edit.id",
+        "type": "edit.type",
+        "date": "edit.date",
+        "amount": "edit.amount",
+        "receiptNumber": "edit.receiptNumber"
+      }
+    }
+  },
+  "ExpenseReimbursement": {
+    "required": ["iban", "bankName", "accountHolder"],
+    "hints": { "iban": "Expense_hint_iban" },
+    "validators": {
+      "iban": [ { "validator": "ValidateIban", "message": "Expense_err_iban" } ]
+    },
+    "pageValidators": [
+      { "validator": "ValidatePattern", "fields": ["accountHolder"], "pattern": "$con.Expense_Regex_Name", "message": "Expense_err_name" }
+    ],
+    "reviewFieldRelationship": [["iban", "bankName", "accountHolder"]]
+  },
+  "ExpenseSummary": {
+    "navigationByChild": true
+  }
+}</value>
+    </values>
+</CustomMetadata>

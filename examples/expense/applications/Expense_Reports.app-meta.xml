@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <defaultLandingTab>Expense_Report_Wizard</defaultLandingTab>
+    <description>Wizard Framework example: business trip expense reports (wizard + manager review).</description>
+    <formFactors>Large</formFactors>
+    <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
+    <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
+    <isNavTabPersistenceDisabled>false</isNavTabPersistenceDisabled>
+    <isOmniPinnedViewEnabled>false</isOmniPinnedViewEnabled>
+    <label>Expense Reports</label>
+    <navType>Standard</navType>
+    <tabs>Expense_Report_Wizard</tabs>
+    <tabs>Expense_Report__c</tabs>
+    <uiType>Lightning</uiType>
+</CustomApplication>

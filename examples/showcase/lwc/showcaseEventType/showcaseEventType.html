@@ -1,0 +1,50 @@
+<template>
+  <article class="eh-page">
+    <section>
+      <!-- Static info alert — always visible, demonstrates elemAlert type="info" -->
+      <c-elem-alert type="info">
+        Choose how you will attend the conference. Your selection affects which
+        pages appear next — online attendees skip the in-person preferences
+        step.
+      </c-elem-alert>
+    </section>
+
+    <section>
+      <div class="slds-grid slds-gutters_x-small slds-wrap">
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-combobox
+            label="Event Type"
+            name="eventType"
+            items={eventTypeOptions}
+            value={data.eventType}
+            onchange={changeHandler}
+            required={_required.eventType}
+            read-only={_readOnly.eventType}
+            error={_errors.eventType}
+          ></c-input-combobox>
+        </div>
+      </div>
+    </section>
+
+    <!-- Conditional warning alert — visible only when hybrid is selected.
+         Demonstrates dynamic content rendering based on page model state. -->
+    <template lwc:if={isHybrid}>
+      <section>
+        <c-elem-alert type="warning">
+          Hybrid attendance: you follow sessions online but can join on-site for
+          networking breaks and the closing ceremony. In-person preferences
+          (dietary, shirt size, accommodation) will still be collected.
+        </c-elem-alert>
+      </section>
+    </template>
+
+    <!-- Success confirmation — visible once a valid type is selected -->
+    <template lwc:if={isTypeSelected}>
+      <section>
+        <c-elem-alert type="success">
+          Great choice! Click <strong>Next</strong> to select your sessions.
+        </c-elem-alert>
+      </section>
+    </template>
+  </article>
+</template>

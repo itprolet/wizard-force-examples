@@ -1,0 +1,185 @@
+<template>
+  <article class="eh-page">
+    <!-- state banners -->
+    <template lwc:if={isApproved}>
+      <section>
+        <c-elem-alert type="success">{_l.Expense_msg_approved}</c-elem-alert>
+      </section>
+    </template>
+    <template lwc:elseif={isSigned}>
+      <section>
+        <c-elem-alert type="success">{_l.Expense_msg_submitted}</c-elem-alert>
+      </section>
+    </template>
+    <template lwc:elseif={isReview}>
+      <section>
+        <c-elem-alert type="warning">
+          {_l.Expense_msg_review}
+          <template lwc:if={reviewComment}>
+            <br /><strong>{_l.Expense_msg_reviewComment}</strong>
+            {reviewComment}
+          </template>
+        </c-elem-alert>
+      </section>
+    </template>
+
+    <!-- Trip -->
+    <section>
+      <h2 class="eh-header eh-divider">{_l.Expense_pag_trip}</h2>
+      <div class="slds-grid slds-gutters_x-small slds-wrap">
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-text
+            label={_l.Expense_lbl_destinationType}
+            value={destinationTypeLabel}
+            read-only
+            readonly-textlike
+          ></c-input-text>
+        </div>
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-text
+            label={_l.Expense_lbl_destination}
+            value={trip.destination}
+            read-only
+            readonly-textlike
+          ></c-input-text>
+        </div>
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-text
+            label={_l.Expense_lbl_dateFrom}
+            value={tripDates}
+            read-only
+            readonly-textlike
+          ></c-input-text>
+        </div>
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-text
+            label={_l.Expense_lbl_account}
+            value={trip.accountName}
+            read-only
+            readonly-textlike
+          ></c-input-text>
+        </div>
+        <div class="slds-col slds-size_1-of-1">
+          <c-input-text
+            label={_l.Expense_lbl_purpose}
+            value={trip.purpose}
+            read-only
+            readonly-textlike
+          ></c-input-text>
+        </div>
+        <template lwc:if={isInternational}>
+          <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+            <c-input-text
+              label={_l.Expense_lbl_passportNumber}
+              value={documents.passportNumber}
+              read-only
+              readonly-textlike
+            ></c-input-text>
+          </div>
+          <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+            <c-input-text
+              label={_l.Expense_lbl_visaNumber}
+              value={documents.visaNumber}
+              read-only
+              readonly-textlike
+            ></c-input-text>
+          </div>
+        </template>
+        <template lwc:if={isEu}>
+          <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+            <c-input-text
+              label={_l.Expense_lbl_ehicNumber}
+              value={health.ehicNumber}
+              read-only
+              readonly-textlike
+            ></c-input-text>
+          </div>
+        </template>
+      </div>
+    </section>
+
+    <!-- Expenses -->
+    <section>
+      <h2 class="eh-header eh-divider">{_l.Expense_pag_items}</h2>
+      <c-elem-datatable
+        columns={expenseColumns}
+        data={expenseRows}
+        fill-width
+        hide-pagination
+      ></c-elem-datatable>
+      <p class="slds-text-align_right slds-m-top_x-small">
+        <strong>{_l.Expense_lbl_total}: {totalLabel}</strong>
+      </p>
+      <!-- value calculated by Apex and read from $ctx -->
+      <template lwc:if={hasPerDiem}>
+        <p class="slds-text-align_right">
+          {_l.Expense_lbl_perDiem}: {perDiemLabel}
+        </p>
+      </template>
+    </section>
+
+    <!-- Reimbursement -->
+    <section>
+      <h2 class="eh-header eh-divider">{_l.Expense_pag_reimbursement}</h2>
+      <div class="slds-grid slds-gutters_x-small slds-wrap">
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-text
+            label={_l.Expense_lbl_iban}
+            value={reimbursement.iban}
+            read-only
+            readonly-textlike
+          ></c-input-text>
+        </div>
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-text
+            label={_l.Expense_lbl_accountHolder}
+            value={reimbursement.accountHolder}
+            read-only
+            readonly-textlike
+          ></c-input-text>
+        </div>
+      </div>
+    </section>
+
+    <!-- Submit (own navigation because of navigationByChild) -->
+    <template lwc:if={isEditable}>
+      <section class="slds-m-top_medium">
+        <c-input-checkbox
+          label={_l.Expense_lbl_declaration}
+          name="agreeDeclaration"
+          checked={data.agreeDeclaration}
+          error={declarationError}
+          onchange={handleDeclaration}
+        ></c-input-checkbox>
+      </section>
+      <template lwc:if={submitError}>
+        <section>
+          <c-elem-alert type="error">{submitError}</c-elem-alert>
+        </section>
+      </template>
+      <div
+        class="eh-wizard-buttons slds-grid slds-grid_align-spread slds-m-top_large"
+      >
+        <c-input-button onclicked={handleBack} disabled={isSubmitting}
+          >{_l.Expense_act_back}</c-input-button
+        >
+        <c-input-button
+          classname="active"
+          onclicked={handleSubmit}
+          disabled={isSubmitting}
+          loading={isSubmitting}
+          >{submitLabel}</c-input-button
+        >
+      </div>
+    </template>
+    <template lwc:elseif={isFinished}>
+      <div
+        class="eh-wizard-buttons slds-grid slds-grid_align-end slds-m-top_large"
+      >
+        <c-input-button classname="active" onclicked={startNewReport}
+          >{_l.Expense_act_new}</c-input-button
+        >
+      </div>
+    </template>
+  </article>
+</template>

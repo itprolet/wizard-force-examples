@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>64.0</apiVersion>
+    <description>Expense Report wizard page 3: list of expenses with c-elem-datatable, add/edit/remove, review mode for list items.</description>
+    <isExposed>false</isExposed>
+    <masterLabel>Expense - Items</masterLabel>
+    <capabilities>
+        <capability>lightning__dynamicComponent</capability>
+    </capabilities>
+</LightningComponentBundle>

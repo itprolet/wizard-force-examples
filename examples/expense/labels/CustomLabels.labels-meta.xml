@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>Expense_act_add</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_act_add</shortDescription>
+        <value>Add expense</value>
+    </labels>
+    <labels>
+        <fullName>Expense_act_back</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_act_back</shortDescription>
+        <value>Back</value>
+    </labels>
+    <labels>
+        <fullName>Expense_act_cancel</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_act_cancel</shortDescription>
+        <value>Cancel</value>
+    </labels>
+    <labels>
+        <fullName>Expense_act_new</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_act_new</shortDescription>
+        <value>Start a new report</value>
+    </labels>
+    <labels>
+        <fullName>Expense_act_resubmit</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_act_resubmit</shortDescription>
+        <value>Submit corrections</value>
+    </labels>
+    <labels>
+        <fullName>Expense_act_save</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_act_save</shortDescription>
+        <value>Save changes</value>
+    </labels>
+    <labels>
+        <fullName>Expense_act_submit</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_act_submit</shortDescription>
+        <value>Submit report</value>
+    </labels>
+    <labels>
+        <fullName>Expense_err_dates</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_err_dates</shortDescription>
+        <value>The return date must be on or after the departure date.</value>
+    </labels>
+    <labels>
+        <fullName>Expense_err_declaration</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_err_declaration</shortDescription>
+        <value>Please confirm the declaration.</value>
+    </labels>
+    <labels>
+        <fullName>Expense_err_fillExpense</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_err_fillExpense</shortDescription>
+        <value>Fill in all expense fields with a positive amount.</value>
+    </labels>
+    <labels>
+        <fullName>Expense_err_iban</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_err_iban</shortDescription>
+        <value>Invalid IBAN</value>
+    </labels>
+    <labels>
+        <fullName>Expense_err_limit</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_err_limit</shortDescription>
+        <value>The total amount of expenses exceeds the allowed limit for one trip.</value>
+    </labels>
+    <labels>
+        <fullName>Expense_err_name</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_err_name</shortDescription>
+        <value>Use letters, spaces, dots, apostrophes and dashes only.</value>
+    </labels>
+    <labels>
+        <fullName>Expense_err_passport</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_err_passport</shortDescription>
+        <value>The passport must be valid until the end of the trip.</value>
+    </labels>
+    <labels>
+        <fullName>Expense_hint_iban</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_hint_iban</shortDescription>
+        <value>Your personal bank account for the reimbursement</value>
+    </labels>
+    <labels>
+        <fullName>Expense_hint_purpose</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_hint_purpose</shortDescription>
+        <value>Short description, e.g. customer meeting or conference</value>
+    </labels>
+    <labels>
+        <fullName>Expense_lbl_account</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_lbl_account</shortDescription>
+        <value>Customer account</value>
+    </labels>
+    <labels>
+        <fullName>Expense_lbl_accountHolder</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_lbl_accountHolder</shortDescription>
+        <value>Account holder</value>
+    </labels>
+    <labels>
+        <fullName>Expense_lbl_amount</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_lbl_amount</shortDescription>
+        <value>Amount (EUR)</value>
+    </labels>
+    <labels>
+        <fullName>Expense_lbl_bankName</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_lbl_bankName</shortDescription>
+        <value>Bank name</value>
+    </labels>
+    <labels>
+        <fullName>Expense_lbl_date</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_lbl_date</shortDescription>
+        <value>Date</value>
+    </labels>
+    <labels>
+        <fullName>Expense_lbl_dateFrom</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_lbl_dateFrom</shortDescription>
+        <value>Departure date</value>
+    </labels>
+    <labels>
+        <fullName>Expense_lbl_dateTo</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_lbl_dateTo</shortDescription>
+        <value>Return date</value>
+    </labels>
+    <labels>
+        <fullName>Expense_lbl_declaration</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_lbl_declaration</shortDescription>
+        <value>I declare that the expenses above are correct and related to this business trip.</value>
+    </labels>
+    <labels>
+        <fullName>Expense_lbl_destination</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_lbl_destination</shortDescription>
+        <value>Destination (city, country)</value>
+    </labels>
+    <labels>
+        <fullName>Expense_lbl_destinationType</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_lbl_destinationType</shortDescription>
+        <value>Destination type</value>
+    </labels>
+    <labels>
+        <fullName>Expense_lbl_ehicExpiry</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_lbl_ehicExpiry</shortDescription>
+        <value>EHIC valid until</value>
+    </labels>
+    <labels>
+        <fullName>Expense_lbl_ehicNumber</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_lbl_ehicNumber</shortDescription>
+        <value>EHIC card number</value>
+    </labels>
+    <labels>
+        <fullName>Expense_lbl_iban</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_lbl_iban</shortDescription>
+        <value>IBAN</value>
+    </labels>
+    <labels>
+        <fullName>Expense_lbl_passportExpiry</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_lbl_passportExpiry</shortDescription>
+        <value>Passport valid until</value>
+    </labels>
+    <labels>
+        <fullName>Expense_lbl_passportNumber</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_lbl_passportNumber</shortDescription>
+        <value>Passport number</value>
+    </labels>
+    <labels>
+        <fullName>Expense_lbl_perDiem</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_lbl_perDiem</shortDescription>
+        <value>Per-diem allowance</value>
+    </labels>
+    <labels>
+        <fullName>Expense_lbl_purpose</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_lbl_purpose</shortDescription>
+        <value>Purpose of the trip</value>
+    </labels>
+    <labels>
+        <fullName>Expense_lbl_receiptNumber</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_lbl_receiptNumber</shortDescription>
+        <value>Receipt number</value>
+    </labels>
+    <labels>
+        <fullName>Expense_lbl_total</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_lbl_total</shortDescription>
+        <value>Total</value>
+    </labels>
+    <labels>
+        <fullName>Expense_lbl_type</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_lbl_type</shortDescription>
+        <value>Expense type</value>
+    </labels>
+    <labels>
+        <fullName>Expense_lbl_visaNumber</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_lbl_visaNumber</shortDescription>
+        <value>Visa number</value>
+    </labels>
+    <labels>
+        <fullName>Expense_lbl_visaRequired</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_lbl_visaRequired</shortDescription>
+        <value>A visa is required for this trip</value>
+    </labels>
+    <labels>
+        <fullName>Expense_msg_approved</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_msg_approved</shortDescription>
+        <value>Your report was approved.</value>
+    </labels>
+    <labels>
+        <fullName>Expense_msg_editing</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_msg_editing</shortDescription>
+        <value>Editing expense</value>
+    </labels>
+    <labels>
+        <fullName>Expense_msg_noExpenses</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_msg_noExpenses</shortDescription>
+        <value>No expenses added yet. Add at least one expense to continue.</value>
+    </labels>
+    <labels>
+        <fullName>Expense_msg_perDiemInfo</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_msg_perDiemInfo</shortDescription>
+        <value>{0} day(s) x {1} EUR</value>
+    </labels>
+    <labels>
+        <fullName>Expense_msg_review</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_msg_review</shortDescription>
+        <value>Your manager requested changes. The fields that must change are unlocked and marked.</value>
+    </labels>
+    <labels>
+        <fullName>Expense_msg_reviewComment</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_msg_reviewComment</shortDescription>
+        <value>Manager comment:</value>
+    </labels>
+    <labels>
+        <fullName>Expense_msg_submitted</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_msg_submitted</shortDescription>
+        <value>Your report was submitted and is waiting for approval.</value>
+    </labels>
+    <labels>
+        <fullName>Expense_opt_domestic</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_opt_domestic</shortDescription>
+        <value>Domestic</value>
+    </labels>
+    <labels>
+        <fullName>Expense_opt_eu</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_opt_eu</shortDescription>
+        <value>European Union</value>
+    </labels>
+    <labels>
+        <fullName>Expense_opt_hotel</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_opt_hotel</shortDescription>
+        <value>Hotel</value>
+    </labels>
+    <labels>
+        <fullName>Expense_opt_international</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_opt_international</shortDescription>
+        <value>Outside the EU</value>
+    </labels>
+    <labels>
+        <fullName>Expense_opt_meals</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_opt_meals</shortDescription>
+        <value>Meals</value>
+    </labels>
+    <labels>
+        <fullName>Expense_opt_other</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_opt_other</shortDescription>
+        <value>Other</value>
+    </labels>
+    <labels>
+        <fullName>Expense_opt_taxi</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_opt_taxi</shortDescription>
+        <value>Taxi</value>
+    </labels>
+    <labels>
+        <fullName>Expense_opt_transport</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_opt_transport</shortDescription>
+        <value>Transport</value>
+    </labels>
+    <labels>
+        <fullName>Expense_pag_documents</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_pag_documents</shortDescription>
+        <value>Travel documents</value>
+    </labels>
+    <labels>
+        <fullName>Expense_pag_health</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_pag_health</shortDescription>
+        <value>EU health card</value>
+    </labels>
+    <labels>
+        <fullName>Expense_pag_items</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_pag_items</shortDescription>
+        <value>Expenses</value>
+    </labels>
+    <labels>
+        <fullName>Expense_pag_reimbursement</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_pag_reimbursement</shortDescription>
+        <value>Reimbursement</value>
+    </labels>
+    <labels>
+        <fullName>Expense_pag_summary</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_pag_summary</shortDescription>
+        <value>Summary</value>
+    </labels>
+    <labels>
+        <fullName>Expense_pag_trip</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_pag_trip</shortDescription>
+        <value>Trip</value>
+    </labels>
+    <labels>
+        <fullName>Expense_title</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expense_title</shortDescription>
+        <value>Business Trip Expense Report</value>
+    </labels>
+</CustomLabels>

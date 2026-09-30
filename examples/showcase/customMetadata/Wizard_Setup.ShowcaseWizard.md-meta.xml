@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Showcase Wizard</label>
+    <protected>false</protected>
+    <values>
+        <field>Title__c</field>
+        <value xsi:type="xsd:string">Conference Registration</value>
+    </values>
+    <values>
+        <field>Plan__c</field>
+        <value xsi:type="xsd:string">{
+  &quot;EventType&quot;: &quot;ShowcaseEventType&quot;,
+  &quot;Schedule&quot;: &quot;ShowcaseSchedule&quot;,
+  &quot;if (not(ShowcaseEventType.eventType=&apos;online&apos;))&quot;: {
+    &quot;Preferences&quot;: &quot;ShowcasePreferences&quot;
+  },
+  &quot;Contact&quot;: &quot;ShowcaseContact&quot;,
+  &quot;Summary&quot;: &quot;ShowcaseSummary&quot;
+}</value>
+    </values>
+    <values>
+        <field>Rules__c</field>
+        <value xsi:type="xsd:string">{
+  &quot;ShowcaseEventType&quot;: {
+    &quot;required&quot;: [&quot;eventType&quot;]
+  },
+  &quot;ShowcaseSchedule&quot;: {
+    &quot;pageValidators&quot;: [
+      { &quot;validator&quot;: &quot;validateSessionMin&quot;, &quot;message&quot;: &quot;Please select at least one session slot.&quot; }
+    ]
+  },
+  &quot;ShowcasePreferences&quot;: {
+    &quot;required&quot;: [&quot;dietaryOption&quot;, &quot;shirtSize&quot;]
+  },
+  &quot;ShowcaseContact&quot;: {
+    &quot;required&quot;: [&quot;firstName&quot;, &quot;lastName&quot;, &quot;email&quot;, &quot;phone&quot;],
+    &quot;patterns&quot;: {
+      &quot;phone&quot;: &quot;\\+?[0-9]{9,15}&quot;
+    },
+    &quot;validators&quot;: {
+      &quot;email&quot;: [&quot;validateShowcaseEmail&quot;]
+    },
+    &quot;hints&quot;: {
+      &quot;phone&quot;: &quot;International format accepted, e.g. +359888123456&quot;,
+      &quot;email&quot;: &quot;A confirmation will be sent to this address&quot;
+    },
+    &quot;if (hearAboutUs=&apos;referral&apos;)&quot;: {
+      &quot;required&quot;: &quot;referralName&quot;
+    },
+    &quot;if (not(hearAboutUs=&apos;referral&apos;))&quot;: {
+      &quot;hidden&quot;: &quot;referralName&quot;
+    }
+  },
+  &quot;ShowcaseSummary&quot;: {
+    &quot;navigationByChild&quot;: true,
+    &quot;required&quot;: [&quot;agreeGdpr&quot;]
+  }
+}</value>
+    </values>
+</CustomMetadata>

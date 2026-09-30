@@ -1,0 +1,101 @@
+<template>
+  <article class="eh-page">
+    <section>
+      <div class="slds-m-around_medium">
+
+        <c-input-text
+          label="First name"
+          value={attendee.firstName}
+          read-only
+          readonly-textlike
+        ></c-input-text>
+
+        <c-input-text
+          label="Last name"
+          value={attendee.lastName}
+          read-only
+          readonly-textlike
+        ></c-input-text>
+
+        <c-input-text
+          label="Attendee type"
+          value={typeLabel}
+          read-only
+          readonly-textlike
+        ></c-input-text>
+
+        <c-input-text
+          label="Email"
+          value={attendee.email}
+          read-only
+          readonly-textlike
+        ></c-input-text>
+
+        <template lwc:if={isSpeaker}>
+
+          <c-input-text
+            label="Talk title"
+            value={eventTalk.talkTitle}
+            read-only
+            readonly-textlike
+          ></c-input-text>
+
+          <c-input-text
+            label="Talk description"
+            value={eventTalk.talkDescription}
+            read-only
+            readonly-textlike
+          ></c-input-text>
+
+          <c-input-text
+            label="Talk length"
+            value={talkLengthLabel}
+            read-only
+            readonly-textlike
+          ></c-input-text>
+
+        </template>
+
+        <c-input-text
+          label="T-shirt size"
+          value={tshirtSizeLabel}
+          read-only
+          readonly-textlike
+        ></c-input-text>
+
+        <c-input-text
+          label="Dietary preferences"
+          value={dietaryLabel}
+          read-only
+          readonly-textlike
+        ></c-input-text>
+
+        <template lwc:if={isOther}>
+          <c-input-text
+            label="Dietary details"
+            value={eventPreferences.dietaryDetails}
+            read-only
+            readonly-textlike
+          ></c-input-text>
+        </template>
+
+        <c-input-text
+          label="Bring guest"
+          value={bringGuestLabel}
+          read-only
+          readonly-textlike
+        ></c-input-text>
+
+        <template lwc:if={isBringGuest}>
+          <c-input-text
+            label="Guest name"
+            value={eventPreferences.guestName}
+            read-only
+            readonly-textlike
+          ></c-input-text>
+        </template>
+
+      </div>
+    </section>
+  </article>
+</template>

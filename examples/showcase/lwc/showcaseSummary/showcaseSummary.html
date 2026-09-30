@@ -1,0 +1,184 @@
+<template>
+  <article class="eh-page">
+    <!-- Success state after submit -->
+    <template lwc:if={isSubmitted}>
+      <section>
+        <c-elem-alert type="success"
+          >{_l.Showcase_msg_submitSuccess}</c-elem-alert
+        >
+      </section>
+    </template>
+
+    <template lwc:else>
+      <section>
+        <c-elem-alert type="info">
+          Please review your details before submitting. Use the
+          <strong>Back</strong>
+          button to make corrections.
+        </c-elem-alert>
+      </section>
+
+      <!-- Section: Attendance -->
+      <section>
+        <h2 class="eh-header eh-divider">Attendance</h2>
+        <div class="slds-grid slds-gutters_x-small slds-wrap">
+          <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+            <c-input-text
+              label="Event Type"
+              value={eventTypeLabel}
+              read-only
+              readonly-textlike
+            ></c-input-text>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: Selected Sessions (datatable) -->
+      <section>
+        <h2 class="eh-header eh-divider">Selected Sessions</h2>
+        <!--
+          elemDatatable usage:
+          - columns  → array of { fieldName, label, align? }
+          - data     → array of row objects (fieldName keys must match columns)
+          - Computed from the model — rows are filtered to selected sessions only.
+        -->
+        <c-elem-datatable
+          columns={sessionColumns}
+          data={sessionData}
+        ></c-elem-datatable>
+      </section>
+
+      <!-- Section: In-Person Preferences (shown only when they were collected) -->
+      <template lwc:if={hasPreferences}>
+        <section>
+          <h2 class="eh-header eh-divider">In-Person Preferences</h2>
+          <div class="slds-grid slds-gutters_x-small slds-wrap">
+            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+              <c-input-text
+                label="Dietary Requirement"
+                value={preferencesData.dietaryOption}
+                read-only
+                readonly-textlike
+              ></c-input-text>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+              <c-input-text
+                label="T-Shirt Size"
+                value={preferencesData.shirtSize}
+                read-only
+                readonly-textlike
+              ></c-input-text>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+              <c-input-text
+                label="Accommodation"
+                value={preferencesData.accommodation}
+                read-only
+                readonly-textlike
+              ></c-input-text>
+            </div>
+            <div class="slds-col slds-size_1-of-1">
+              <c-input-text
+                label="Airport Shuttle"
+                value={shuttleLabel}
+                read-only
+                readonly-textlike
+              ></c-input-text>
+            </div>
+          </div>
+        </section>
+      </template>
+
+      <!-- Section: Contact Details -->
+      <section>
+        <h2 class="eh-header eh-divider">Contact Details</h2>
+        <div class="slds-grid slds-gutters_x-small slds-wrap">
+          <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+            <c-input-text
+              label="First Name"
+              value={contactData.firstName}
+              read-only
+              readonly-textlike
+            ></c-input-text>
+          </div>
+          <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+            <c-input-text
+              label="Last Name"
+              value={contactData.lastName}
+              read-only
+              readonly-textlike
+            ></c-input-text>
+          </div>
+          <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+            <c-input-text
+              label="Email"
+              value={contactData.email}
+              read-only
+              readonly-textlike
+            ></c-input-text>
+          </div>
+          <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+            <c-input-text
+              label="Phone"
+              value={contactData.phone}
+              read-only
+              readonly-textlike
+            ></c-input-text>
+          </div>
+          <template lwc:if={contactData.company}>
+            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+              <c-input-text
+                label="Company"
+                value={contactData.company}
+                read-only
+                readonly-textlike
+              ></c-input-text>
+            </div>
+          </template>
+        </div>
+      </section>
+
+      <!-- GDPR consent — the only editable field on this page -->
+      <section class="slds-m-top_medium">
+        <c-input-checkbox
+          label={_l.Showcase_lbl_agreeGdpr}
+          name="agreeGdpr"
+          data-name="agreeGdpr"
+          checked={isGdprChecked}
+          onchange={changeHandler}
+        ></c-input-checkbox>
+        <template lwc:if={_errors.agreeGdpr}>
+          <p class="slds-text-color_error slds-m-top_xx-small">
+            {_errors.agreeGdpr}
+          </p>
+        </template>
+      </section>
+
+      <!-- Submit error -->
+      <template lwc:if={submitError}>
+        <section>
+          <c-elem-alert type="error">{submitError}</c-elem-alert>
+        </section>
+      </template>
+
+      <!--
+        navigationByChild: this page owns its navigation buttons.
+        The wizard hides its own prev/next when navigationByChild = true in Rules.
+      -->
+      <div
+        class="eh-wizard-buttons slds-grid slds-grid_align-spread slds-m-top_large"
+      >
+        <c-input-button onclicked={handleBack} disabled={isSubmitting}>
+          {_l.Showcase_act_back}
+        </c-input-button>
+        <c-input-button
+          classname="active"
+          onclicked={handleSubmit}
+          disabled={isSubmitting}
+        >
+          {submitLabel}
+        </c-input-button>
+      </div>
+    </template>
+  </article>
+</template>

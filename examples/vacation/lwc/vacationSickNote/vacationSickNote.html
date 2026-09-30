@@ -1,0 +1,27 @@
+<template>
+  <article class="eh-page">
+    <section>
+      <div class="slds-m-around_medium">
+        <c-input-text
+          type="text"
+          label="Doctor Note Number"
+          name="doctorNoteNumber"
+          value={data.doctorNoteNumber}
+          required={required.doctorNoteNumber}
+          error={errors.doctorNoteNumber}
+          onchange={changeHandler}
+        ></c-input-text>
+
+        <c-input-text
+          type="text"
+          label="Doctor Name"
+          name="doctorName"
+          value={data.doctorName}
+          required={required.doctorName}
+          error={errors.doctorName}
+          onchange={changeHandler}
+        ></c-input-text>
+      </div>
+    </section>
+  </article>
+</template>

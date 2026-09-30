@@ -1,0 +1,87 @@
+<template>
+  <article class="eh-page">
+    <template lwc:if={isEmpty}>
+      <section>
+        <c-elem-alert type="info">{_l.Expense_msg_noExpenses}</c-elem-alert>
+      </section>
+    </template>
+
+    <section>
+      <c-elem-datatable
+        columns={columns}
+        data={rows}
+        fill-width
+        hide-pagination
+        empty-message={_l.Expense_msg_noExpenses}
+      ></c-elem-datatable>
+      <p class="slds-text-align_right slds-m-top_x-small">
+        <strong>{_l.Expense_lbl_total}: {totalLabel}</strong>
+      </p>
+    </section>
+
+    <template lwc:if={showForm}>
+      <section class="slds-m-top_medium">
+        <h2 class="eh-header eh-divider">{formTitle}</h2>
+        <!-- names use dot notation: the base changeHandler writes them into data.edit.* -->
+        <div class="slds-grid slds-gutters_x-small slds-wrap">
+          <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+            <c-input-combobox
+              label={_l.Expense_lbl_type}
+              name="edit.type"
+              items={typeOptions}
+              value={data.edit.type}
+              onchange={changeHandler}
+              read-only={editReadOnly.type}
+              error={editErrors.type}
+            ></c-input-combobox>
+          </div>
+          <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+            <c-input-text
+              type="date"
+              label={_l.Expense_lbl_date}
+              name="edit.date"
+              value={data.edit.date}
+              onchange={changeHandler}
+              read-only={editReadOnly.date}
+              error={editErrors.date}
+            ></c-input-text>
+          </div>
+          <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+            <!-- in REVIEW this is the field unlocked through pageFieldMapping -->
+            <c-input-text
+              type="number"
+              min="0"
+              label={_l.Expense_lbl_amount}
+              name="edit.amount"
+              value={data.edit.amount}
+              onchange={changeHandler}
+              read-only={editReadOnly.amount}
+              error={editErrors.amount}
+            ></c-input-text>
+          </div>
+          <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+            <c-input-text
+              label={_l.Expense_lbl_receiptNumber}
+              name="edit.receiptNumber"
+              value={data.edit.receiptNumber}
+              onchange={changeHandler}
+              read-only={editReadOnly.receiptNumber}
+              error={editErrors.receiptNumber}
+            ></c-input-text>
+          </div>
+        </div>
+        <div class="slds-grid slds-grid_align-end slds-m-top_small">
+          <c-input-button lwc:if={isEditing} onclicked={cancelEdit}
+            >{_l.Expense_act_cancel}</c-input-button
+          >
+          <c-input-button
+            classname="active"
+            class="slds-m-left_x-small"
+            onclicked={saveEdit}
+            >{saveLabel}</c-input-button
+          >
+        </div>
+      </section>
+    </template>
+  </article>
+</template>

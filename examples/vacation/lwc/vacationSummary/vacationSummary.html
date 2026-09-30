@@ -1,0 +1,51 @@
+<template>
+  <article class="eh-page">
+    <section>
+      <div class="slds-m-around_medium">
+        <c-input-text
+          label="Start date"
+          value={details.startDate}
+          read-only
+          readonly-textlike
+        ></c-input-text>
+
+        <c-input-text
+          label="End date"
+          value={details.endDate}
+          read-only
+          readonly-textlike
+        ></c-input-text>
+
+        <c-input-text
+          label="Vacation type"
+          value={typeLabel}
+          read-only
+          readonly-textlike
+        ></c-input-text>
+
+        <c-input-text
+          label="Comment"
+          value={details.comment}
+          read-only
+          readonly-textlike
+        ></c-input-text>
+
+        <template lwc:if={isSick}>
+          <c-input-text
+            label="Doctor's note number"
+            value={sickNote.doctorNoteNumber}
+            read-only
+            readonly-textlike
+          ></c-input-text>
+
+          <c-input-text
+            label="Doctor's name"
+            value={sickNote.doctorName}
+            read-only
+            readonly-textlike
+          ></c-input-text>
+        </template>
+      </div>
+    </section>
+  </article>
+</template>

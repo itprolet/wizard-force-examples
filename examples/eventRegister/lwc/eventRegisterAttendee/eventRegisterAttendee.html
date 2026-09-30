@@ -1,0 +1,48 @@
+<template>
+  <article class="eh-page">
+    <section>
+      <div class="slds-m-around_medium">
+        <c-input-text
+          type="text"
+          label="First name"
+          name="firstName"
+          value={data.firstName}
+          required={required.firstName}
+          error={errors.firstName}
+          onchange={changeHandler}
+        ></c-input-text>
+
+        <c-input-text
+          type="text"
+          label="Last name"
+          name="lastName"
+          value={data.lastName}
+          required={required.lastName}
+          error={errors.lastName}
+          onchange={changeHandler}
+        ></c-input-text>
+
+        <c-input-text
+          type="email"
+          label="Email"
+          name="email"
+          value={data.email}
+          required={required.email}
+          error={errors.email}
+          onchange={changeHandler}
+        ></c-input-text>
+
+        <c-input-combobox
+          label="Attendee type"
+          name="type"
+          items={typeOptions}
+          value={data.type}
+          required={required.type}
+          error={errors.type}
+          onchange={changeHandler}
+        ></c-input-combobox>
+
+      </div>
+    </section>
+  </article>
+</template>

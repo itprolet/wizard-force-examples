@@ -1,0 +1,120 @@
+<template>
+  <article class="eh-page">
+    <section>
+      <div class="slds-grid slds-gutters_x-small slds-wrap">
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-text
+            label={_l.Showcase_lbl_firstName}
+            name="firstName"
+            value={data.firstName}
+            onchange={changeHandler}
+            required={_required.firstName}
+            read-only={_readOnly.firstName}
+            error={_errors.firstName}
+          ></c-input-text>
+        </div>
+
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-text
+            label={_l.Showcase_lbl_lastName}
+            name="lastName"
+            value={data.lastName}
+            onchange={changeHandler}
+            required={_required.lastName}
+            read-only={_readOnly.lastName}
+            error={_errors.lastName}
+          ></c-input-text>
+        </div>
+
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <!--
+            email: uses the custom field validator validateShowcaseEmail.
+            Registered in Rules under validators.email.
+            The error message is set by the validator and surfaced via _errors.email.
+            The hint is configured in the Rules metadata (hints.email).
+          -->
+          <c-input-text
+            label={_l.Showcase_lbl_email}
+            name="email"
+            type="email"
+            value={data.email}
+            onchange={changeHandler}
+            required={_required.email}
+            read-only={_readOnly.email}
+            error={_errors.email}
+            message={_hints.email}
+          ></c-input-text>
+        </div>
+
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <!--
+            phone: validated by the built-in ValidatePattern Apex class.
+            The regex pattern is configured in the Rules metadata (patterns.phone).
+            The hint is also configured in Rules (hints.phone).
+          -->
+          <c-input-text
+            label={_l.Showcase_lbl_phone}
+            name="phone"
+            type="tel"
+            value={data.phone}
+            onchange={changeHandler}
+            required={_required.phone}
+            read-only={_readOnly.phone}
+            error={_errors.phone}
+            message={_hints.phone}
+            pattern={_patterns.phone}
+          ></c-input-text>
+        </div>
+
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <c-input-text
+            label={_l.Showcase_lbl_company}
+            name="company"
+            value={data.company}
+            onchange={changeHandler}
+            read-only={_readOnly.company}
+            error={_errors.company}
+          ></c-input-text>
+        </div>
+
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <!--
+            hearAboutUs drives a conditional field below.
+            When value = 'referral', the Rules engine sets required.referralName
+            and clears hidden.referralName, making the next field visible.
+          -->
+          <c-input-combobox
+            label={_l.Showcase_lbl_hearAboutUs}
+            name="hearAboutUs"
+            items={hearAboutOptions}
+            value={data.hearAboutUs}
+            onchange={changeHandler}
+            read-only={_readOnly.hearAboutUs}
+            error={_errors.hearAboutUs}
+          ></c-input-combobox>
+        </div>
+
+        <!--
+          Conditional field: visible only when hearAboutUs = 'referral'.
+          Visibility is controlled by the Rules engine via the `visible` prop:
+            "if (hearAboutUs='referral')":      { "required": "referralName" }
+            "if (not(hearAboutUs='referral'))":  { "hidden":   "referralName" }
+          The component reads _visible.referralName to decide whether to render.
+        -->
+        <template lwc:if={isReferralNameVisible}>
+          <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+            <c-input-text
+              label={_l.Showcase_lbl_referralName}
+              name="referralName"
+              value={data.referralName}
+              onchange={changeHandler}
+              required={_required.referralName}
+              read-only={_readOnly.referralName}
+              error={_errors.referralName}
+            ></c-input-text>
+          </div>
+        </template>
+      </div>
+    </section>
+  </article>
+</template>

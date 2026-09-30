@@ -1,0 +1,101 @@
+<template>
+  <lightning-card title="Manager review" icon-name="standard:approval">
+    <div class="slds-p-horizontal_medium">
+      <template lwc:if={error}>
+        <p class="slds-text-color_error">{error}</p>
+      </template>
+      <template lwc:elseif={review}>
+        <p>
+          Status: <strong>{review.status}</strong> · Wizard state:
+          <strong>{review.wizardState}</strong>
+        </p>
+
+        <template lwc:if={canReview}>
+          <table
+            class="slds-table slds-table_bordered slds-table_cell-buffer slds-m-top_small"
+          >
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Date</th>
+                <th class="slds-text-align_right">Amount</th>
+                <th>Receipt</th>
+                <th>Amount must change</th>
+                <th>Remove line</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template for:each={review.lines} for:item="line">
+                <tr key={line.lineKey}>
+                  <td>{line.type}</td>
+                  <td>
+                    <lightning-formatted-date-time
+                      value={line.expenseDate}
+                      time-zone="UTC"
+                    ></lightning-formatted-date-time>
+                  </td>
+                  <td class="slds-text-align_right">
+                    <lightning-formatted-number
+                      value={line.amount}
+                      format-style="currency"
+                      currency-code="EUR"
+                    ></lightning-formatted-number>
+                  </td>
+                  <td>{line.receiptNumber}</td>
+                  <td>
+                    <lightning-input
+                      type="checkbox"
+                      variant="label-hidden"
+                      label="Amount must change"
+                      data-key={line.lineKey}
+                      data-kind="amount"
+                      onchange={toggleLine}
+                    ></lightning-input>
+                  </td>
+                  <td>
+                    <lightning-input
+                      type="checkbox"
+                      variant="label-hidden"
+                      label="Remove line"
+                      data-key={line.lineKey}
+                      data-kind="delete"
+                      onchange={toggleLine}
+                    ></lightning-input>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+          <lightning-input
+            class="slds-m-top_small"
+            type="checkbox"
+            label={ibanLabel}
+            onchange={toggleIban}
+          ></lightning-input>
+          <lightning-textarea
+            label="Comment for the employee"
+            value={comment}
+            onchange={commentChanged}
+          ></lightning-textarea>
+          <div class="slds-m-top_small">
+            <lightning-button
+              label="Request changes"
+              onclick={handleRequestChanges}
+              disabled={busy}
+            ></lightning-button>
+            <lightning-button
+              class="slds-m-left_x-small"
+              variant="brand"
+              label="Approve"
+              onclick={handleApprove}
+              disabled={busy}
+            ></lightning-button>
+          </div>
+        </template>
+        <template lwc:else>
+          <p class="slds-m-top_small">{stateMessage}</p>
+        </template>
+      </template>
+    </div>
+  </lightning-card>
+</template>

@@ -1,0 +1,40 @@
+<template>
+  <article class="eh-page">
+    <section>
+      <div class="slds-m-around_medium">
+
+        <c-input-text
+          type="text"
+          label="Talk title"
+          name="talkTitle"
+          value={data.talkTitle}
+          required={required.talkTitle}
+          error={errors.talkTitle}
+          onchange={changeHandler}
+        ></c-input-text>
+
+        <c-input-combobox
+          label="Talk length"
+          name="talkLength"
+          items={talkLengthOptions}
+          value={data.talkLength}
+          required={required.talkLength}
+          error={errors.talkLength}
+          onchange={changeHandler}
+        ></c-input-combobox>
+
+        <c-input-text
+          type="text"
+          label="Talk description"
+          name="talkDescription"
+          value={data.talkDescription}
+          required={required.talkDescription}
+          error={errors.talkDescription}
+          onchange={changeHandler}
+          multiline
+        ></c-input-text>
+
+      </div>
+    </section>
+  </article>
+</template>
