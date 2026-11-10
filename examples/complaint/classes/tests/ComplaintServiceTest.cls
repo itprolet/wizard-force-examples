@@ -49,7 +49,8 @@ private class ComplaintServiceTest {
     private static String pathJson(List<prolet.WizardPageData> path) {
         List<Map<String, Object>> pages = new List<Map<String, Object>>();
         for (prolet.WizardPageData page : path) {
-            pages.add(new Map<String, Object>{ 'title' => page.title, 'page' => page.page, 'initParams' => page.initParams });
+            pages.add(new Map<String, Object>{ 'title' => page.title, 'page' => page.page, 'initParams' => page.initParams,
+                'paramsJson' => page.paramsJson });
         }
         return JSON.serialize(pages);
     }

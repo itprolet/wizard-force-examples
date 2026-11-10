@@ -27,21 +27,6 @@
     },
     {
       "path": "examples/carRental"
-    },
-    {
-      "path": "examples/basic-wizard"
-    },
-    {
-      "path": "examples/complaint-wizard"
-    },
-    {
-      "path": "examples/embedded-form"
-    },
-    {
-      "path": "examples/eventRegister"
-    },
-    {
-      "path": "examples/feedback-wizard"
     }
   ],
   "name": "wizard-force-examples",

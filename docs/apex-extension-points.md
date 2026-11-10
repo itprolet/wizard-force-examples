@@ -98,4 +98,4 @@ A `prolet__Smart_Lookup_Setting__mdt` record can name your class (`prolet__ApexC
 
 ## Not Part of the Contract
 
-`WizardController`, `WizardService`, `WizardUtils`, `SmartLookupCtrl` and the `Wf*` classes (selector, domain, unit of work, query builder) are internal. Your org cannot call them, and they may change in any version.
+`WizardController`, `WizardService`, `WizardUtils` and `SmartLookupCtrl` are `public`: your org cannot call them. The `Wf*` classes (selector, domain, unit of work, query builder) are `global` because the package's own global classes build on them, but they are not part of the contract: do not extend or call them, they may change in any version.

@@ -53,7 +53,7 @@ A lookup setting (`prolet__ApexClass__c`) or a validator in the rules names your
 
 ## Apex That Is Not Yours to Call
 
-Only `global` Apex of the package is visible in your org. `prolet.WizardController`, `WizardService`, `WizardUtils`, `SmartLookupCtrl` and the `Wf*` classes are `public`: your code cannot call them. Their uses have a global way:
+Only `global` Apex of the package is visible in your org. `prolet.WizardController`, `WizardService`, `WizardUtils` and `SmartLookupCtrl` are `public`: your code cannot call them. (The `Wf*` classes are global, but internal: not part of the contract.) Their uses have a global way:
 
 | Instead of                                       | Use                                                                |
 | ------------------------------------------------ | ------------------------------------------------------------------ |
@@ -69,7 +69,10 @@ Apex outside the package cannot `JSON.serialize` or `JSON.deserialize` the packa
 private static String pathJson(List<prolet.WizardPageData> path) {
     List<Map<String, Object>> pages = new List<Map<String, Object>>();
     for (prolet.WizardPageData page : path) {
-        pages.add(new Map<String, Object>{ 'title' => page.title, 'page' => page.page, 'initParams' => page.initParams });
+        pages.add(new Map<String, Object>{
+            'title' => page.title, 'page' => page.page,
+            'initParams' => page.initParams, 'paramsJson' => page.paramsJson
+        });
     }
     return JSON.serialize(pages);
 }
