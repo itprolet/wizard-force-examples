@@ -78,6 +78,13 @@
         <value>Submitting…</value>
     </labels>
     <labels>
+        <fullName>Showcase_act_startNew</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Showcase start a new registration action label</shortDescription>
+        <value>Start a new registration</value>
+    </labels>
+    <labels>
         <fullName>Showcase_msg_submitSuccess</fullName>
         <language>en_US</language>
         <protected>false</protected>

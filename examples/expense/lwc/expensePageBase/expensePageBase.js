@@ -1,4 +1,5 @@
 import { LightningElement, api, track } from "lwc";
+import { lockWizardUi } from "prolet/wizardUtils";
 
 /**
  * Base class for the Expense Report wizard pages.
@@ -23,15 +24,13 @@ export default class ExpensePageBase extends LightningElement {
   @api page;
   @api wizardType;
   @api currentId;
-  /** ACTIVE | SIGNED | REVIEW | APPROVED */
+  /** ACTIVE, or LOCKED once the report is submitted (any state but ACTIVE is locked) */
   @api state;
-  /** Wizard__c.Review_Data__c - fields requested for change in REVIEW state */
-  @api reviewData;
   @api hasPrev;
   @api hasNext;
   /** Labels: framework labels + label-registry of expenseReportRegistry */
   @api l;
-  /** Rule results for the page fields, computed by the wizard from Rules__c */
+  /** Rule results for the page fields, computed by the wizard from prolet__Rules__c */
   @api patterns;
   @api required;
   @api errors;
@@ -61,7 +60,7 @@ export default class ExpensePageBase extends LightningElement {
   get _messages() {
     return this.messages || {};
   }
-  /** Hints in Rules__c are label names - translate them. */
+  /** Hints in prolet__Rules__c are label names - translate them. */
   get _hints() {
     const result = {};
     Object.entries(this.hints || {}).forEach(([key, value]) => {
@@ -70,15 +69,22 @@ export default class ExpensePageBase extends LightningElement {
     return result;
   }
 
-  /** Context written by the backend (Wizard__c.Context__c). The wizard adds it to the current page model. */
+  /** Context written by the backend (Wizard__c.prolet__Context__c). The wizard adds it to the current page model. */
   get ctx() {
     return this._model?.[this.page]?.$ctx || {};
   }
   get isEditable() {
-    return !this.state || this.state === "ACTIVE" || this.state === "REVIEW";
+    return !this.state || this.state === "ACTIVE";
   }
-  get isReview() {
-    return this.state === "REVIEW";
+  /**
+   * The manager asked for changes ($ctx.requestedChanges, see ExpenseReportService): only those can
+   * be made, page by page ({ "expenses[id=e1].amount": "540", "expenses[id=e2]": "" }).
+   */
+  get requestedChanges() {
+    return this.ctx.requestedChanges?.[this.page] || {};
+  }
+  get changesRequested() {
+    return this.isEditable && !!this.ctx.requestedChanges;
   }
 
   // ---- page data ----
@@ -133,10 +139,17 @@ export default class ExpensePageBase extends LightningElement {
     this.data = data;
   }
 
-  dispatchPageChange(direction) {
+  /**
+   * @param direction what the page asks for (see c-wizard)
+   * @param versionChange with "refresh": what the page's own Apex did to the version of the
+   * wizard ({ fromVersion, pathVersion }), so its tab is not out of date after its own change
+   * @param pageModel the answers sent with it: the page's own by default; null sends none (a
+   * "refresh" after a submit, whose answers went to the submit itself)
+   */
+  dispatchPageChange(direction, versionChange, pageModel = clone(this.data)) {
     this.dispatchEvent(
       new CustomEvent("pagechange", {
-        detail: { direction, pageModel: clone(this.data) }
+        detail: { direction, pageModel, versionChange }
       })
     );
   }
@@ -161,11 +174,7 @@ export default class ExpensePageBase extends LightningElement {
 
   /** Lock / unlock the wizard UI (shows the preloader) while a server call is running. */
   lockUi(locked) {
-    this.dispatchEvent(
-      new CustomEvent("action", {
-        detail: { action: "uiLock", status: locked ? "in_progress" : "done" }
-      })
-    );
+    lockWizardUi(this, locked);
   }
 }
 

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Service Visit</label>
+    <pluralLabel>Service Visits</pluralLabel>
+    <description>Service Visits created by the serviceVisit wizard</description>
+    <nameField>
+        <label>Service Visit Number</label>
+        <type>AutoNumber</type>
+        <displayFormat>SV-{00000}</displayFormat>
+        <trackHistory>false</trackHistory>
+    </nameField>
+    <deploymentStatus>Deployed</deploymentStatus>
+
+    <!-- WIZARD-MAKER: who sees whose records.
+         sharingModel:         ReadWrite = everyone sees and edits all · Read = everyone sees, only the owner edits · Private = only the owner
+         externalSharingModel: the same, for Experience Cloud users (must not be more open than sharingModel) -->
+    <sharingModel>ReadWrite</sharingModel>
+    <externalSharingModel>Private</externalSharingModel>
+    <visibility>Public</visibility>
+
+    <!-- WIZARD-MAKER: features. Change false → true to switch one on. -->
+    <enableReports>true</enableReports>             <!-- reports on these records -->
+    <enableSearch>true</enableSearch>               <!-- found by the global search -->
+    <enableActivities>false</enableActivities>      <!-- tasks and events -->
+    <enableHistory>false</enableHistory>            <!-- field history (also set trackHistory on the fields) -->
+    <enableFeeds>false</enableFeeds>                <!-- Chatter feed -->
+    <allowInChatterGroups>false</allowInChatterGroups>
+    <enableLicensing>false</enableLicensing>
+    <!-- enableBulkApi, enableSharing and enableStreamingApi must all be true or all be false -->
+    <enableBulkApi>true</enableBulkApi>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+</CustomObject>

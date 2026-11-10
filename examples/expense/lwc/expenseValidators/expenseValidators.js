@@ -1,8 +1,8 @@
-import { getLabelsMap } from "c/wizardUtils";
+import { getLabelsMap } from "prolet/wizardUtils";
 
 /**
  * Validators of the Expense Report wizard. They are registered in expenseReportRegistry under the names
- * used in Wizard_Setup.ExpenseReport Rules__c:
+ * used in Wizard_Setup.ExpenseReport prolet__Rules__c:
  *
  *   validator-registry       { ValidateIban }                     field validators:  (value, message) => error | undefined
  *   page-validator-registry  { ValidateTripDates,                  page validators:   (page, model, props, errors) => valid
@@ -13,7 +13,7 @@ import { getLabelsMap } from "c/wizardUtils";
  * the same check on the server (Type.forName) when the user navigates. The other two are client-only:
  * a name without an Apex class is simply skipped on the server.
  *
- * Messages in Rules__c are label names; they are translated through the labels registered by the registry.
+ * Messages in prolet__Rules__c are label names; they are translated through the labels registered by the registry.
  */
 
 function t(message, fallback) {
@@ -76,7 +76,7 @@ export function validatePassportValidity(page, model, props, errors) {
   return true;
 }
 
-/** Expenses page: total amount must not exceed props.limit (a $con constant in Rules__c). */
+/** Expenses page: total amount must not exceed props.limit (a $con constant in prolet__Rules__c). */
 export function validateExpenseLimit(page, model, props, errors) {
   const limit = parseFloat(props?.limit);
   if (Number.isNaN(limit)) {

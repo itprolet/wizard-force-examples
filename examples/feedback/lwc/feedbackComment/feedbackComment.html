@@ -1,0 +1,27 @@
+<template>
+  <article class="eh-page">
+    <section>
+      <div class="slds-m-around_medium">
+        <prolet-input-text
+          label="Your comment"
+          name="comment"
+          value={data.comment}
+          required={_required.comment}
+          error={_errors.comment}
+          onchange={handleChange}
+        >
+        </prolet-input-text>
+        <prolet-input-text
+          type="email"
+          label="E-mail"
+          name="email"
+          value={data.email}
+          required={_required.email}
+          error={_errors.email}
+          onchange={handleChange}
+        >
+        </prolet-input-text>
+      </div>
+    </section>
+  </article>
+</template>

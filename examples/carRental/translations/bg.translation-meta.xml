@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Translations xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customLabels>
+        <label>Промени</label>
+        <name>CarRental_act_edit</name>
+    </customLabels>
+    <customLabels>
+        <label>Започни отново</label>
+        <name>CarRental_act_startAgain</name>
+    </customLabels>
+    <customLabels>
+        <label>Изпрати</label>
+        <name>CarRental_act_submit</name>
+    </customLabels>
+    <customLabels>
+        <label>Моля, потвърдете преди изпращане.</label>
+        <name>CarRental_err_confirm</name>
+    </customLabels>
+    <customLabels>
+        <label>Нещо се обърка. Моля, опитайте отново.</label>
+        <name>CarRental_err_submit</name>
+    </customLabels>
+    <customLabels>
+        <label>Чрез фирма</label>
+        <name>CarRental_lbl_car_bookedThrough</name>
+    </customLabels>
+    <customLabels>
+        <label>Дни</label>
+        <name>CarRental_lbl_car_days</name>
+    </customLabels>
+    <customLabels>
+        <label>Потвърждавам, че информацията по-горе е вярна</label>
+        <name>CarRental_lbl_confirm</name>
+    </customLabels>
+    <customLabels>
+        <label>Възраст</label>
+        <name>CarRental_lbl_driver_age</name>
+    </customLabels>
+    <customLabels>
+        <label>Имейл</label>
+        <name>CarRental_lbl_driver_email</name>
+    </customLabels>
+    <customLabels>
+        <label>Име и фамилия</label>
+        <name>CarRental_lbl_driver_fullName</name>
+    </customLabels>
+    <customLabels>
+        <label>GPS навигация</label>
+        <name>CarRental_lbl_extras_gps</name>
+    </customLabels>
+    <customLabels>
+        <label>Бележки</label>
+        <name>CarRental_lbl_extras_notes</name>
+    </customLabels>
+    <customLabels>
+        <label>Лице за фактура</label>
+        <name>CarRental_lbl_invoice_billingContact</name>
+    </customLabels>
+    <customLabels>
+        <label>Не</label>
+        <name>CarRental_msg_no</name>
+    </customLabels>
+    <customLabels>
+        <label>Благодарим! Отговорите ви бяха изпратени.</label>
+        <name>CarRental_msg_submitted</name>
+    </customLabels>
+    <customLabels>
+        <label>Да</label>
+        <name>CarRental_msg_yes</name>
+    </customLabels>
+    <customLabels>
+        <label>Кола</label>
+        <name>CarRental_pag_car</name>
+    </customLabels>
+    <customLabels>
+        <label>Шофьор</label>
+        <name>CarRental_pag_driver</name>
+    </customLabels>
+    <customLabels>
+        <label>Екстри</label>
+        <name>CarRental_pag_extras</name>
+    </customLabels>
+    <customLabels>
+        <label>Фактура</label>
+        <name>CarRental_pag_invoice</name>
+    </customLabels>
+    <customLabels>
+        <label>Обобщение</label>
+        <name>CarRental_pag_summary</name>
+    </customLabels>
+    <customLabels>
+        <label>За вас</label>
+        <name>CarRental_sec_driver_aboutYou</name>
+    </customLabels>
+    <customLabels>
+        <label>Шофьорска книжка</label>
+        <name>CarRental_sec_driver_licence</name>
+    </customLabels>
+    <customLabels>
+        <label>Коли по наем</label>
+        <name>CarRental_title</name>
+    </customLabels>
+</Translations>

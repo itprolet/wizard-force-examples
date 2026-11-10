@@ -2,7 +2,7 @@
   <article class="eh-page">
     <section>
       <div class="slds-m-around_medium">
-        <c-input-text
+        <prolet-input-text
           type="text"
           label="Doctor Note Number"
           name="doctorNoteNumber"
@@ -10,9 +10,8 @@
           required={required.doctorNoteNumber}
           error={errors.doctorNoteNumber}
           onchange={changeHandler}
-        ></c-input-text>
-
-        <c-input-text
+        ></prolet-input-text>
+        <prolet-input-text
           type="text"
           label="Doctor Name"
           name="doctorName"
@@ -20,7 +19,7 @@
           required={required.doctorName}
           error={errors.doctorName}
           onchange={changeHandler}
-        ></c-input-text>
+        ></prolet-input-text>
       </div>
     </section>
   </article>

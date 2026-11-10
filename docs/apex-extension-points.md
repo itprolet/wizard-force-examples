@@ -10,7 +10,7 @@ This page will document the supported Apex extension contracts exposed by the ma
 
 - [Home](index.md) · [Framework Concepts](framework-concepts.md) · [Getting Started](getting-started.md) · [Build a Wizard](build-a-wizard.md)
 - [Registry API](registry-api.md) · [Apex Extension Points](apex-extension-points.md) · [Validation](validation.md) · [Data Model](data-model.md)
-- [LWC Components](lwc-components.md) · [Themes](themes.md) · [Review Mode](review-mode.md)
+- [LWC Components](lwc-components.md) · [Themes](themes.md) · [Locked Wizards](locked-wizards.md) · [Namespace](namespace.md)
 - [Deployment, Security, and Testing](deployment-security-testing.md) · [Troubleshooting](troubleshooting.md) · [GitHub Pages Setup](github-pages-setup.md)
 
 Planned content:
@@ -26,5 +26,5 @@ Planned content:
 
 Example references:
 
-- [`examples/feedback-wizard/classes`](../examples/feedback-wizard/classes)
-- [`examples/complaint-wizard/classes`](../examples/complaint-wizard/classes)
+- [`examples/feedback/classes`](../examples/feedback/classes)
+- [`examples/complaint/classes`](../examples/complaint/classes)

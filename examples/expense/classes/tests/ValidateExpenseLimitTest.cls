@@ -12,8 +12,8 @@ private class ValidateExpenseLimitTest {
         return new Map<String, Object>{ PAGE => new Map<String, Object>{ 'expenses' => expenses } };
     }
 
-    private static WizardPageRules.ValidatorEntry entry(Object limitValue, String message) {
-        return new WizardPageRules.ValidatorEntry(new Map<String, Object>{
+    private static prolet.WizardPageRules.ValidatorEntry entry(Object limitValue, String message) {
+        return new prolet.WizardPageRules.ValidatorEntry(new Map<String, Object>{
                 'validator' => 'ValidateExpenseLimit', 'limit' => limitValue, 'message' => message
         });
     }
@@ -55,7 +55,7 @@ private class ValidateExpenseLimitTest {
 
     @IsTest
     static void worksThroughTheFrameworkInterface() {
-        IPageValidator validator = (IPageValidator) Type.forName('ValidateExpenseLimit').newInstance();
+        prolet.IPageValidator validator = (prolet.IPageValidator) Type.forName('ValidateExpenseLimit').newInstance();
         Map<String, Object> errors = new Map<String, Object>();
         Assert.isFalse(validator.validate(PAGE, model(new List<String>{ '10' }), entry('5', null), errors));
     }

@@ -4,120 +4,104 @@ title: Framework Concepts
 
 # Framework Concepts
 
-This page explains the Wizard Framework runtime model for subscriber developers who are extending the package without access to package source code.
-
-Use this page to understand how wizard type configuration, page components, registries, validation, navigation, and review behavior work together at runtime.
+This page explains the runtime model of the Wizard Framework for developers who build on the package without access to its source: how a wizard type, its pages, the registry, the checks, navigation and locking work together.
 
 ## Navigation
 
 - [Home](index.md) · [Framework Concepts](framework-concepts.md) · [Getting Started](getting-started.md) · [Build a Wizard](build-a-wizard.md)
 - [Registry API](registry-api.md) · [Apex Extension Points](apex-extension-points.md) · [Validation](validation.md) · [Data Model](data-model.md)
-- [LWC Components](lwc-components.md) · [Themes](themes.md) · [Review Mode](review-mode.md)
+- [LWC Components](lwc-components.md) · [Themes](themes.md) · [Locked Wizards](locked-wizards.md) · [Namespace](namespace.md)
 - [Deployment, Security, and Testing](deployment-security-testing.md) · [Troubleshooting](troubleshooting.md) · [GitHub Pages Setup](github-pages-setup.md)
 
 ## Runtime Building Blocks
 
-The package runtime is centered around a few core artifacts:
+- `prolet__Wizard__c`: one record per wizard a user fills in.
+- `prolet__Wizard_Setup__mdt`: one record per wizard type, with its plan, rules and title.
+- `<prolet-wizard>`: the container that shows the steps, the current page and the buttons.
+- Your page LWCs, registered by name in a registry component.
+- Your validators (JavaScript, Apex), named in the rules.
+- Your submit, in Apex, that turns the answers into your own records.
 
-- `Wizard__c` as the persisted wizard state container.
-- `Wizard_Setup__mdt` as the wizard type and behavior configuration.
-- The `wizard` and `wizardPageShare` container components.
-- Subscriber page LWCs registered through a registry component.
-- JavaScript and Apex validators connected through rules.
-- Subscriber submit services that map wizard model data to business records.
+## `prolet__Wizard__c`: One Wizard
 
-A subscriber implementation usually defines one or more wizard types, then binds each type to page component names and validation rules through metadata and registry contracts.
+Each wizard a user fills in is one record:
 
-## `Wizard__c` As State Container
+| Field | What it holds |
+|---|---|
+| `Wizard_Type__c` | The type: the `DeveloperName` of a `Wizard_Setup__mdt` record. A type without one is refused. |
+| `Model__c` | The answers, as JSON: one object per page (`{ "Trip": { "city": "Sofia" } }`). |
+| `Context__c` | The context of the process, as JSON (`$ctx` in the rules). Written by your Apex, never by the user. |
+| `State__c` | `ACTIVE` (the user fills it in) or `LOCKED` (read-only). Anything but `ACTIVE` counts as locked. |
+| `Path__c` | The pages the user went through, in order. |
+| `PathVersion__c` | The version of the wizard: one more on every real change of the fields above. |
 
-At runtime, each wizard instance uses a `Wizard__c` record to store:
+A new wizard first shows its first page without a record: the record is created on the first **Next**. Details: [Data Model](data-model.md).
 
-- wizard type selection;
-- page model JSON in `Model__c`;
-- navigation and progress context;
-- review mode state and optional review-only settings;
-- runtime status information.
+## The Wizard Type: Plan and Rules
 
-Your page components should treat this model as the single source of truth for user input gathered across steps.
+A `Wizard_Setup__mdt` record has three fields:
 
-## Wizard Type Contract
+- `Title__c`: the title of the wizard (a label name or a text).
+- `Plan__c`: the steps, as JSON: each step has a title (its key) and a page name (its value). A step can be shown only under a condition (`"if (...)"`), and can pass parameters to its page.
+- `Rules__c`: per page, what is required, hidden, read-only, which patterns and validators apply, and page-level errors; also under conditions.
 
-A wizard type is a runtime contract between:
+Conditions read the answers (`city = 'Sofia'`, `Contact.kind = 'company'` for another page), the context (`$ctx.status`) and the constants the setup names (`$con.MAX_DAYS`, from `Wizard_Contstant__mdt`). The browser and the server read them the same way.
 
-1. metadata configuration (`Wizard_Setup__mdt`);
-2. registry keys for pages and validators;
-3. subscriber page and validator implementations.
+A page name in the plan must be a key of the page registry; otherwise the wizard cannot show that page.
 
-The type configuration determines which page names are expected, how navigation behaves, which validators run, and how submit logic should interpret the model.
+## Pages and the Registry
 
-If a page name in metadata does not match a registered key, the wizard cannot resolve and render that page.
+The wizard resolves your code by name:
 
-## Page Definition and Registry Resolution
+- page name → page LWC constructor (`pageRegistry`);
+- validator name → JavaScript validator function (`validatorRegistry`); a name that is not there may be an Apex class (see [Validation](validation.md));
+- label names → texts (`l`).
 
-The framework resolves page artifacts by registry key:
+The usual way is a registry LWC that renders `<prolet-wizard>` with these maps. See [Registry API](registry-api.md).
 
-- page component key -> LWC constructor;
-- validator key -> JavaScript validator function or Apex validator type reference;
-- optional page-field mappings for review and data shaping;
-- optional labels and localized text mappings.
+## A Page
 
-The recommended pattern is a self-contained registry LWC that prepares all maps and passes them into the package container component.
+A page receives the answers of the whole wizard (`model`) and what the rules say about its fields (`required`, `readOnly`, `visible`, `errors`, `hints`, `messages`, `patterns`), plus the wizard's `state`. It shows its fields and sends its answers back when the wizard asks it to move (`handlePage`), with a `pagechange` event. Extending `prolet/wizardPageBase` gives all of this in one place.
 
-## Page Component Data Flow
+The wizard does the moving and the checks; the page renders and reacts to its own fields.
 
-A page component is responsible for:
+## Navigation
 
-- receiving the current page model state from the container;
-- rendering controls based on that state;
-- emitting model updates in the expected shape;
-- respecting page mode (editable, read-only, review behavior when active).
+- **Next** checks the page (in the browser, then on the server) and saves its answers; the server decides the next page from the plan.
+- **Previous** goes back without checks.
+- **A step of the progress bar** goes back to an earlier page of the path. Later pages are reached one at a time, with **Next**. (In a locked wizard every page of its path can be opened, forward too.)
 
-The container orchestrates page transitions and validation. Page components focus on rendering and local interaction, not global wizard orchestration.
+`prolet.WizardNavigationMode` is the direction of a move: `FORWARD`, `BACKWARD` or `JUMP` (to a step). It is not a policy.
 
-## Navigation and Lifecycle
+Each move sends the version of the wizard the tab has. If another tab, another browser or your own Apex changed the wizard in between, the server refuses the move, saves nothing, and the wizard shows the latest saved state with a warning (code `WIZARD_PATH_VERSION_CONFLICT`).
 
-Navigation behavior is driven by package runtime state and configuration:
+## The Order of the Checks
 
-- initial page resolution;
-- next/previous transitions;
-- page validity gates before transition;
-- terminal submit readiness checks.
+For a page, the checks run in this order, in the browser and again on the server:
 
-`WizardNavigationMode` values influence whether navigation can proceed freely, is validation-gated, or follows stricter progression rules for a given flow.
+1. `required`: a required field without a value (a hidden field is never required);
+2. `ticked`: a checkbox that must be ticked ("I agree");
+3. field validators (`validators`): your JavaScript functions in the browser, your `prolet.IValidator` classes on the server;
+4. page validators (`pageValidators`): your page-level JavaScript, your `prolet.IPageValidator` classes on the server;
+5. `pageErrors`: errors the rules raise for the whole page (under a condition);
+6. `patterns`: a regular expression per field.
 
-## Validation Pipeline
+Any of them stops the move and shows its message. On **Next** the server checks every page of the path, not only the current one. See [Validation](validation.md).
 
-Validation runs as a layered pipeline:
+## Locked Wizards
 
-1. field-level JavaScript validators;
-2. page-level JavaScript validators (`registerPageValidator`);
-3. server-side Apex validators (`IPageValidator`) when configured;
-4. built-in rules such as pattern validation.
+A wizard is `ACTIVE` while the user fills it in, and `LOCKED` once it is submitted. A locked wizard only shows: every field is read-only, nothing is saved, and the server refuses every write of the answers. Your submit locks it with `prolet.WizardApi.lock`, after `assertCompleted`. Your Apex can still write its context (a status the user sees), and can unlock it again. See [Locked Wizards](locked-wizards.md).
 
-The pipeline can stop progression, surface inline errors, or return structured page errors depending on validator type and contract.
+## What the Package Owns, What You Own
 
-## Review Mode Concept
+The package owns the wizard: its record, its moves, its checks, its locking. You own:
 
-Review mode allows users to inspect entered data before submit and, depending on configuration, edit only selected paths.
+- your page LWCs and your registry;
+- your validators;
+- your submit and your own records;
+- the security of your own Apex (`with sharing`, `USER_MODE`).
 
-`modifyOnlyList` supports path-based control over what remains editable. This includes list filters like:
-
-- `items[id=1]`
-- `items[id=1].name`
-
-Use review mode for confirmation-heavy flows where users need a final inspection step without reopening full page editing.
-
-## Subscriber Ownership Boundaries
-
-The managed package owns runtime orchestration. Subscriber code owns implementation details:
-
-- custom page LWCs;
-- custom JavaScript and Apex validators;
-- selector/domain/unit-of-work extensions where supported;
-- submit mapping to subscriber business objects and services;
-- org-specific security enforcement in custom logic.
-
-Treat only documented contracts as stable extension points. Do not depend on undocumented internal behavior.
+Rely only on what these pages document. Anything else in the package may change.
 
 ## Related Documentation
 
@@ -126,5 +110,5 @@ Treat only documented contracts as stable extension points. Do not depend on und
 - [Registry API](registry-api.md)
 - [Validation](validation.md)
 - [Data Model](data-model.md)
-- [Review Mode](review-mode.md)
+- [Locked Wizards](locked-wizards.md)
 - [Apex Extension Points](apex-extension-points.md)

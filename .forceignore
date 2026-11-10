@@ -1,6 +1,5 @@
 # Documentation and repo files
 README.md
-PUBLICATION_CHECKLIST.md
 docs/**
 config/**
 package.json
@@ -16,4 +15,5 @@ docs/_site/**
 .DS_Store
 **/jsconfig.json
 **/.eslintrc.json
+**/__tests__/**
 scripts/**

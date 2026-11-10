@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Status__c</fullName>
+    <label>Status</label>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>   <!-- true: only these values are allowed -->
+        <valueSetDefinition>
+            <sorted>false</sorted>   <!-- true: show the values in alphabetical order -->
+            <value>
+                <fullName>new</fullName>
+                <default>true</default>
+                <label>New</label>
+            </value>
+            <value>
+                <fullName>planned</fullName>
+                <default>false</default>
+                <label>Planned</label>
+            </value>
+            <value>
+                <fullName>done</fullName>
+                <default>false</default>
+                <label>Done</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <!-- <description>A note for admins, shown in Setup</description> -->
+    <!-- <inlineHelpText>Shown to users as (i) next to the field</inlineHelpText> -->
+    <!-- WIZARD-MAKER: keep required=false. The wizard checks required fields per page and condition;
+         required=true in the database breaks conditional fields and cannot be in a permission set. -->
+    <required>false</required>
+    <trackHistory>false</trackHistory>     <!-- true: log changes (needs enableHistory on the object) -->
+    <trackTrending>false</trackTrending>
+</CustomField>

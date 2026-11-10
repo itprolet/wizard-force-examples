@@ -1,0 +1,62 @@
+<template>
+  <!-- WIZARD-MAKER:frame (the wizard's own steps and buttons; change them with "npm run make layout") -->
+  <c-car-rental-frame
+    page={page}
+    model={model}
+    data={data}
+    l={l}
+    state={state}
+    errors={errors}
+  >
+    <article class="eh-page">
+      <section>
+        <div class="slds-m-around_medium">
+          <!-- WIZARD-MAKER:layout (arranged with "npm run make layout") -->
+          <div class="slds-grid slds-gutters_medium slds-wrap">
+            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+              <prolet-input-text
+                type="number"
+                label={_l.CarRental_lbl_extras_childSeats}
+                name="childSeats"
+                value={data.childSeats}
+                required={required.childSeats}
+                error={errors.childSeats}
+                onchange={changeHandler}
+              ></prolet-input-text>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+              <prolet-input-text
+                type="text"
+                label={_l.CarRental_lbl_extras_notes}
+                name="notes"
+                value={data.notes}
+                required={required.notes}
+                error={errors.notes}
+                onchange={changeHandler}
+                multiline
+              ></prolet-input-text>
+            </div>
+            <div
+              class="slds-col slds-size_1-of-1 slds-large-size_1-of-2 wm-checkbox"
+            >
+              <prolet-input-checkbox
+                label={_l.CarRental_lbl_extras_gps}
+                name="gps"
+                checked={data.gps}
+                required={required.gps}
+                error={errors.gps}
+                onchange={changeHandler}
+              ></prolet-input-checkbox>
+            </div>
+          </div>
+          <!-- WIZARD-MAKER:layout end -->
+          <!-- WIZARD-MAKER example: show fields only when a condition is true.
+             The getter (e.g. showOtherDetails) goes in the JS, see the examples in PART 2.
+        <template lwc:if={showOtherDetails}>
+          …one or more fields…
+        </template>
+        --></div>
+      </section>
+    </article>
+  </c-car-rental-frame>
+</template>

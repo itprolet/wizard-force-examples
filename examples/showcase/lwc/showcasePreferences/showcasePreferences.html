@@ -7,60 +7,60 @@
           "if (not(ShowcaseEventType.eventType='online'))": { "Preferences": "ShowcasePreferences" }
         This demonstrates cross-page conditional pages driven by the Rules engine.
       -->
-      <c-elem-alert type="info">
+      <prolet-elem-alert type="info">
         These preferences apply to your on-site experience. All fields marked
         with * are required so we can prepare accordingly.
-      </c-elem-alert>
+      </prolet-elem-alert>
     </section>
 
     <section>
       <div class="slds-grid slds-gutters_x-small slds-wrap">
         <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
-          <c-input-combobox
+          <prolet-input-combobox
             label="Dietary Requirement"
             name="dietaryOption"
             items={dietaryOptions}
             value={data.dietaryOption}
-            onchange={changeHandler}
+            onchange={handleChange}
             required={_required.dietaryOption}
             read-only={_readOnly.dietaryOption}
             error={_errors.dietaryOption}
-          ></c-input-combobox>
+          ></prolet-input-combobox>
         </div>
 
         <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
-          <c-input-combobox
+          <prolet-input-combobox
             label="T-Shirt Size"
             name="shirtSize"
             items={shirtSizeOptions}
             value={data.shirtSize}
-            onchange={changeHandler}
+            onchange={handleChange}
             required={_required.shirtSize}
             read-only={_readOnly.shirtSize}
             error={_errors.shirtSize}
-          ></c-input-combobox>
+          ></prolet-input-combobox>
         </div>
 
         <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
-          <c-input-combobox
+          <prolet-input-combobox
             label="Accommodation"
             name="accommodation"
             items={accommodationOptions}
             value={data.accommodation}
-            onchange={changeHandler}
+            onchange={handleChange}
             read-only={_readOnly.accommodation}
             error={_errors.accommodation}
-          ></c-input-combobox>
+          ></prolet-input-combobox>
         </div>
 
         <div class="slds-col slds-size_1-of-1">
-          <c-input-checkbox
+          <prolet-input-checkbox
             label="I would like to use the airport shuttle service"
             name="shuttle"
             checked={data.shuttle}
-            onchange={changeHandler}
+            onchange={handleChange}
             read-only={_readOnly.shuttle}
-          ></c-input-checkbox>
+          ></prolet-input-checkbox>
         </div>
       </div>
     </section>
@@ -68,10 +68,10 @@
     <!-- Contextual warning when accommodation is booked -->
     <template lwc:if={isAccommodationBooked}>
       <section>
-        <c-elem-alert type="warning">
+        <prolet-elem-alert type="warning">
           Accommodation is subject to availability and will be confirmed
           separately via email within 3 business days.
-        </c-elem-alert>
+        </prolet-elem-alert>
       </section>
     </template>
   </article>

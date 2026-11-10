@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Translations xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customLabels>
+        <label>Промени</label>
+        <name>ClubMembership_act_edit</name>
+    </customLabels>
+    <customLabels>
+        <label>Започни отново</label>
+        <name>ClubMembership_act_startAgain</name>
+    </customLabels>
+    <customLabels>
+        <label>Изпрати</label>
+        <name>ClubMembership_act_submit</name>
+    </customLabels>
+    <customLabels>
+        <label>Моля, използвайте свой имейл</label>
+        <name>ClubMembership_err_clubEmail</name>
+    </customLabels>
+    <customLabels>
+        <label>Моля, потвърдете преди изпращане.</label>
+        <name>ClubMembership_err_confirm</name>
+    </customLabels>
+    <customLabels>
+        <label>Нещо се обърка. Моля, опитайте отново.</label>
+        <name>ClubMembership_err_submit</name>
+    </customLabels>
+    <customLabels>
+        <label>Адрес</label>
+        <name>ClubMembership_lbl_applicant_address</name>
+    </customLabels>
+    <customLabels>
+        <label>Дата на раждане</label>
+        <name>ClubMembership_lbl_applicant_birthDate</name>
+    </customLabels>
+    <customLabels>
+        <label>Имейл</label>
+        <name>ClubMembership_lbl_applicant_email</name>
+    </customLabels>
+    <customLabels>
+        <label>Име и фамилия</label>
+        <name>ClubMembership_lbl_applicant_fullName</name>
+    </customLabels>
+    <customLabels>
+        <label>Телефон</label>
+        <name>ClubMembership_lbl_applicant_phone</name>
+    </customLabels>
+    <customLabels>
+        <label>Уебсайт</label>
+        <name>ClubMembership_lbl_applicant_website</name>
+    </customLabels>
+    <customLabels>
+        <label>Голям клиент</label>
+        <name>ClubMembership_lbl_company_bigClient</name>
+    </customLabels>
+    <customLabels>
+        <label>Фирма</label>
+        <name>ClubMembership_lbl_company_company</name>
+    </customLabels>
+    <customLabels>
+        <label>Лице за контакт</label>
+        <name>ClubMembership_lbl_company_contactPerson</name>
+    </customLabels>
+    <customLabels>
+        <label>Партньорски клуб</label>
+        <name>ClubMembership_lbl_company_partnerClub</name>
+    </customLabels>
+    <customLabels>
+        <label>Препоръчан от</label>
+        <name>ClubMembership_lbl_company_referredBy</name>
+    </customLabels>
+    <customLabels>
+        <label>Потвърждавам, че информацията по-горе е вярна</label>
+        <name>ClubMembership_lbl_confirm</name>
+    </customLabels>
+    <customLabels>
+        <label>Начална дата</label>
+        <name>ClubMembership_lbl_membership_startDate</name>
+    </customLabels>
+    <customLabels>
+        <label>IBAN</label>
+        <name>ClubMembership_lbl_payment_iban</name>
+    </customLabels>
+    <customLabels>
+        <label>Не</label>
+        <name>ClubMembership_msg_no</name>
+    </customLabels>
+    <customLabels>
+        <label>Благодарим! Отговорите ви бяха изпратени.</label>
+        <name>ClubMembership_msg_submitted</name>
+    </customLabels>
+    <customLabels>
+        <label>Да</label>
+        <name>ClubMembership_msg_yes</name>
+    </customLabels>
+    <customLabels>
+        <label>Основен</label>
+        <name>ClubMembership_opt_membership_plan_basic</name>
+    </customLabels>
+    <customLabels>
+        <label>Премиум</label>
+        <name>ClubMembership_opt_membership_plan_premium</name>
+    </customLabels>
+    <customLabels>
+        <label>Стандартен</label>
+        <name>ClubMembership_opt_membership_plan_standard</name>
+    </customLabels>
+    <customLabels>
+        <label>Кандидат</label>
+        <name>ClubMembership_pag_applicant</name>
+    </customLabels>
+    <customLabels>
+        <label>Фирма</label>
+        <name>ClubMembership_pag_company</name>
+    </customLabels>
+    <customLabels>
+        <label>Членство</label>
+        <name>ClubMembership_pag_membership</name>
+    </customLabels>
+    <customLabels>
+        <label>Плащане</label>
+        <name>ClubMembership_pag_payment</name>
+    </customLabels>
+    <customLabels>
+        <label>Обобщение</label>
+        <name>ClubMembership_pag_summary</name>
+    </customLabels>
+</Translations>

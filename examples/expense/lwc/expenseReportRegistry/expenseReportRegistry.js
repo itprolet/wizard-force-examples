@@ -11,10 +11,10 @@ import {
   validatePassportValidity,
   validateExpenseLimit
 } from "c/expenseValidators";
-import { registerLabels } from "c/wizardUtils";
+import { registerLabels } from "prolet/wizardUtils";
 import { L } from "./labels";
 
-// Page-validator messages in Rules__c are label names. The framework translates them through the
+// Page-validator messages in prolet__Rules__c are label names. The framework translates them through the
 // global label map (not through label-registry), so register the labels globally as well.
 registerLabels(L);
 
@@ -27,9 +27,9 @@ registerLabels(L);
  * Wizard_Setup__mdt record) - it is pre-filled with that value.
  *
  * Keys must match the names used in Wizard_Setup.ExpenseReport:
- *   Plan__c values            → _pageRegistry
- *   Rules__c validators       → _validatorRegistry
- *   Rules__c pageValidators   → _pageValidatorRegistry (ValidatePattern is pre-registered by the framework)
+ *   prolet__Plan__c values            → _pageRegistry
+ *   prolet__Rules__c validators       → _validatorRegistry
+ *   prolet__Rules__c pageValidators   → _pageValidatorRegistry (ValidatePattern is pre-registered by the framework)
  */
 export default class ExpenseReportRegistry extends LightningElement {
   /** Wizard type (Wizard_Setup__mdt DeveloperName) forwarded to <c-wizard>. Set in App Builder. */

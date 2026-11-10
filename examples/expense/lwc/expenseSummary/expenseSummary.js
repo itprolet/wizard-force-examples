@@ -1,20 +1,24 @@
 import ExpensePageBase from "c/expensePageBase";
 import submitReport from "@salesforce/apex/ExpenseReportController.submitReport";
 import calculatePerDiem from "@salesforce/apex/ExpenseReportController.calculatePerDiem";
-
-/** sessionStorage key used by c-wizard to remember the current Wizard__c id per wizard type. */
-const WIZARD_IDS_SESSION_KEY = "wizard_ids";
+import { clearStoredWizardId, errorMessage } from "prolet/wizardUtils";
 
 /**
  * Page 5 - Summary.
  *
  * - Rules: navigationByChild = true, so the wizard hides its Back / Next buttons and this page
  *   renders its own Back / Submit.
- * - On open, Apex calculates the per-diem allowance into Wizard__c.Context__c, then the page sends
+ * - On open, Apex calculates the per-diem allowance into Wizard__c.prolet__Context__c, then the page sends
  *   `pagechange` with direction `refresh` - the wizard reloads the context and the page reads it as `$ctx`.
- * - Submit: Apex creates the Expense_Report__c and sets State__c = SIGNED; another `refresh` makes the
- *   wizard pick up the new state, so every page becomes read-only.
- * - REVIEW: shows the manager comment ($ctx.reviewComment); the button becomes "Submit corrections".
+ * - Submit: Apex creates the Expense_Report__c, saves the ticked declaration in the answers of this
+ *   page and locks the wizard (WizardApi.lock); another `refresh` makes the wizard pick up the new
+ *   state, so every page becomes read-only (the declaration stays ticked: the form and the answers
+ *   agree).
+ * - Both Apex calls return what they did to the version of the wizard; the page sends it with its
+ *   `refresh`, so the wizard knows the change was its own and its next move is not refused.
+ * - The manager's decision is in $ctx (see ExpenseReportService): changes requested shows the
+ *   comment ($ctx.reviewComment) and the button becomes "Submit corrections"; approved and submitted
+ *   are shown on the locked wizard ($ctx.reportStatus).
  */
 export default class ExpenseSummary extends ExpensePageBase {
   defaults() {
@@ -28,8 +32,8 @@ export default class ExpenseSummary extends ExpensePageBase {
   connectedCallback() {
     if (this.wizardId && this.isEditable) {
       calculatePerDiem({ wizardId: this.wizardId })
-        .then(() => this.dispatchPageChange("refresh"))
-        .catch((error) => this.toast(errorMessage(error), "error"));
+        .then((change) => this.dispatchPageChange("refresh", change))
+        .catch((error) => this.toast(messageOf(error), "error"));
     }
   }
 
@@ -110,17 +114,14 @@ export default class ExpenseSummary extends ExpensePageBase {
   }
 
   // ---- state ----
-  get isSigned() {
-    return this.state === "SIGNED";
-  }
   get isApproved() {
-    return this.state === "APPROVED";
+    return !this.isEditable && this.ctx.reportStatus === "Approved";
   }
-  get isFinished() {
-    return this.isSigned || this.isApproved;
+  get isSubmitted() {
+    return !this.isEditable && !this.isApproved;
   }
   get submitLabel() {
-    return this.isReview
+    return this.changesRequested
       ? this._l.Expense_act_resubmit
       : this._l.Expense_act_submit;
   }
@@ -144,14 +145,17 @@ export default class ExpenseSummary extends ExpensePageBase {
     this.submitError = null;
     this.lockUi(true);
     try {
-      await submitReport({
+      const change = await submitReport({
         wizardId: this.wizardId,
         agreedToDeclaration: true
       });
-      // Reload state (SIGNED) and context from Wizard__c
-      this.dispatchPageChange("refresh");
+      // Reload state (LOCKED) and context from Wizard__c. No answers with it (pageModel null): the
+      // tick is the submit's own, a locked wizard would warn that it was not saved
+      this.dispatchPageChange("refresh", change, null);
     } catch (error) {
-      this.submitError = errorMessage(error);
+      this.submitError = messageOf(error);
+      // refused: maybe submitted in another tab, so the wizard reads its state again
+      this.dispatchPageChange("refresh", undefined, null);
     } finally {
       this.isSubmitting = false;
       this.lockUi(false);
@@ -163,19 +167,12 @@ export default class ExpenseSummary extends ExpensePageBase {
    * To start a new report, forget that id and reload the page without URL parameters.
    */
   startNewReport() {
-    try {
-      const stored = JSON.parse(
-        sessionStorage.getItem(WIZARD_IDS_SESSION_KEY) || "{}"
-      );
-      delete stored[this.wizardType];
-      sessionStorage.setItem(WIZARD_IDS_SESSION_KEY, JSON.stringify(stored));
-    } catch (error) {
-      // sessionStorage not available - the page reload below still works for a new tab
-    }
+    clearStoredWizardId(this.wizardType);
     window.location.assign(window.location.pathname);
   }
 }
 
-function errorMessage(error) {
-  return error?.body?.message || error?.message || "Unexpected error";
+/** The server's message (see errorMessage of c/wizardUtils), or a word when it says nothing */
+function messageOf(error) {
+  return errorMessage(error) || "Unexpected error";
 }

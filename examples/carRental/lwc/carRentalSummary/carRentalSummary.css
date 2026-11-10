@@ -1,0 +1,74 @@
+/* WIZARD-MAKER: the framework's styles, so the headings of this page look as in every wizard. */
+@import "prolet/styles";
+
+/* WIZARD-MAKER:summary-buttons (Edit, Back and Submit; written again by "npm run make summary") */
+/* a step's title with Edit next to it: back to that step */
+.summary-head {
+  display: flex;
+  align-items: center;
+  gap: var(--eh-spacing-regular);
+}
+.summary-head > h2 {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.summary-edit {
+  flex: none;
+  padding: var(--eh-spacing-smallest) var(--eh-spacing-small);
+  border: 1px solid transparent;
+  border-radius: var(--border-button-radius);
+  background: none;
+  color: var(--color-regular);
+  font: inherit;
+  font-size: var(--eh-font-size-small);
+  font-weight: bold;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: background-color var(--eh-duration);
+}
+.summary-edit:hover,
+.summary-edit:focus-visible {
+  background-color: color-mix(in srgb, var(--color-active) 30%, white);
+  text-decoration: none;
+}
+
+/* Back and Submit: the framework's buttons (eh-button), Back with a line instead of a fill */
+.summary-button {
+  min-height: 2.5rem;
+  padding: 0 var(--eh-spacing-larger);
+}
+.summary-button.back {
+  background-color: var(--color-white) !important;
+  color: var(--color-regular) !important;
+  border: 1px solid var(--color-regular) !important;
+}
+/* Submit while its request runs: a small turning ring, as on the frame's Next */
+.summary-button.busy {
+  position: relative;
+  padding-right: calc(var(--eh-spacing-larger) + 1.25rem);
+  cursor: progress;
+}
+.summary-button.busy::after {
+  content: "";
+  position: absolute;
+  right: var(--eh-spacing-regular);
+  top: 50%;
+  width: 0.875rem;
+  height: 0.875rem;
+  margin-top: -0.4375rem;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: summary-busy-turn 0.7s linear infinite;
+}
+@keyframes summary-busy-turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .summary-button.busy::after {
+    animation-duration: 2s;
+  }
+}
+/* WIZARD-MAKER:summary-buttons end */

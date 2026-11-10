@@ -1,0 +1,37 @@
+<template>
+  <fieldset class="tiles-field">
+    <legend class="slds-form-element__label eh-input-label tiles-label">
+      <abbr
+        lwc:if={required}
+        class="slds-required"
+        title="required"
+        aria-hidden="true"
+      ></abbr>
+      {label}
+    </legend>
+    <div class="tiles" role="radiogroup" onkeydown={handleKeydown}>
+      <template for:each={tiles} for:item="tile">
+        <button
+          key={tile.value}
+          type="button"
+          role="radio"
+          class={tile.className}
+          aria-checked={tile.checked}
+          tabindex={tile.tabindex}
+          data-value={tile.value}
+          onclick={handleClick}
+        >
+          <img lwc:if={tile.photo} class="tile-photo" src={tile.photo} alt="" />
+          <span
+            lwc:elseif={tile.placeholder}
+            class="tile-photo tile-placeholder"
+            aria-hidden="true"
+            >{tile.initial}</span
+          >
+          <span class="tile-label">{tile.label}</span>
+        </button>
+      </template>
+    </div>
+    <p lwc:if={error} class="tiles-error">{error}</p>
+  </fieldset>
+</template>

@@ -10,6 +10,7 @@ import Showcase_act_back from "@salesforce/label/c.Showcase_act_back";
 import Showcase_act_submit from "@salesforce/label/c.Showcase_act_submit";
 import Showcase_act_submitting from "@salesforce/label/c.Showcase_act_submitting";
 import Showcase_msg_submitSuccess from "@salesforce/label/c.Showcase_msg_submitSuccess";
+import Showcase_act_startNew from "@salesforce/label/c.Showcase_act_startNew";
 
 const L = {
   Showcase_lbl_firstName,
@@ -23,7 +24,8 @@ const L = {
   Showcase_act_back,
   Showcase_act_submit,
   Showcase_act_submitting,
-  Showcase_msg_submitSuccess
+  Showcase_msg_submitSuccess,
+  Showcase_act_startNew
 };
 
 export { L };

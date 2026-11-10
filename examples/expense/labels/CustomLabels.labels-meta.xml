@@ -299,7 +299,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Expense_msg_review</shortDescription>
-        <value>Your manager requested changes. The fields that must change are unlocked and marked.</value>
+        <value>Your manager requested changes. Only what was asked for can be changed, and it must be changed before you submit the report again.</value>
     </labels>
     <labels>
         <fullName>Expense_msg_reviewComment</fullName>

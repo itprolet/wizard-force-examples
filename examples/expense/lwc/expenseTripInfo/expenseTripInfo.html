@@ -3,7 +3,7 @@
     <section>
       <div class="slds-grid slds-gutters_x-small slds-wrap">
         <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
-          <c-input-combobox
+          <prolet-input-combobox
             label={_l.Expense_lbl_destinationType}
             name="destinationType"
             items={destinationTypeOptions}
@@ -12,10 +12,10 @@
             required={_required.destinationType}
             read-only={_readOnly.destinationType}
             error={_errors.destinationType}
-          ></c-input-combobox>
+          ></prolet-input-combobox>
         </div>
         <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
-          <c-input-text
+          <prolet-input-text
             label={_l.Expense_lbl_destination}
             name="destination"
             value={data.destination}
@@ -23,10 +23,10 @@
             required={_required.destination}
             read-only={_readOnly.destination}
             error={_errors.destination}
-          ></c-input-text>
+          ></prolet-input-text>
         </div>
         <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
-          <c-input-text
+          <prolet-input-text
             type="date"
             label={_l.Expense_lbl_dateFrom}
             name="dateFrom"
@@ -35,11 +35,11 @@
             required={_required.dateFrom}
             read-only={_readOnly.dateFrom}
             error={_errors.dateFrom}
-          ></c-input-text>
+          ></prolet-input-text>
         </div>
         <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
           <!-- errors.dateTo is set by the JS page validator ValidateTripDates -->
-          <c-input-text
+          <prolet-input-text
             type="date"
             label={_l.Expense_lbl_dateTo}
             name="dateTo"
@@ -48,14 +48,13 @@
             required={_required.dateTo}
             read-only={_readOnly.dateTo}
             error={_errors.dateTo}
-          ></c-input-text>
+          ></prolet-input-text>
         </div>
         <div class="slds-col slds-size_1-of-1">
-          <!-- mode 1 suggester: SELECT Id, Name FROM Account WHERE Name LIKE :search LIMIT 30 -->
-          <c-input-suggester
+          <!-- the records come from the query in Smart_Lookup_Setting.Expense_AccountId (customMetadata) -->
+          <prolet-input-suggester
             label={_l.Expense_lbl_account}
-            object-name="Account"
-            search-key="Name"
+            lookup-name="Expense_AccountId"
             key-field="Id"
             name-field="Name"
             selected-id={data.accountId}
@@ -64,10 +63,10 @@
             required={_required.accountId}
             read-only={_readOnly.accountId}
             error={_errors.accountId}
-          ></c-input-suggester>
+          ></prolet-input-suggester>
         </div>
         <div class="slds-col slds-size_1-of-1">
-          <c-input-text
+          <prolet-input-text
             multiline
             label={_l.Expense_lbl_purpose}
             name="purpose"
@@ -77,7 +76,7 @@
             read-only={_readOnly.purpose}
             error={_errors.purpose}
             message={_hints.purpose}
-          ></c-input-text>
+          ></prolet-input-text>
         </div>
       </div>
     </section>

@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>CarRental_act_edit</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Edit</shortDescription>
+        <value>Edit</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_act_startAgain</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Start again</shortDescription>
+        <value>Start again</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_act_submit</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Submit</shortDescription>
+        <value>Submit</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_err_confirm</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Please confirm before submitting.</shortDescription>
+        <value>Please confirm before submitting.</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_err_licenceAge</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Your licence must be at least 2 years old</shortDescription>
+        <value>Your licence must be at least 2 years old</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_err_licenceFormat</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Two letters and six digits</shortDescription>
+        <value>Two letters and six digits</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_err_submit</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Something went wrong. Please try again.</shortDescription>
+        <value>Something went wrong. Please try again.</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_lbl_car_bookedThrough</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Booked Through</shortDescription>
+        <value>Booked Through</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_lbl_car_carClass</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Car Class</shortDescription>
+        <value>Car Class</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_lbl_car_carModel</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Car Model</shortDescription>
+        <value>Car Model</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_lbl_car_days</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Rental Days</shortDescription>
+        <value>Rental Days</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_lbl_car_fullInsurance</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Full Insurance</shortDescription>
+        <value>Full Insurance</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_lbl_car_luxuryNotes</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Luxury Notes</shortDescription>
+        <value>Luxury Notes</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_lbl_car_pickupCity</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Pickup City</shortDescription>
+        <value>Pickup City</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_lbl_car_pickupDate</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Pickup Date</shortDescription>
+        <value>Pickup Date</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_lbl_confirm</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>I confirm the information above is correct</shortDescription>
+        <value>I confirm the information above is correct</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_lbl_driver_age</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Age</shortDescription>
+        <value>Age</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_lbl_driver_email</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Email</shortDescription>
+        <value>Email</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_lbl_driver_experienced</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>I drive more than 5 years</shortDescription>
+        <value>I drive more than 5 years</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_lbl_driver_fullName</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Full Name</shortDescription>
+        <value>Full Name</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_lbl_driver_licenceDate</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Licence Date</shortDescription>
+        <value>Licence Date</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_lbl_driver_licenceNumber</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Licence Number</shortDescription>
+        <value>Licence Number</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_lbl_extras_childSeats</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Child Seats</shortDescription>
+        <value>Child Seats</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_lbl_extras_gps</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>GPS navigation</shortDescription>
+        <value>GPS navigation</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_lbl_extras_notes</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Notes</shortDescription>
+        <value>Notes</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_lbl_invoice_bigCompany</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Big Company</shortDescription>
+        <value>Big Company</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_lbl_invoice_billingContact</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Billing Contact</shortDescription>
+        <value>Billing Contact</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_lbl_invoice_openDeal</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Open Deal</shortDescription>
+        <value>Open Deal</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_lbl_invoice_vatNumber</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Vat Number</shortDescription>
+        <value>Vat Number</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_msg_no</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>No</shortDescription>
+        <value>No</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_msg_submitted</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Thank you! Your answers were submitted.</shortDescription>
+        <value>Thank you! Your answers were submitted.</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_msg_yes</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Yes</shortDescription>
+        <value>Yes</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_opt_car_carClass_economy</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Economy</shortDescription>
+        <value>Economy</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_opt_car_carClass_luxury</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Luxury</shortDescription>
+        <value>Luxury</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_opt_car_carClass_suv</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>SUV</shortDescription>
+        <value>SUV</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_opt_car_pickupCity_plovdiv</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Plovdiv</shortDescription>
+        <value>Plovdiv</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_opt_car_pickupCity_sofia</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Sofia</shortDescription>
+        <value>Sofia</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_opt_car_pickupCity_varna</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Varna</shortDescription>
+        <value>Varna</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_pag_car</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Car</shortDescription>
+        <value>Car</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_pag_driver</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Driver</shortDescription>
+        <value>Driver</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_pag_extras</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Extras and Notes</shortDescription>
+        <value>Extras and Notes</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_pag_invoice</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Invoice</shortDescription>
+        <value>Invoice</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_pag_summary</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Summary</shortDescription>
+        <value>Summary</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_sec_driver_aboutYou</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>About you</shortDescription>
+        <value>About you</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_sec_driver_licence</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Licence</shortDescription>
+        <value>Licence</value>
+    </labels>
+    <labels>
+        <fullName>CarRental_title</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Car Rental</shortDescription>
+        <value>Car Rental</value>
+    </labels>
+</CustomLabels>

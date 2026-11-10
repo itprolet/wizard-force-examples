@@ -1,16 +1,16 @@
 <template>
   <article class="eh-page">
     <section>
-      <c-elem-alert type="info">
+      <prolet-elem-alert type="info">
         Select the sessions you wish to attend. You may choose from both morning
         and afternoon slots. At least one selection is required.
-      </c-elem-alert>
+      </prolet-elem-alert>
     </section>
 
     <!-- Page-level validator error (set by validateSessionMin) -->
     <template lwc:if={_errors.sessionMin}>
       <section>
-        <c-elem-alert type="error">{_errors.sessionMin}</c-elem-alert>
+        <prolet-elem-alert type="error">{_errors.sessionMin}</prolet-elem-alert>
       </section>
     </template>
 
@@ -26,7 +26,7 @@
         Content inside each div is moved into the tab panel by the component.
       -->
       <div class="shape-panel">
-        <c-input-tabset value={activeTab} onchange={handleTabChange}>
+        <prolet-input-tabset value={activeTab} onchange={handleTabChange}>
           <div
             data-role="tab"
             data-value="morning"
@@ -36,31 +36,31 @@
               class="slds-grid slds-gutters_x-small slds-wrap slds-m-top_small"
             >
               <div class="slds-col slds-size_1-of-1">
-                <c-input-checkbox
+                <prolet-input-checkbox
                   label="09:00 — Opening Keynote"
                   name="sessionM1"
                   checked={data.sessionM1}
-                  onchange={changeHandler}
+                  onchange={handleChange}
                   read-only={_readOnly.sessionM1}
-                ></c-input-checkbox>
+                ></prolet-input-checkbox>
               </div>
               <div class="slds-col slds-size_1-of-1">
-                <c-input-checkbox
+                <prolet-input-checkbox
                   label="10:30 — Workshop A: LWC Fundamentals"
                   name="sessionM2"
                   checked={data.sessionM2}
-                  onchange={changeHandler}
+                  onchange={handleChange}
                   read-only={_readOnly.sessionM2}
-                ></c-input-checkbox>
+                ></prolet-input-checkbox>
               </div>
               <div class="slds-col slds-size_1-of-1">
-                <c-input-checkbox
+                <prolet-input-checkbox
                   label="12:00 — Networking Lunch (open)"
                   name="sessionM3"
                   checked={data.sessionM3}
-                  onchange={changeHandler}
+                  onchange={handleChange}
                   read-only={_readOnly.sessionM3}
-                ></c-input-checkbox>
+                ></prolet-input-checkbox>
               </div>
             </div>
           </div>
@@ -74,35 +74,35 @@
               class="slds-grid slds-gutters_x-small slds-wrap slds-m-top_small"
             >
               <div class="slds-col slds-size_1-of-1">
-                <c-input-checkbox
+                <prolet-input-checkbox
                   label="14:00 — Panel: The Future of Salesforce"
                   name="sessionA1"
                   checked={data.sessionA1}
-                  onchange={changeHandler}
+                  onchange={handleChange}
                   read-only={_readOnly.sessionA1}
-                ></c-input-checkbox>
+                ></prolet-input-checkbox>
               </div>
               <div class="slds-col slds-size_1-of-1">
-                <c-input-checkbox
+                <prolet-input-checkbox
                   label="15:30 — Workshop B: Apex Best Practices"
                   name="sessionA2"
                   checked={data.sessionA2}
-                  onchange={changeHandler}
+                  onchange={handleChange}
                   read-only={_readOnly.sessionA2}
-                ></c-input-checkbox>
+                ></prolet-input-checkbox>
               </div>
               <div class="slds-col slds-size_1-of-1">
-                <c-input-checkbox
+                <prolet-input-checkbox
                   label="17:00 — Closing Keynote &amp; Awards"
                   name="sessionA3"
                   checked={data.sessionA3}
-                  onchange={changeHandler}
+                  onchange={handleChange}
                   read-only={_readOnly.sessionA3}
-                ></c-input-checkbox>
+                ></prolet-input-checkbox>
               </div>
             </div>
           </div>
-        </c-input-tabset>
+        </prolet-input-tabset>
       </div>
     </section>
 

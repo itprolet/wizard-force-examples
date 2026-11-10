@@ -10,7 +10,7 @@ This page will document Wizard Framework theming and personalization.
 
 - [Home](index.md) · [Framework Concepts](framework-concepts.md) · [Getting Started](getting-started.md) · [Build a Wizard](build-a-wizard.md)
 - [Registry API](registry-api.md) · [Apex Extension Points](apex-extension-points.md) · [Validation](validation.md) · [Data Model](data-model.md)
-- [LWC Components](lwc-components.md) · [Themes](themes.md) · [Review Mode](review-mode.md)
+- [LWC Components](lwc-components.md) · [Themes](themes.md) · [Locked Wizards](locked-wizards.md) · [Namespace](namespace.md)
 - [Deployment, Security, and Testing](deployment-security-testing.md) · [Troubleshooting](troubleshooting.md) · [GitHub Pages Setup](github-pages-setup.md)
 
 Planned content:
@@ -24,5 +24,5 @@ Planned content:
 
 Example references:
 
-- [`examples/feedback-wizard/lwc/feedbackWizardRegistry`](../examples/feedback-wizard/lwc/feedbackWizardRegistry)
-- [`examples/basic-wizard/lwc/styleShowcase`](../examples/basic-wizard/lwc/styleShowcase)
+- [`examples/feedback/lwc/feedbackWizardRegistry`](../examples/feedback/lwc/feedbackWizardRegistry)
+- [`examples/showcase/lwc`](../examples/showcase/lwc)

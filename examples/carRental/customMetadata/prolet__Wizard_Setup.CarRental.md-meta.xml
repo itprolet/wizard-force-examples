@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Car Rental</label>
+    <protected>false</protected>
+    <values>
+        <field>prolet__Title__c</field>
+        <value xsi:type="xsd:string">CarRental_title</value>
+    </values>
+    <values>
+        <field>prolet__Plan__c</field>
+        <value xsi:type="xsd:string">{
+  "CarRental_pag_driver": "CarRentalDriver",
+  "CarRental_pag_car": "CarRentalCar",
+  "if (CarRentalCar.days &gt; 7)": {
+    "CarRental_pag_extras": "CarRentalExtras"
+  },
+  "if (CarRentalCar.carClass='luxury')": {
+    "CarRental_pag_invoice": "CarRentalInvoice"
+  },
+  "CarRental_pag_summary": "CarRentalSummary"
+}</value>
+    </values>
+    <values>
+        <field>prolet__Rules__c</field>
+        <value xsi:type="xsd:string">{
+  "CarRentalDriver": {
+    "required": [
+      "fullName",
+      "email",
+      "licenceNumber",
+      "licenceDate",
+      "age"
+    ],
+    "validators": {
+      "licenceNumber": [
+        {
+          "validator": "ValidateLicenceFormat",
+          "message": "CarRental_err_licenceFormat"
+        }
+      ]
+    },
+    "pageValidators": [
+      {
+        "validator": "ValidateLicenceAge",
+        "message": "CarRental_err_licenceAge"
+      }
+    ],
+    "hideProgress": true,
+    "navigationByChild": true
+  },
+  "CarRentalCar": {
+    "required": [
+      "pickupDate",
+      "days",
+      "bookedThrough"
+    ],
+    "if (not(carClass='luxury'))": {
+      "hidden": [
+        "fullInsurance",
+        "luxuryNotes"
+      ]
+    },
+    "if (carClass='luxury')": {
+      "ticked": [
+        "fullInsurance"
+      ]
+    },
+    "hideProgress": true,
+    "navigationByChild": true
+  },
+  "CarRentalInvoice": {
+    "required": [
+      "billingContact"
+    ],
+    "hideProgress": true,
+    "navigationByChild": true
+  },
+  "CarRentalExtras": {
+    "required": [
+      "notes"
+    ],
+    "hideProgress": true,
+    "navigationByChild": true
+  },
+  "CarRentalSummary": {
+    "navigationByChild": true,
+    "hideProgress": true
+  }
+}</value>
+    </values>
+</CustomMetadata>

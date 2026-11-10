@@ -3,7 +3,7 @@
     <section>
       <div class="slds-grid slds-gutters_x-small slds-wrap">
         <div class="slds-col slds-size_1-of-1">
-          <c-input-text
+          <prolet-input-text
             label={_l.Expense_lbl_iban}
             name="iban"
             value={data.iban}
@@ -12,10 +12,10 @@
             read-only={_readOnly.iban}
             error={_errors.iban}
             message={ibanMessage}
-          ></c-input-text>
+          ></prolet-input-text>
         </div>
         <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
-          <c-input-text
+          <prolet-input-text
             label={_l.Expense_lbl_bankName}
             name="bankName"
             value={data.bankName}
@@ -24,10 +24,10 @@
             read-only={_readOnly.bankName}
             error={_errors.bankName}
             message={_messages.bankName}
-          ></c-input-text>
+          ></prolet-input-text>
         </div>
         <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
-          <c-input-text
+          <prolet-input-text
             label={_l.Expense_lbl_accountHolder}
             name="accountHolder"
             value={data.accountHolder}
@@ -36,7 +36,7 @@
             read-only={_readOnly.accountHolder}
             error={_errors.accountHolder}
             message={_messages.accountHolder}
-          ></c-input-text>
+          ></prolet-input-text>
         </div>
       </div>
     </section>

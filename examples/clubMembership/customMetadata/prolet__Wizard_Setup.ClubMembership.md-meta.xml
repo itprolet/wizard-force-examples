@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Club Membership</label>
+    <protected>false</protected>
+    <values>
+        <field>prolet__Title__c</field>
+        <value xsi:type="xsd:string">ClubMembership_title</value>
+    </values>
+    <values>
+        <field>prolet__Plan__c</field>
+        <value xsi:type="xsd:string">{
+  "ClubMembership_pag_applicant": "ClubMembershipApplicant",
+  "ClubMembership_pag_membership": "ClubMembershipMembership",
+  "ClubMembership_pag_payment": "ClubMembershipPayment",
+  "ClubMembership_pag_company": "ClubMembershipCompany",
+  "ClubMembership_pag_summary": "ClubMembershipSummary"
+}</value>
+    </values>
+    <values>
+        <field>prolet__Rules__c</field>
+        <value xsi:type="xsd:string">{
+  "ClubMembershipApplicant": {
+    "required": [
+      "fullName",
+      "email",
+      "birthDate",
+      "personalId",
+      "phone"
+    ],
+    "validators": {
+      "email": [
+        {
+          "validator": "ValidateClubEmail",
+          "message": "ClubMembership_err_clubEmail"
+        }
+      ]
+    },
+    "hideProgress": true,
+    "navigationByChild": true
+  },
+  "ClubMembershipMembership": {
+    "required": [
+      "startDate"
+    ],
+    "if (not(familyMembers &gt; 0))": {
+      "hidden": [
+        "familyNames"
+      ]
+    },
+    "if (not(plan='premium'))": {
+      "hidden": [
+        "premiumWishes"
+      ]
+    },
+    "hideProgress": true,
+    "navigationByChild": true
+  },
+  "ClubMembershipPayment": {
+    "if (not(method='bank'))": {
+      "hidden": [
+        "iban"
+      ]
+    },
+    "ticked": [
+      "acceptRules"
+    ],
+    "hideProgress": true,
+    "navigationByChild": true
+  },
+  "ClubMembershipCompany": {
+    "pageValidators": [
+      {
+        "validator": "ValidateCompanyPage",
+        "message": "ClubMembership_err_companyPage"
+      }
+    ],
+    "hideProgress": true,
+    "navigationByChild": true
+  },
+  "ClubMembershipSummary": {
+    "hideProgress": true,
+    "navigationByChild": true
+  }
+}</value>
+    </values>
+</CustomMetadata>

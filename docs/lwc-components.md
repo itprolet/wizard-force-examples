@@ -10,7 +10,7 @@ This page will document the public LWC component catalog.
 
 - [Home](index.md) · [Framework Concepts](framework-concepts.md) · [Getting Started](getting-started.md) · [Build a Wizard](build-a-wizard.md)
 - [Registry API](registry-api.md) · [Apex Extension Points](apex-extension-points.md) · [Validation](validation.md) · [Data Model](data-model.md)
-- [LWC Components](lwc-components.md) · [Themes](themes.md) · [Review Mode](review-mode.md)
+- [LWC Components](lwc-components.md) · [Themes](themes.md) · [Locked Wizards](locked-wizards.md) · [Namespace](namespace.md)
 - [Deployment, Security, and Testing](deployment-security-testing.md) · [Troubleshooting](troubleshooting.md) · [GitHub Pages Setup](github-pages-setup.md)
 
 Planned content:
@@ -24,6 +24,6 @@ Planned content:
 
 Example references:
 
-- [`examples/basic-wizard/lwc`](../examples/basic-wizard/lwc)
-- [`examples/feedback-wizard/lwc`](../examples/feedback-wizard/lwc)
-- [`examples/complaint-wizard/lwc`](../examples/complaint-wizard/lwc)
+- [`examples/vacation/lwc`](../examples/vacation/lwc)
+- [`examples/feedback/lwc`](../examples/feedback/lwc)
+- [`examples/complaint/lwc`](../examples/complaint/lwc)

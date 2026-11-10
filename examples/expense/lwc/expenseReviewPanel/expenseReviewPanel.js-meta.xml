@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>64.0</apiVersion>
-    <description>Manager review of an Expense Report: request changes (puts the wizard in REVIEW mode) or approve.</description>
+    <description>Manager review of an Expense Report: request changes (the wizard is ACTIVE again for the employee) or approve.</description>
     <isExposed>true</isExposed>
     <masterLabel>Expense Report - Manager Review</masterLabel>
     <targets>

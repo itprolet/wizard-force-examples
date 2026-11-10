@@ -1,0 +1,17 @@
+{
+  "root": true,
+  "overrides": [
+    {
+      "files": ["**/lwc/**/*.js"],
+      "extends": ["@salesforce/eslint-config-lwc/recommended"]
+    },
+    {
+      "files": ["**/aura/**/*.js"],
+      "extends": ["@salesforce/eslint-config-lwc/base"],
+      "plugins": ["@salesforce/eslint-plugin-aura"],
+      "rules": {
+        "@salesforce/aura/no-deprecated-apis": "warn"
+      }
+    }
+  ]
+}

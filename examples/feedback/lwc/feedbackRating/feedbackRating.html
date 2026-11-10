@@ -1,0 +1,27 @@
+<template>
+  <article class="eh-page">
+    <section>
+      <div class="slds-m-around_medium">
+        <prolet-input-text
+          type="number"
+          label="How would you rate us? (1–5)"
+          name="rating"
+          min="1"
+          max="5"
+          value={data.rating}
+          required={_required.rating}
+          error={_errors.rating}
+          onchange={handleChange}
+        >
+        </prolet-input-text>
+        <prolet-input-checkbox
+          label="Would you recommend us?"
+          name="wouldRecommend"
+          checked={data.wouldRecommend}
+          onchange={handleChange}
+        >
+        </prolet-input-checkbox>
+      </div>
+    </section>
+  </article>
+</template>

@@ -1,0 +1,47 @@
+<template>
+  <article class="eh-page">
+    <section>
+      <div class="slds-m-around_medium">
+        <prolet-input-suggester
+          label="Account"
+          lookup-name="ServiceVisit_Account"
+          key-field="Id"
+          name-field="Name"
+          selected-id={data.account}
+          selected-name={data.accountName}
+          required={required.account}
+          error={errors.account}
+          onsmartlookupselected={accountSelected}
+        ></prolet-input-suggester>
+        <prolet-input-suggester
+          label="Contact"
+          lookup-name="ServiceVisit_Contact"
+          key-field="Id"
+          name-field="Name"
+          arg0-value={contactArg0}
+          disabled={contactDisabled}
+          selected-id={data.contact}
+          selected-name={data.contactName}
+          required={required.contact}
+          error={errors.contact}
+          onsmartlookupselected={contactSelected}
+        ></prolet-input-suggester>
+        <prolet-input-text
+          type="email"
+          label="Contact Email"
+          name="contactEmail"
+          value={data.contactEmail}
+          required={required.contactEmail}
+          error={errors.contactEmail}
+          onchange={changeHandler}
+        ></prolet-input-text>
+        <!-- WIZARD-MAKER example: show fields only when a condition is true.
+             The getter (e.g. showOtherDetails) goes in the JS, see the examples in PART 2.
+        <template lwc:if={showOtherDetails}>
+          …one or more fields…
+        </template>
+        -->
+      </div>
+    </section>
+  </article>
+</template>

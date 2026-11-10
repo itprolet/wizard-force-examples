@@ -5,7 +5,7 @@ const DESTINATION_TYPES = ["domestic", "eu", "international"];
 /**
  * Page 1 - Trip.
  * - destinationType drives the plan: "international" shows ExpenseTravelDocuments,
- *   "eu" shows ExpenseEuHealthCard (if / else if in Plan__c).
+ *   "eu" shows ExpenseEuHealthCard (if / else if in prolet__Plan__c).
  * - The customer account is chosen with c-input-suggester in mode 1 (dynamic SOQL, no metadata).
  * - Rules: required fields, a hint for `purpose`, JS page validator ValidateTripDates.
  */
