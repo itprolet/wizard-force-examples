@@ -26,14 +26,14 @@ This page explains the runtime model of the Wizard Framework for developers who 
 
 Each wizard a user fills in is one record:
 
-| Field | What it holds |
-|---|---|
-| `Wizard_Type__c` | The type: the `DeveloperName` of a `Wizard_Setup__mdt` record. A type without one is refused. |
-| `Model__c` | The answers, as JSON: one object per page (`{ "Trip": { "city": "Sofia" } }`). |
-| `Context__c` | The context of the process, as JSON (`$ctx` in the rules). Written by your Apex, never by the user. |
-| `State__c` | `ACTIVE` (the user fills it in) or `LOCKED` (read-only). Anything but `ACTIVE` counts as locked. |
-| `Path__c` | The pages the user went through, in order. |
-| `PathVersion__c` | The version of the wizard: one more on every real change of the fields above. |
+| Field            | What it holds                                                                                       |
+| ---------------- | --------------------------------------------------------------------------------------------------- |
+| `Wizard_Type__c` | The type: the `DeveloperName` of a `Wizard_Setup__mdt` record. A type without one is refused.       |
+| `Model__c`       | The answers, as JSON: one object per page (`{ "Trip": { "city": "Sofia" } }`).                      |
+| `Context__c`     | The context of the process, as JSON (`$ctx` in the rules). Written by your Apex, never by the user. |
+| `State__c`       | `ACTIVE` (the user fills it in) or `LOCKED` (read-only). Anything but `ACTIVE` counts as locked.    |
+| `Path__c`        | The pages the user went through, in order.                                                          |
+| `PathVersion__c` | The version of the wizard: one more on every real change of the fields above.                       |
 
 A new wizard first shows its first page without a record: the record is created on the first **Next**. Details: [Data Model](data-model.md).
 

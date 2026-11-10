@@ -40,19 +40,19 @@ Every example is written for an org with the package installed: the framework's 
 
 ## What The Package Provides
 
-| Area | What you use | Where it is documented |
-|---|---|---|
-| Wizard record | `prolet__Wizard__c`: type, answers, context, path, version and state of each wizard | [Data Model](data-model.md) |
-| Wizard configuration | `prolet__Wizard_Setup__mdt`: the plan, the rules and the title of a wizard type | [Build a Wizard](build-a-wizard.md) |
-| Wizard container | `<prolet-wizard>` and its attributes | [LWC Components](lwc-components.md) |
-| Page base class | `prolet/wizardPageBase`: the page contract written once | [Registry API](registry-api.md) |
-| Runtime registry | pages, validators and labels handed to the wizard | [Registry API](registry-api.md) |
-| Validation | required, ticked, patterns, JavaScript and Apex validators, page validators | [Validation](validation.md) |
-| Apex API | `prolet.WizardApi`, `prolet.WizardVersionChange`, `prolet.WizardStates`, `prolet.IValidator`, `prolet.IPageValidator` and the DTOs | [Apex Extension Points](apex-extension-points.md) |
-| Reusable UI | inputs, alerts, datatable, tiles, progress | [LWC Components](lwc-components.md) |
-| Lookups | `prolet__Smart_Lookup_Setting__mdt`: a query in metadata, or your own Apex class | [LWC Components](lwc-components.md) |
-| Locking | `ACTIVE` / `LOCKED`, submit, unlock | [Locked Wizards](locked-wizards.md) |
-| Themes | colours and shape | [Themes](themes.md) |
+| Area                 | What you use                                                                                                                       | Where it is documented                            |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| Wizard record        | `prolet__Wizard__c`: type, answers, context, path, version and state of each wizard                                                | [Data Model](data-model.md)                       |
+| Wizard configuration | `prolet__Wizard_Setup__mdt`: the plan, the rules and the title of a wizard type                                                    | [Build a Wizard](build-a-wizard.md)               |
+| Wizard container     | `<prolet-wizard>` and its attributes                                                                                               | [LWC Components](lwc-components.md)               |
+| Page base class      | `prolet/wizardPageBase`: the page contract written once                                                                            | [Registry API](registry-api.md)                   |
+| Runtime registry     | pages, validators and labels handed to the wizard                                                                                  | [Registry API](registry-api.md)                   |
+| Validation           | required, ticked, patterns, JavaScript and Apex validators, page validators                                                        | [Validation](validation.md)                       |
+| Apex API             | `prolet.WizardApi`, `prolet.WizardVersionChange`, `prolet.WizardStates`, `prolet.IValidator`, `prolet.IPageValidator` and the DTOs | [Apex Extension Points](apex-extension-points.md) |
+| Reusable UI          | inputs, alerts, datatable, tiles, progress                                                                                         | [LWC Components](lwc-components.md)               |
+| Lookups              | `prolet__Smart_Lookup_Setting__mdt`: a query in metadata, or your own Apex class                                                   | [LWC Components](lwc-components.md)               |
+| Locking              | `ACTIVE` / `LOCKED`, submit, unlock                                                                                                | [Locked Wizards](locked-wizards.md)               |
+| Themes               | colours and shape                                                                                                                  | [Themes](themes.md)                               |
 
 ## How To Read This Documentation
 
@@ -89,11 +89,11 @@ export default class FeedbackWizardRegistry extends LightningElement {
   pageRegistry = {
     FeedbackRating,
     FeedbackComment,
-    WizardFeedbackSummary
+    WizardFeedbackSummary,
   };
 
   validatorRegistry = {
-    validateFeedbackEmail
+    validateFeedbackEmail,
   };
 }
 ```
@@ -101,8 +101,8 @@ export default class FeedbackWizardRegistry extends LightningElement {
 ```html
 <template>
   <prolet-wizard
-    page-registry={pageRegistry}
-    validator-registry={validatorRegistry}
+    page-registry="{pageRegistry}"
+    validator-registry="{validatorRegistry}"
     wizard-type-config="Feedback"
   >
   </prolet-wizard>
@@ -136,22 +136,22 @@ The package's internal classes (`WizardController`, `WizardService`, `WizardUtil
 
 ## Documentation Map
 
-| Page | Purpose |
-|---|---|
-| [Framework Concepts](framework-concepts.md) | Runtime model, lifecycle, navigation and the order of checks |
-| [Getting Started](getting-started.md) | Installation and the smallest working wizard |
-| [Build a Wizard](build-a-wizard.md) | End-to-end walkthrough |
-| [Registry API](registry-api.md) | The registry, the page contract and `wizardPageBase` |
-| [Apex Extension Points](apex-extension-points.md) | The global Apex API |
-| [Validation](validation.md) | Rules, patterns, JavaScript and Apex validators |
-| [Data Model](data-model.md) | `prolet__Wizard__c`, its states, URL parameters and the stateless mode |
-| [LWC Components](lwc-components.md) | The components you can place in your pages |
-| [Themes](themes.md) | Colours and shape |
-| [Locked Wizards](locked-wizards.md) | `ACTIVE` / `LOCKED`, submit and unlock |
-| [Namespace](namespace.md) | Which names need `prolet` in your code |
-| [Deployment, Security, and Testing](deployment-security-testing.md) | Sharing, permissions, upgrades |
-| [Troubleshooting](troubleshooting.md) | Common errors and what they mean |
-| [GitHub Pages Setup](github-pages-setup.md) | Publishing this site from `docs/` |
+| Page                                                                | Purpose                                                                |
+| ------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| [Framework Concepts](framework-concepts.md)                         | Runtime model, lifecycle, navigation and the order of checks           |
+| [Getting Started](getting-started.md)                               | Installation and the smallest working wizard                           |
+| [Build a Wizard](build-a-wizard.md)                                 | End-to-end walkthrough                                                 |
+| [Registry API](registry-api.md)                                     | The registry, the page contract and `wizardPageBase`                   |
+| [Apex Extension Points](apex-extension-points.md)                   | The global Apex API                                                    |
+| [Validation](validation.md)                                         | Rules, patterns, JavaScript and Apex validators                        |
+| [Data Model](data-model.md)                                         | `prolet__Wizard__c`, its states, URL parameters and the stateless mode |
+| [LWC Components](lwc-components.md)                                 | The components you can place in your pages                             |
+| [Themes](themes.md)                                                 | Colours and shape                                                      |
+| [Locked Wizards](locked-wizards.md)                                 | `ACTIVE` / `LOCKED`, submit and unlock                                 |
+| [Namespace](namespace.md)                                           | Which names need `prolet` in your code                                 |
+| [Deployment, Security, and Testing](deployment-security-testing.md) | Sharing, permissions, upgrades                                         |
+| [Troubleshooting](troubleshooting.md)                               | Common errors and what they mean                                       |
+| [GitHub Pages Setup](github-pages-setup.md)                         | Publishing this site from `docs/`                                      |
 
 ## Next Step
 

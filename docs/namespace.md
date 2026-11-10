@@ -15,22 +15,22 @@ The Wizard Framework is a managed package with the namespace `prolet`. In your o
 
 ## Where `prolet` Goes
 
-| Where | The package's name | Your own name |
-|---|---|---|
-| JS import | `import WizardPageBase from "prolet/wizardPageBase";`, `from "prolet/wizardUtils"` | `from "c/myPage"` |
-| CSS | `@import "prolet/styles";` | `@import "c/myStyles";` |
-| HTML tag | `<prolet-wizard>`, `<prolet-input-text>`, `<prolet-elem-alert>`, `<prolet-page-progress>` | `<c-my-frame>` |
-| Lightning page (flexipage) | `prolet:wizard` | `c:myWizardRegistry` |
-| Apex class | `prolet.WizardApi`, `prolet.WizardStates`, `prolet.WizardPageData`, `prolet.IValidator` | `MyService` |
-| Object | `prolet__Wizard__c` | `My_Record__c` |
-| Field of the package | `prolet__Model__c`, `prolet__State__c`, `prolet__Context__c` | `My_Field__c`, also a lookup to the wizard you name `Wizard__c` |
-| Lookup to a wizard | `<referenceTo>prolet__Wizard__c</referenceTo>` | the field itself stays yours |
-| Custom metadata record | file `prolet__Wizard_Setup.MyWizard.md-meta.xml`, fields `prolet__Plan__c`, `prolet__Rules__c`, `prolet__Title__c` | |
-| Lookup setting | `prolet__Smart_Lookup_Setting.MyLookup.md-meta.xml`, `prolet__Soql__c`, `prolet__ApexClass__c` | the class it names: `MyLookup` |
-| Constant | `prolet__Wizard_Contstant.MyConstant.md-meta.xml`, `prolet__Value__c` | |
-| Permission set | `prolet__Wizard_Framework_User`, `prolet__Wizard_Framework_Back_Office` | |
-| Label in Apex | `System.Label.get('prolet', 'Wizard_err_locked')` | `System.Label.My_label` |
-| Label in LWC | `@salesforce/label/prolet.Wizard_err_locked` | `@salesforce/label/c.My_label` |
+| Where                      | The package's name                                                                                                 | Your own name                                                   |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------- |
+| JS import                  | `import WizardPageBase from "prolet/wizardPageBase";`, `from "prolet/wizardUtils"`                                 | `from "c/myPage"`                                               |
+| CSS                        | `@import "prolet/styles";`                                                                                         | `@import "c/myStyles";`                                         |
+| HTML tag                   | `<prolet-wizard>`, `<prolet-input-text>`, `<prolet-elem-alert>`, `<prolet-page-progress>`                          | `<c-my-frame>`                                                  |
+| Lightning page (flexipage) | `prolet:wizard`                                                                                                    | `c:myWizardRegistry`                                            |
+| Apex class                 | `prolet.WizardApi`, `prolet.WizardStates`, `prolet.WizardPageData`, `prolet.IValidator`                            | `MyService`                                                     |
+| Object                     | `prolet__Wizard__c`                                                                                                | `My_Record__c`                                                  |
+| Field of the package       | `prolet__Model__c`, `prolet__State__c`, `prolet__Context__c`                                                       | `My_Field__c`, also a lookup to the wizard you name `Wizard__c` |
+| Lookup to a wizard         | `<referenceTo>prolet__Wizard__c</referenceTo>`                                                                     | the field itself stays yours                                    |
+| Custom metadata record     | file `prolet__Wizard_Setup.MyWizard.md-meta.xml`, fields `prolet__Plan__c`, `prolet__Rules__c`, `prolet__Title__c` |                                                                 |
+| Lookup setting             | `prolet__Smart_Lookup_Setting.MyLookup.md-meta.xml`, `prolet__Soql__c`, `prolet__ApexClass__c`                     | the class it names: `MyLookup`                                  |
+| Constant                   | `prolet__Wizard_Contstant.MyConstant.md-meta.xml`, `prolet__Value__c`                                              |                                                                 |
+| Permission set             | `prolet__Wizard_Framework_User`, `prolet__Wizard_Framework_Back_Office`                                            |                                                                 |
+| Label in Apex              | `System.Label.get('prolet', 'Wizard_err_locked')`                                                                  | `System.Label.My_label`                                         |
+| Label in LWC               | `@salesforce/label/prolet.Wizard_err_locked`                                                                       | `@salesforce/label/c.My_label`                                  |
 
 ## Where It Does Not Go
 
@@ -55,11 +55,11 @@ A lookup setting (`prolet__ApexClass__c`) or a validator in the rules names your
 
 Only `global` Apex of the package is visible in your org. `prolet.WizardController`, `WizardService`, `WizardUtils`, `SmartLookupCtrl` and the `Wf*` classes are `public`: your code cannot call them. Their uses have a global way:
 
-| Instead of | Use |
-|---|---|
-| `new WizardSelector()` | `prolet.WizardSelector.newInstance()` (a `prolet.IWizardSelector`) |
-| `SmartLookupCtrl.likePattern(text)` | `prolet.WizardApi.likePattern(text)` |
-| `WizardUtils.parsePageRules(page, rules, model)` | `prolet.WizardApi.parsePageRules(page, rules, model)` |
+| Instead of                                       | Use                                                                |
+| ------------------------------------------------ | ------------------------------------------------------------------ |
+| `new WizardSelector()`                           | `prolet.WizardSelector.newInstance()` (a `prolet.IWizardSelector`) |
+| `SmartLookupCtrl.likePattern(text)`              | `prolet.WizardApi.likePattern(text)`                               |
+| `WizardUtils.parsePageRules(page, rules, model)` | `prolet.WizardApi.parsePageRules(page, rules, model)`              |
 
 ## JSON of the Package's Classes
 

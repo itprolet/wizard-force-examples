@@ -16,17 +16,17 @@ The documentation is published with GitHub Pages from the `docs/` folder.
 
 Each example is a package directory of its own and deploys on its own, into an org with the package installed. Take them in this order:
 
-| # | Example | What it shows |
-|---|---|---|
-| 1 | [vacation](examples/vacation) | The smallest wizard: three pages, required fields only, no Apex; the answers live in `prolet__Wizard__c` |
-| 2 | [embedded](examples/embedded) | A single form inside your own component: the plan, rules and answers come from the parent, nothing is stored (`wizardchange` / `wizardcomplete`) |
-| 3 | [feedback](examples/feedback) | A full flow: its own object, a `with sharing` controller, `WizardApi.assertCompleted` / `lock`, pages on `wizardPageBase` |
-| 4 | [serviceVisit](examples/serviceVisit) | A conditional page and two lookups from metadata (`Smart_Lookup_Setting`) |
-| 5 | [complaint](examples/complaint) | Labels, attachments, patterns, hints, page errors, a new wizard after a locked one |
-| 6 | [clubMembership](examples/clubMembership) | A lookup written in Apex, `ticked` boxes, `hidden` fields, page validators, translations, its own frame |
-| 7 | [showcase](examples/showcase) | Every input and element of the package (tabs, datatable, alerts) |
-| 8 | [expense](examples/expense) | Constants, server validators (`IValidator` / `IPageValidator`), two tabs on one wizard, locking, a manager's review with `prolet__Wizard_Framework_Back_Office` |
-| — | [carRental](examples/carRental) | Optional, an advanced look: tiles, photos, two objects |
+| #   | Example                                   | What it shows                                                                                                                                                   |
+| --- | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | [vacation](examples/vacation)             | The smallest wizard: three pages, required fields only, no Apex; the answers live in `prolet__Wizard__c`                                                        |
+| 2   | [embedded](examples/embedded)             | A single form inside your own component: the plan, rules and answers come from the parent, nothing is stored (`wizardchange` / `wizardcomplete`)                |
+| 3   | [feedback](examples/feedback)             | A full flow: its own object, a `with sharing` controller, `WizardApi.assertCompleted` / `lock`, pages on `wizardPageBase`                                       |
+| 4   | [serviceVisit](examples/serviceVisit)     | A conditional page and two lookups from metadata (`Smart_Lookup_Setting`)                                                                                       |
+| 5   | [complaint](examples/complaint)           | Labels, attachments, patterns, hints, page errors, a new wizard after a locked one                                                                              |
+| 6   | [clubMembership](examples/clubMembership) | A lookup written in Apex, `ticked` boxes, `hidden` fields, page validators, translations, its own frame                                                         |
+| 7   | [showcase](examples/showcase)             | Every input and element of the package (tabs, datatable, alerts)                                                                                                |
+| 8   | [expense](examples/expense)               | Constants, server validators (`IValidator` / `IPageValidator`), two tabs on one wizard, locking, a manager's review with `prolet__Wizard_Framework_Back_Office` |
+| —   | [carRental](examples/carRental)           | Optional, an advanced look: tiles, photos, two objects                                                                                                          |
 
 Deploy one:
 
