@@ -1,0 +1,105 @@
+<template>
+  <!-- WIZARD-MAKER:frame (the wizard's own steps and buttons; change them with "npm run make layout") -->
+  <c-club-membership-frame
+    page={page}
+    model={model}
+    data={data}
+    l={l}
+    state={state}
+    errors={errors}
+  >
+    <article class="eh-page">
+      <section>
+        <div class="slds-m-around_medium">
+          <!-- WIZARD-MAKER:layout (arranged with "npm run make layout") -->
+          <div class="slds-grid slds-gutters_medium slds-wrap">
+            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+              <prolet-input-suggester
+                label={_l.ClubMembership_lbl_company_company}
+                lookup-name="ClubMembership_Company"
+                key-field="Id"
+                name-field="Name"
+                selected-id={data.company}
+                selected-name={data.companyName}
+                required={required.company}
+                error={errors.company}
+                onsmartlookupselected={companySelected}
+              ></prolet-input-suggester>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+              <prolet-input-suggester
+                label={_l.ClubMembership_lbl_company_contactPerson}
+                lookup-name="ClubMembership_ContactPerson"
+                key-field="Id"
+                name-field="Name"
+                arg0-value={contactPersonArg0}
+                disabled={contactPersonDisabled}
+                selected-id={data.contactPerson}
+                selected-name={data.contactPersonName}
+                required={required.contactPerson}
+                error={errors.contactPerson}
+                onsmartlookupselected={contactPersonSelected}
+              ></prolet-input-suggester>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+              <prolet-input-suggester
+                label={_l.ClubMembership_lbl_company_partnerClub}
+                lookup-name="ClubMembership_PartnerClub"
+                key-field="Id"
+                name-field="Name"
+                selected-id={data.partnerClub}
+                selected-name={data.partnerClubName}
+                required={required.partnerClub}
+                error={errors.partnerClub}
+                onsmartlookupselected={partnerClubSelected}
+              ></prolet-input-suggester>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+              <prolet-input-suggester
+                label={_l.ClubMembership_lbl_company_bigClient}
+                lookup-name="ClubMembership_BigClient"
+                key-field="Id"
+                name-field="Name"
+                selected-id={data.bigClient}
+                selected-name={data.bigClientName}
+                required={required.bigClient}
+                error={errors.bigClient}
+                onsmartlookupselected={bigClientSelected}
+              ></prolet-input-suggester>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+              <prolet-input-suggester
+                label={_l.ClubMembership_lbl_company_referredBy}
+                lookup-name="ClubMembership_ReferredBy"
+                key-field="Id"
+                name-field="Name"
+                selected-id={data.referredBy}
+                selected-name={data.referredByName}
+                required={required.referredBy}
+                error={errors.referredBy}
+                onsmartlookupselected={referredBySelected}
+              ></prolet-input-suggester>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+              <prolet-input-text
+                type="text"
+                label={_l.ClubMembership_lbl_company_vatNumber}
+                name="vatNumber"
+                value={data.vatNumber}
+                required={required.vatNumber}
+                error={errors.vatNumber}
+                onchange={changeHandler}
+              ></prolet-input-text>
+            </div>
+          </div>
+          <!-- WIZARD-MAKER:layout end -->
+          <!-- WIZARD-MAKER example: show fields only when a condition is true.
+             The getter (e.g. showOtherDetails) goes in the JS, see the examples in PART 2.
+        <template lwc:if={showOtherDetails}>
+          …one or more fields…
+        </template>
+        --></div>
+      </section>
+    </article>
+  </c-club-membership-frame>
+</template>

@@ -2,7 +2,7 @@
   <article class="eh-page">
     <section>
       <div class="slds-m-around_medium">
-        <c-input-text
+        <prolet-input-text
           type="date"
           label="Start date"
           name="startDate"
@@ -10,9 +10,8 @@
           required={required.startDate}
           error={errors.startDate}
           onchange={changeHandler}
-        ></c-input-text>
-
-        <c-input-text
+        ></prolet-input-text>
+        <prolet-input-text
           type="date"
           label="End date"
           name="endDate"
@@ -20,9 +19,8 @@
           required={required.endDate}
           error={errors.endDate}
           onchange={changeHandler}
-        ></c-input-text>
-
-        <c-input-combobox
+        ></prolet-input-text>
+        <prolet-input-combobox
           label="Vacation type"
           name="type"
           items={typeOptions}
@@ -30,9 +28,8 @@
           required={required.type}
           error={errors.type}
           onchange={changeHandler}
-        ></c-input-combobox>
-
-        <c-input-text
+        ></prolet-input-combobox>
+        <prolet-input-text
           type="text"
           label="Comment"
           name="comment"
@@ -40,7 +37,7 @@
           required={required.comment}
           error={errors.comment}
           onchange={changeHandler}
-        ></c-input-text>
+        ></prolet-input-text>
       </div>
     </section>
   </article>

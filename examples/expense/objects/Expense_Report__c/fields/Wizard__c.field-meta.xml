@@ -3,7 +3,7 @@
     <fullName>Wizard__c</fullName>
     <deleteConstraint>SetNull</deleteConstraint>
     <label>Wizard</label>
-    <referenceTo>Wizard__c</referenceTo>
+    <referenceTo>prolet__Wizard__c</referenceTo>
     <relationshipLabel>Expense Reports</relationshipLabel>
     <relationshipName>Expense_Reports</relationshipName>
     <required>false</required>

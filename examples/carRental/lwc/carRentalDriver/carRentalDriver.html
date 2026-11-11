@@ -1,0 +1,106 @@
+<template>
+  <!-- WIZARD-MAKER:frame (the wizard's own steps and buttons; change them with "npm run make layout") -->
+  <c-car-rental-frame
+    page={page}
+    model={model}
+    data={data}
+    l={l}
+    state={state}
+    errors={errors}
+  >
+    <article class="eh-page">
+      <section>
+        <div class="slds-m-around_medium">
+          <!-- WIZARD-MAKER:layout (arranged with "npm run make layout") -->
+          <section class="wm-section wm-box">
+            <h2 class="eh-header eh-divider">
+              {_l.CarRental_sec_driver_aboutYou}
+            </h2>
+            <div class="slds-grid slds-gutters_medium slds-wrap">
+              <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+                <prolet-input-text
+                  type="text"
+                  label={_l.CarRental_lbl_driver_fullName}
+                  name="fullName"
+                  value={data.fullName}
+                  required={required.fullName}
+                  error={errors.fullName}
+                  onchange={changeHandler}
+                ></prolet-input-text>
+              </div>
+              <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+                <prolet-input-text
+                  type="email"
+                  label={_l.CarRental_lbl_driver_email}
+                  name="email"
+                  value={data.email}
+                  required={required.email}
+                  error={errors.email}
+                  onchange={changeHandler}
+                ></prolet-input-text>
+              </div>
+              <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+                <prolet-input-text
+                  type="text"
+                  label={_l.CarRental_lbl_driver_licenceNumber}
+                  name="licenceNumber"
+                  value={data.licenceNumber}
+                  required={required.licenceNumber}
+                  error={errors.licenceNumber}
+                  onchange={changeHandler}
+                ></prolet-input-text>
+              </div>
+            </div>
+          </section>
+          <section class="wm-section wm-box">
+            <h2 class="eh-header eh-divider">
+              {_l.CarRental_sec_driver_licence}
+            </h2>
+            <div class="slds-grid slds-gutters_medium slds-wrap">
+              <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+                <prolet-input-text
+                  type="date"
+                  label={_l.CarRental_lbl_driver_licenceDate}
+                  name="licenceDate"
+                  value={data.licenceDate}
+                  required={required.licenceDate}
+                  error={errors.licenceDate}
+                  onchange={changeHandler}
+                ></prolet-input-text>
+              </div>
+              <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+                <prolet-input-text
+                  type="number"
+                  label={_l.CarRental_lbl_driver_age}
+                  name="age"
+                  value={data.age}
+                  required={required.age}
+                  error={errors.age}
+                  onchange={changeHandler}
+                ></prolet-input-text>
+              </div>
+              <div
+                class="slds-col slds-size_1-of-1 slds-large-size_1-of-2 wm-checkbox"
+              >
+                <prolet-input-checkbox
+                  label={_l.CarRental_lbl_driver_experienced}
+                  name="experienced"
+                  checked={data.experienced}
+                  required={required.experienced}
+                  error={errors.experienced}
+                  onchange={changeHandler}
+                ></prolet-input-checkbox>
+              </div>
+            </div>
+          </section>
+          <!-- WIZARD-MAKER:layout end -->
+          <!-- WIZARD-MAKER example: show fields only when a condition is true.
+             The getter (e.g. showOtherDetails) goes in the JS, see the examples in PART 2.
+        <template lwc:if={showOtherDetails}>
+          …one or more fields…
+        </template>
+        --></div>
+      </section>
+    </article>
+  </c-car-rental-frame>
+</template>

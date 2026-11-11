@@ -1,0 +1,8 @@
+/* WIZARD-MAKER:style (written by "npm run make style"; your own CSS goes below the end line) */
+:host {
+  --wizard-shape-input: 12px;
+  --wizard-shape-button: 12px;
+  --wizard-shape-step: 40%;
+  --wizard-shape-box: 12px;
+}
+/* WIZARD-MAKER:style end */

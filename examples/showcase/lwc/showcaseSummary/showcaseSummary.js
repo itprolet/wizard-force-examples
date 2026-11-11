@@ -1,4 +1,10 @@
-import { LightningElement, api, track } from "lwc";
+import { api, track } from "lwc";
+import WizardPageBase from "prolet/wizardPageBase";
+import {
+  clearStoredWizardId,
+  errorMessage,
+  isLockedState
+} from "prolet/wizardUtils";
 import submitShowcase from "@salesforce/apex/ShowcaseController.submitShowcase";
 
 // All available sessions — used to build the datatable from the boolean flags in the model.
@@ -47,62 +53,58 @@ const EVENT_TYPE_LABELS = {
   hybrid: "Hybrid"
 };
 
-export default class ShowcaseSummary extends LightningElement {
-  @api wizardId;
-  @api title;
-  @api page;
-  @api l;
-  @api wizardType;
-  @api currentId;
-  @api hasPrev;
-  @api hasNext;
+export default class ShowcaseSummary extends WizardPageBase {
   @api prop1;
+
   @api prop2;
 
-  get _l() {
-    return this.l || {};
+  /** The GDPR tick: the submit's own, not an answer of the page (it is never sent as one) */
+  agreeGdpr = false;
+
+  /** The page's own error (the tick is missing): not one of the wizard's rules */
+  localErrors = {};
+
+  /** The GDPR tick changed: kept here, it goes with the submit */
+  handleAgree(event) {
+    this.agreeGdpr = (event.detail?.checked ?? event.target?.checked) === true;
   }
 
-  // Summary reads the full model, not just its own page namespace
-  _model;
-  @api get model() {
-    return this._model;
-  }
-  set model(val) {
-    this._model = val;
-  }
-
-  _errors;
-  @api get errors() {
-    return this._errors || {};
-  }
-  set errors(val) {
-    this._errors = val;
-  }
-
-  @api readOnly;
-  @api visible;
-  @api patterns;
-  @api required;
-  @api hints;
-
-  @track data = { agreeGdpr: false };
   @track isSubmitting = false;
-  @track isSubmitted = false;
+
+  /** Submitted in this visit */
+  @track submitted = false;
+
+  /** Submitted now, or before: a locked wizard (any state but ACTIVE) is not submitted again */
+  get isSubmitted() {
+    return this.submitted || isLockedState(this.state);
+  }
+
+  /**
+   * A locked wizard was submitted already and is only looked at: a new one is started on a clean
+   * page (the remembered Id and the Id in the URL are gone)
+   */
+  startNew() {
+    clearStoredWizardId(this.wizardType);
+    window.location.assign(window.location.pathname);
+  }
+
   @track submitError = null;
 
   // --- cross-page data getters ---
   get eventTypeData() {
-    return this._model?.ShowcaseEventType || {};
+    return this.model?.ShowcaseEventType || {};
   }
+
   get scheduleData() {
-    return this._model?.ShowcaseSchedule || {};
+    return this.model?.ShowcaseSchedule || {};
   }
+
   get preferencesData() {
-    return this._model?.ShowcasePreferences || {};
+    return this.model?.ShowcasePreferences || {};
   }
+
   get contactData() {
-    return this._model?.ShowcaseContact || {};
+    return this.model?.ShowcaseContact || {};
   }
 
   // --- labels ---
@@ -143,7 +145,7 @@ export default class ShowcaseSummary extends LightningElement {
 
   // --- GDPR ---
   get isGdprChecked() {
-    return this.data.agreeGdpr === true;
+    return this.agreeGdpr === true;
   }
 
   // --- submit button label ---
@@ -155,47 +157,34 @@ export default class ShowcaseSummary extends LightningElement {
 
   // --- navigationByChild handlers ---
   handleBack() {
-    this.dispatchEvent(
-      new CustomEvent("pagechange", {
-        detail: { direction: "prev", pageModel: {} }
-      })
-    );
-  }
-
-  changeHandler(event) {
-    const name = event.detail?.name || event.currentTarget.dataset.name;
-    const value = event.detail.checked ?? false;
-    this.data = { ...this.data, [name]: value };
+    this.goBack();
   }
 
   async handleSubmit() {
     if (!this.isGdprChecked) {
-      this._errors = {
+      this.localErrors = {
         agreeGdpr: "You must agree to the processing of your personal data."
       };
       return;
     }
-    this._errors = {};
+    this.localErrors = {};
     this.isSubmitting = true;
+    // the wizard waits too: no move, no refresh of its own while the submit runs
+    this.uiLock(true);
     this.submitError = null;
     try {
       await submitShowcase({ wizardId: this.wizardId });
-      this.isSubmitted = true;
+      this.submitted = true;
     } catch (e) {
       this.submitError =
-        e?.body?.message || "An unexpected error occurred. Please try again.";
+        errorMessage(e) || "An unexpected error occurred. Please try again.";
     } finally {
       this.isSubmitting = false;
+      this.uiLock(false);
+      // the wizard reads its state again: locked after the submit, or by a submit in another tab
+      // when this one was refused. No answers with it (pageModel null): the tick is the submit's
+      // own, not an answer a move saves, so the page keeps no draft and nothing is warned about
+      this.refresh({ pageModel: null });
     }
   }
-
-  @api handlePage(dir) {
-    this.dispatchEvent(
-      new CustomEvent("pagechange", {
-        detail: { direction: dir, pageModel: {} }
-      })
-    );
-  }
-
-  @api processChange() {}
 }

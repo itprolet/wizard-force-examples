@@ -1,0 +1,79 @@
+<template>
+  <!-- WIZARD-MAKER:frame (the wizard's own steps and buttons; change them with "npm run make layout") -->
+  <c-car-rental-frame
+    page={page}
+    model={model}
+    data={data}
+    l={l}
+    state={state}
+    errors={errors}
+  >
+    <article class="eh-page">
+      <section>
+        <div class="slds-m-around_medium">
+          <!-- WIZARD-MAKER:layout (arranged with "npm run make layout") -->
+          <div class="slds-grid slds-gutters_medium slds-wrap">
+            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+              <prolet-input-text
+                type="text"
+                label={_l.CarRental_lbl_invoice_vatNumber}
+                name="vatNumber"
+                value={data.vatNumber}
+                required={required.vatNumber}
+                error={errors.vatNumber}
+                onchange={changeHandler}
+              ></prolet-input-text>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+              <prolet-input-suggester
+                label={_l.CarRental_lbl_invoice_billingContact}
+                lookup-name="CarRental_BillingContact"
+                key-field="Id"
+                name-field="Name"
+                arg0-value={billingContactArg0}
+                disabled={billingContactDisabled}
+                selected-id={data.billingContact}
+                selected-name={data.billingContactName}
+                required={required.billingContact}
+                error={errors.billingContact}
+                onsmartlookupselected={billingContactSelected}
+              ></prolet-input-suggester>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+              <prolet-input-suggester
+                label={_l.CarRental_lbl_invoice_bigCompany}
+                lookup-name="CarRental_BigCompany"
+                key-field="Id"
+                name-field="Name"
+                selected-id={data.bigCompany}
+                selected-name={data.bigCompanyName}
+                required={required.bigCompany}
+                error={errors.bigCompany}
+                onsmartlookupselected={bigCompanySelected}
+              ></prolet-input-suggester>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+              <prolet-input-suggester
+                label={_l.CarRental_lbl_invoice_openDeal}
+                lookup-name="CarRental_OpenDeal"
+                key-field="Id"
+                name-field="Name"
+                selected-id={data.openDeal}
+                selected-name={data.openDealName}
+                required={required.openDeal}
+                error={errors.openDeal}
+                onsmartlookupselected={openDealSelected}
+              ></prolet-input-suggester>
+            </div>
+          </div>
+          <!-- WIZARD-MAKER:layout end -->
+          <!-- WIZARD-MAKER example: show fields only when a condition is true.
+             The getter (e.g. showOtherDetails) goes in the JS, see the examples in PART 2.
+        <template lwc:if={showOtherDetails}>
+          …one or more fields…
+        </template>
+        --></div>
+      </section>
+    </article>
+  </c-car-rental-frame>
+</template>

@@ -13,7 +13,7 @@
  *
  * Declared `global` so the managed package can instantiate it when the example lives in a subscriber org.
  */
-global with sharing class ValidateExpenseLimit implements IPageValidator {
+global with sharing class ValidateExpenseLimit implements prolet.IPageValidator {
 
     private static final String DEFAULT_MESSAGE = 'The total amount exceeds the allowed limit';
 
@@ -24,7 +24,7 @@ global with sharing class ValidateExpenseLimit implements IPageValidator {
      * @param errors field -> error message; `$global` is shown as a page-level error
      * @return true if valid
      */
-    global Boolean validate(String page, Map<String, Object> model, WizardPageRules.ValidatorEntry entry,
+    global Boolean validate(String page, Map<String, Object> model, prolet.WizardPageRules.ValidatorEntry entry,
             Map<String, Object> errors) {
         if (String.isBlank(page) || model == null || entry == null || entry.properties == null || errors == null) {
             return true;

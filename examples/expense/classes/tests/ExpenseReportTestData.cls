@@ -4,11 +4,8 @@
 @IsTest
 public class ExpenseReportTestData {
 
-    /**
-     * Wizard__c.Wizard_Type__c is a restricted picklist (global value set Wizard_Type). The framework source
-     * only ships the value TEST, so tests use it - like the other examples - to not depend on org setup.
-     */
-    public static final String WIZARD_TYPE = 'TEST';
+    /** The type of the expense process: the service makes a report only for a wizard of it */
+    public static final String WIZARD_TYPE = ExpenseReportService.WIZARD_TYPE;
     public static final String VALID_IBAN = 'BG80BNBG96611020345678';
 
     /** Model of an international trip with two expenses (e1 = 540 hotel, e2 = 45 taxi). */
@@ -53,22 +50,72 @@ public class ExpenseReportTestData {
         };
     }
 
-    public static Wizard__c insertWizard(Map<String, Object> model, String state) {
-        Wizard__c wizard = new Wizard__c(
-                Wizard_Type__c = WIZARD_TYPE,
-                Model__c = model == null ? null : JSON.serialize(model),
-                State__c = state
+    public static prolet__Wizard__c insertWizard(Map<String, Object> model, String state) {
+        prolet__Wizard__c wizard = new prolet__Wizard__c(
+                prolet__Wizard_Type__c = WIZARD_TYPE,
+                prolet__Model__c = model == null ? null : JSON.serialize(model),
+                prolet__State__c = state
         );
         insert wizard;
         return wizard;
     }
 
-    public static Wizard__c reload(Id wizardId) {
-        return [SELECT Id, State__c, Model__c, Context__c, Review_Data__c FROM Wizard__c WHERE Id = :wizardId];
+    public static prolet__Wizard__c reload(Id wizardId) {
+        return [SELECT Id, prolet__State__c, prolet__Model__c, prolet__Context__c, prolet__PathVersion__c FROM prolet__Wizard__c WHERE Id = :wizardId];
+    }
+
+    /** Standard User with the given permission sets (no role, so no hierarchy) */
+    public static User userWith(String name, List<String> permissionSets) {
+        User user;
+        System.runAs(new User(Id = UserInfo.getUserId())) {
+            Profile standard = [SELECT Id FROM Profile WHERE Name = 'Standard User' LIMIT 1];
+            user = new User(
+                    ProfileId = standard.Id, LastName = name, Alias = name.left(8),
+                    Email = name + '@expense.test', Username = name + Crypto.getRandomInteger() + '@expense.test',
+                    TimeZoneSidKey = 'Europe/Sofia', LocaleSidKey = 'en_US', EmailEncodingKey = 'UTF-8',
+                    LanguageLocaleKey = 'en_US');
+            insert user;
+            List<PermissionSetAssignment> assignments = new List<PermissionSetAssignment>();
+            for (PermissionSet permissionSet : [SELECT Id FROM PermissionSet WHERE Name IN :permissionSets]) {
+                assignments.add(new PermissionSetAssignment(PermissionSetId = permissionSet.Id, AssigneeId = user.Id));
+            }
+            System.Assert.areEqual(permissionSets.size(), assignments.size(), 'permission sets ' + permissionSets);
+            insert assignments;
+        }
+        return user;
+    }
+
+    /**
+     * Takes the wizard's side of the report link out of its context ($ctx.expenseReportId): a report
+     * as it was submitted before the review checked the link.
+     */
+    public static void removeReportLink(Id wizardId) {
+        prolet__Wizard__c wizard = [SELECT prolet__Context__c FROM prolet__Wizard__c WHERE Id = :wizardId];
+        Map<String, Object> context = (Map<String, Object>) JSON.deserializeUntyped(wizard.prolet__Context__c);
+        context.remove(ExpenseReportService.CTX_REPORT);
+        update new prolet__Wizard__c(Id = wizardId, prolet__Context__c = JSON.serialize(context));
+    }
+
+    private static User employee;
+
+    /**
+     * Gives a submitted wizard and its report to an employee (a user of the expense example): the
+     * test user then reviews someone else's report, as a manager does. Nobody decides on their own.
+     */
+    public static void giveToEmployee(Id wizardId) {
+        if (employee == null) {
+            employee = userWith('employee', new List<String>{ 'Wizard_Framework_User', 'Expense_Report_User' });
+        }
+        update new prolet__Wizard__c(Id = wizardId, OwnerId = employee.Id);
+        List<Expense_Report__c> reports = [SELECT Id FROM Expense_Report__c WHERE Wizard__c = :wizardId];
+        for (Expense_Report__c report : reports) {
+            report.OwnerId = employee.Id;
+        }
+        update reports;
     }
 
     /** Replaces the model of an existing wizard (simulates the user editing pages). */
     public static void updateModel(Id wizardId, Map<String, Object> model) {
-        update new Wizard__c(Id = wizardId, Model__c = JSON.serialize(model));
+        update new prolet__Wizard__c(Id = wizardId, prolet__Model__c = JSON.serialize(model));
     }
 }

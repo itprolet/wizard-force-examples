@@ -1,0 +1,90 @@
+<template>
+  <article class="eh-page slds-m-around_medium">
+    <section>
+      <h2 class="eh-header eh-divider">Your feedback</h2>
+      <div class="slds-grid slds-gutters_x-small slds-wrap">
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <prolet-input-text
+            label="Rating (1–5)"
+            value={ratingData.rating}
+            read-only
+            readonly-textlike
+          ></prolet-input-text>
+        </div>
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <prolet-input-text
+            label="Would recommend"
+            value={recommendLabel}
+            read-only
+            readonly-textlike
+          ></prolet-input-text>
+        </div>
+        <div class="slds-col slds-size_1-of-1">
+          <prolet-input-text
+            label="Comment"
+            value={commentData.comment}
+            read-only
+            readonly-textlike
+          ></prolet-input-text>
+        </div>
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+          <prolet-input-text
+            label="Email"
+            value={commentData.email}
+            read-only
+            readonly-textlike
+          ></prolet-input-text>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">Таблица с данни</h2>
+      <prolet-elem-datatable
+        columns={tableColumns}
+        data={tableData}
+      ></prolet-elem-datatable>
+    </section>
+
+    <prolet-input-checkbox
+      label="I agree to the processing of my personal data (GDPR)."
+      name="feedbackAgreeGdpr"
+      data-name="feedbackAgreeGdpr"
+      checked={isAgreeGdprChecked}
+      onchange={handleAgree}
+    >
+    </prolet-input-checkbox>
+    <template lwc:if={localErrors.feedbackAgreeGdpr}>
+      <p class="slds-text-color_error slds-m-top_xx-small">
+        {localErrors.feedbackAgreeGdpr}
+      </p>
+    </template>
+
+    <template lwc:if={submitError}>
+      <prolet-elem-alert type="error" message={submitError}></prolet-elem-alert>
+    </template>
+
+    <template lwc:if={showOwnButtons}>
+      <div
+        class="eh-wizard-buttons slds-grid slds-grid_align-spread slds-m-top_large"
+      >
+        <prolet-input-button onclicked={handleBack} disabled={isSubmitting}
+          >{labels.Wizard_act_back}</prolet-input-button
+        >
+        <prolet-input-button
+          classname="active"
+          onclicked={handleSubmit}
+          disabled={isSubmitting}
+          >Submit feedback</prolet-input-button
+        >
+      </div>
+    </template>
+    <template lwc:else>
+      <div class="slds-m-top_large">
+        <prolet-input-button classname="active" onclicked={startNew}
+          >Give new feedback</prolet-input-button
+        >
+      </div>
+    </template>
+  </article>
+</template>

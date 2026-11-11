@@ -1,0 +1,28 @@
+/* WIZARD-MAKER:grid (checkboxes lined up, fields that appear softly; written by "npm run make layout") */
+.slds-grid > .slds-col.wm-checkbox {
+  padding-left: calc(1rem + 0.875rem);
+  padding-top: 0.75rem;
+}
+.slds-grid > .slds-col.wm-checkbox.wm-beside {
+  padding-top: 2.125rem;
+}
+/* a field shown only if …: it fades in when its condition shows it */
+.slds-grid > .slds-col.wm-shown {
+  animation: wm-shown 0.25s ease-out;
+}
+@keyframes wm-shown {
+  from {
+    opacity: 0;
+    transform: translateY(-0.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .slds-grid > .slds-col.wm-shown {
+    animation: none;
+  }
+}
+/* WIZARD-MAKER:grid end */

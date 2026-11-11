@@ -1,0 +1,131 @@
+<template>
+  <!-- WIZARD-MAKER:frame (the wizard's own steps and buttons; change them with "npm run make layout") -->
+  <c-car-rental-frame
+    page={page}
+    model={model}
+    data={data}
+    l={l}
+    state={state}
+    errors={errors}
+  >
+    <article class="eh-page">
+      <section>
+        <div class="slds-m-around_medium">
+          <!-- WIZARD-MAKER:layout (arranged with "npm run make layout") -->
+          <div class="slds-grid slds-gutters_medium slds-wrap">
+            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+              <c-car-rental-tiles
+                label={_l.CarRental_lbl_car_pickupCity}
+                name="pickupCity"
+                items={pickupCityOptions}
+                value={data.pickupCity}
+                required={required.pickupCity}
+                error={errors.pickupCity}
+                page={page}
+                onchange={changeHandler}
+              ></c-car-rental-tiles>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+              <c-car-rental-tiles
+                label={_l.CarRental_lbl_car_carClass}
+                name="carClass"
+                items={carClassOptions}
+                value={data.carClass}
+                required={required.carClass}
+                error={errors.carClass}
+                page={page}
+                onchange={changeHandler}
+              ></c-car-rental-tiles>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+              <prolet-input-text
+                type="date"
+                label={_l.CarRental_lbl_car_pickupDate}
+                name="pickupDate"
+                value={data.pickupDate}
+                required={required.pickupDate}
+                error={errors.pickupDate}
+                onchange={changeHandler}
+              ></prolet-input-text>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+              <prolet-input-text
+                type="number"
+                label={_l.CarRental_lbl_car_days}
+                name="days"
+                value={data.days}
+                required={required.days}
+                error={errors.days}
+                onchange={changeHandler}
+              ></prolet-input-text>
+            </div>
+            <template lwc:if={showLuxuryNotes}>
+              <div
+                class="slds-col slds-size_1-of-1 slds-large-size_1-of-2 wm-shown"
+              >
+                <!-- WIZARD-MAKER: shown only if (carClass='luxury'). The condition is in Rules__c. -->
+                <prolet-input-text
+                  type="text"
+                  label={_l.CarRental_lbl_car_luxuryNotes}
+                  name="luxuryNotes"
+                  value={data.luxuryNotes}
+                  required={required.luxuryNotes}
+                  error={errors.luxuryNotes}
+                  onchange={changeHandler}
+                  multiline
+                ></prolet-input-text>
+              </div>
+            </template>
+            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+              <prolet-input-suggester
+                label={_l.CarRental_lbl_car_bookedThrough}
+                lookup-name="CarRental_BookedThrough"
+                key-field="Id"
+                name-field="Name"
+                selected-id={data.bookedThrough}
+                selected-name={data.bookedThroughName}
+                required={required.bookedThrough}
+                error={errors.bookedThrough}
+                onsmartlookupselected={bookedThroughSelected}
+              ></prolet-input-suggester>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+              <prolet-input-suggester
+                label={_l.CarRental_lbl_car_carModel}
+                lookup-name="CarRental_CarModel"
+                key-field="Id"
+                name-field="Name"
+                selected-id={data.carModel}
+                selected-name={data.carModelName}
+                required={required.carModel}
+                error={errors.carModel}
+                onsmartlookupselected={carModelSelected}
+              ></prolet-input-suggester>
+            </div>
+            <template lwc:if={showFullInsurance}>
+              <div
+                class="slds-col slds-size_1-of-1 slds-large-size_1-of-2 wm-checkbox wm-beside wm-shown"
+              >
+                <!-- WIZARD-MAKER: shown only if (carClass='luxury'). The condition is in Rules__c. -->
+                <prolet-input-checkbox
+                  label={_l.CarRental_lbl_car_fullInsurance}
+                  name="fullInsurance"
+                  checked={data.fullInsurance}
+                  required={required.fullInsurance}
+                  error={errors.fullInsurance}
+                  onchange={changeHandler}
+                ></prolet-input-checkbox>
+              </div>
+            </template>
+          </div>
+          <!-- WIZARD-MAKER:layout end -->
+          <!-- WIZARD-MAKER example: show fields only when a condition is true.
+             The getter (e.g. showOtherDetails) goes in the JS, see the examples in PART 2.
+        <template lwc:if={showOtherDetails}>
+          …one or more fields…
+        </template>
+        --></div>
+      </section>
+    </article>
+  </c-car-rental-frame>
+</template>

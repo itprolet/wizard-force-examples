@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Family_Names__c</fullName>
+    <label>Family Names</label>
+    <type>LongTextArea</type>
+    <length>32768</length>
+    <visibleLines>5</visibleLines>
+    <description>WIZARD-MAKER mapping: ClubMembershipMembership.familyNames</description>
+    <!-- <inlineHelpText>Shown to users as (i) next to the field</inlineHelpText> -->
+    <trackHistory>false</trackHistory>     <!-- true: log changes (needs enableHistory on the object) -->
+    <trackTrending>false</trackTrending>
+</CustomField>

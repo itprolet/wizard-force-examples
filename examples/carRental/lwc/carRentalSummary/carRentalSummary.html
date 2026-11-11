@@ -1,0 +1,325 @@
+<template>
+  <!-- WIZARD-MAKER:frame (the wizard's own steps and buttons; change them with "npm run make layout") -->
+  <c-car-rental-frame
+    page={page}
+    model={model}
+    data={data}
+    l={l}
+    state={state}
+    errors={errors}
+    hide-buttons
+  >
+    <article class="eh-page">
+      <section class="slds-m-around_medium">
+        <!-- the step's title, and Edit: back to that step to change its answers -->
+        <div class="summary-head">
+          <h2 class="eh-header eh-divider">{_l.CarRental_pag_driver}</h2>
+          <template lwc:if={canEdit}>
+            <button
+              type="button"
+              class="summary-edit"
+              data-page="CarRentalDriver"
+              onclick={editStep}
+            >
+              {_l.CarRental_act_edit}
+            </button>
+          </template>
+        </div>
+        <!-- the answers in two columns (one on a phone) -->
+        <div class="slds-grid slds-wrap slds-gutters_medium">
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label={_l.CarRental_lbl_driver_fullName}
+              value={driver.fullName}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label={_l.CarRental_lbl_driver_email}
+              value={driver.email}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label={_l.CarRental_lbl_driver_licenceNumber}
+              value={driver.licenceNumber}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label={_l.CarRental_lbl_driver_licenceDate}
+              value={driver.licenceDate}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label={_l.CarRental_lbl_driver_age}
+              value={driver.age}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label={_l.CarRental_lbl_driver_experienced}
+              value={driverExperiencedLabel}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+        </div>
+      </section>
+      <section class="slds-m-around_medium">
+        <!-- the step's title, and Edit: back to that step to change its answers -->
+        <div class="summary-head">
+          <h2 class="eh-header eh-divider">{_l.CarRental_pag_car}</h2>
+          <template lwc:if={canEdit}>
+            <button
+              type="button"
+              class="summary-edit"
+              data-page="CarRentalCar"
+              onclick={editStep}
+            >
+              {_l.CarRental_act_edit}
+            </button>
+          </template>
+        </div>
+        <!-- the answers in two columns (one on a phone) -->
+        <div class="slds-grid slds-wrap slds-gutters_medium">
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label={_l.CarRental_lbl_car_pickupCity}
+              value={carPickupCityLabel}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label={_l.CarRental_lbl_car_carClass}
+              value={carCarClassLabel}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label={_l.CarRental_lbl_car_pickupDate}
+              value={car.pickupDate}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label={_l.CarRental_lbl_car_days}
+              value={car.days}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+          <template lwc:if={showCarLuxuryNotes}>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+              <prolet-input-text
+                label={_l.CarRental_lbl_car_luxuryNotes}
+                value={car.luxuryNotes}
+                read-only
+                readonly-textlike
+              ></prolet-input-text>
+            </div>
+          </template>
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label={_l.CarRental_lbl_car_bookedThrough}
+              value={car.bookedThroughName}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label={_l.CarRental_lbl_car_carModel}
+              value={car.carModelName}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+          <template lwc:if={showCarFullInsurance}>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+              <prolet-input-text
+                label={_l.CarRental_lbl_car_fullInsurance}
+                value={carFullInsuranceLabel}
+                read-only
+                readonly-textlike
+              ></prolet-input-text>
+            </div>
+          </template>
+        </div>
+      </section>
+      <template lwc:if={showExtras}>
+        <section class="slds-m-around_medium">
+          <!-- the step's title, and Edit: back to that step to change its answers -->
+          <div class="summary-head">
+            <h2 class="eh-header eh-divider">{_l.CarRental_pag_extras}</h2>
+            <template lwc:if={canEdit}>
+              <button
+                type="button"
+                class="summary-edit"
+                data-page="CarRentalExtras"
+                onclick={editStep}
+              >
+                {_l.CarRental_act_edit}
+              </button>
+            </template>
+          </div>
+          <!-- the answers in two columns (one on a phone) -->
+          <div class="slds-grid slds-wrap slds-gutters_medium">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+              <prolet-input-text
+                label={_l.CarRental_lbl_extras_childSeats}
+                value={extras.childSeats}
+                read-only
+                readonly-textlike
+              ></prolet-input-text>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+              <prolet-input-text
+                label={_l.CarRental_lbl_extras_notes}
+                value={extras.notes}
+                read-only
+                readonly-textlike
+              ></prolet-input-text>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+              <prolet-input-text
+                label={_l.CarRental_lbl_extras_gps}
+                value={extrasGpsLabel}
+                read-only
+                readonly-textlike
+              ></prolet-input-text>
+            </div>
+          </div>
+        </section>
+      </template>
+      <template lwc:if={showInvoice}>
+        <section class="slds-m-around_medium">
+          <!-- the step's title, and Edit: back to that step to change its answers -->
+          <div class="summary-head">
+            <h2 class="eh-header eh-divider">{_l.CarRental_pag_invoice}</h2>
+            <template lwc:if={canEdit}>
+              <button
+                type="button"
+                class="summary-edit"
+                data-page="CarRentalInvoice"
+                onclick={editStep}
+              >
+                {_l.CarRental_act_edit}
+              </button>
+            </template>
+          </div>
+          <!-- the answers in two columns (one on a phone) -->
+          <div class="slds-grid slds-wrap slds-gutters_medium">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+              <prolet-input-text
+                label={_l.CarRental_lbl_invoice_vatNumber}
+                value={invoice.vatNumber}
+                read-only
+                readonly-textlike
+              ></prolet-input-text>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+              <prolet-input-text
+                label={_l.CarRental_lbl_invoice_billingContact}
+                value={invoice.billingContactName}
+                read-only
+                readonly-textlike
+              ></prolet-input-text>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+              <prolet-input-text
+                label={_l.CarRental_lbl_invoice_bigCompany}
+                value={invoice.bigCompanyName}
+                read-only
+                readonly-textlike
+              ></prolet-input-text>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+              <prolet-input-text
+                label={_l.CarRental_lbl_invoice_openDeal}
+                value={invoice.openDealName}
+                read-only
+                readonly-textlike
+              ></prolet-input-text>
+            </div>
+          </div>
+        </section>
+      </template>
+      <!-- WIZARD-MAKER example: show a field only when a condition is true (getter in the JS):
+    <template lwc:if={showGuest}>
+      <prolet-input-text label="Guest name" value={somePage.guestName} read-only readonly-textlike></prolet-input-text>
+    </template>
+    -->
+
+      <!-- WIZARD-MAKER: submit. The wizard's own buttons are hidden on this page ("navigationByChild" in Rules__c). -->
+      <section class="slds-m-around_medium">
+        <template lwc:if={submitError}>
+          <prolet-elem-alert type="error">{submitError}</prolet-elem-alert>
+        </template>
+
+        <template lwc:if={isSubmitted}>
+          <prolet-elem-alert type="success"
+            >{_l.CarRental_msg_submitted}</prolet-elem-alert
+          >
+          <div class="slds-m-top_medium">
+            <button
+              type="button"
+              class="slds-button eh-button summary-button active"
+              onclick={startNew}
+            >
+              {_l.CarRental_act_startAgain}
+            </button>
+          </div>
+        </template>
+        <template lwc:else>
+          <prolet-input-checkbox
+            label={_l.CarRental_lbl_confirm}
+            name="confirmed"
+            checked={data.confirmed}
+            onchange={changeHandler}
+          ></prolet-input-checkbox>
+
+          <div
+            class="eh-wizard-buttons slds-grid slds-grid_align-spread slds-m-top_large"
+          >
+            <!-- the framework's button style (eh-button): <prolet-input-button> has no style outside the framework's template -->
+            <button
+              type="button"
+              class="slds-button eh-button summary-button back"
+              onclick={handleBack}
+              disabled={isSubmitting}
+            >
+              {_l.Wizard_act_back}
+            </button>
+            <button
+              type="button"
+              class={submitClass}
+              onclick={handleSubmit}
+              disabled={isSubmitting}
+              aria-busy={submitBusy}
+            >
+              {_l.CarRental_act_submit}
+            </button>
+          </div>
+        </template>
+      </section>
+    </article>
+  </c-car-rental-frame>
+</template>

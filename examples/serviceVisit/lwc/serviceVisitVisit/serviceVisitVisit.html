@@ -1,0 +1,73 @@
+<template>
+  <article class="eh-page">
+    <section>
+      <div class="slds-m-around_medium">
+        <prolet-input-combobox
+          label="Visit Type"
+          name="visitType"
+          items={visitTypeOptions}
+          value={data.visitType}
+          required={required.visitType}
+          error={errors.visitType}
+          onchange={changeHandler}
+        ></prolet-input-combobox>
+        <prolet-input-text
+          type="date"
+          label="Visit Date"
+          name="visitDate"
+          value={data.visitDate}
+          required={required.visitDate}
+          error={errors.visitDate}
+          onchange={changeHandler}
+        ></prolet-input-text>
+        <prolet-input-text
+          type="number"
+          label="Devices"
+          name="devices"
+          value={data.devices}
+          required={required.devices}
+          error={errors.devices}
+          onchange={changeHandler}
+        ></prolet-input-text>
+        <!-- WIZARD-MAKER: shown only if (devices > 3). The condition is in Rules__c. -->
+        <template lwc:if={showDevicesNote}>
+          <prolet-input-text
+            type="text"
+            label="Devices Note"
+            name="devicesNote"
+            value={data.devicesNote}
+            required={required.devicesNote}
+            error={errors.devicesNote}
+            onchange={changeHandler}
+            multiline
+          ></prolet-input-text>
+        </template>
+        <prolet-input-checkbox
+          label="Urgent"
+          name="urgent"
+          checked={data.urgent}
+          error={errors.urgent}
+          onchange={changeHandler}
+        ></prolet-input-checkbox>
+        <!-- WIZARD-MAKER: shown only if (urgent). The condition is in Rules__c. -->
+        <template lwc:if={showUrgentReason}>
+          <prolet-input-text
+            type="text"
+            label="Urgent Reason"
+            name="urgentReason"
+            value={data.urgentReason}
+            required={required.urgentReason}
+            error={errors.urgentReason}
+            onchange={changeHandler}
+          ></prolet-input-text>
+        </template>
+        <!-- WIZARD-MAKER example: show fields only when a condition is true.
+             The getter (e.g. showOtherDetails) goes in the JS, see the examples in PART 2.
+        <template lwc:if={showOtherDetails}>
+          …one or more fields…
+        </template>
+        -->
+      </div>
+    </section>
+  </article>
+</template>

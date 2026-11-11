@@ -1,0 +1,79 @@
+<template>
+  <!-- the look of the wizard, step by step: change it with "npm run make style" -->
+  <div class={lookClass} style={backgroundStyle}>
+    <div class={frameClass}>
+      <div class={sheetClass}>
+        <img
+          lwc:if={showBanner}
+          class="photo photo-banner"
+          src={photoUrl}
+          alt={photoText}
+        />
+        <img
+          lwc:if={showSide}
+          class="photo photo-side"
+          src={photoUrl}
+          alt={photoText}
+        />
+        <div class="sheet-content">
+          <ol class="stepper">
+            <template for:each={steps} for:item="step">
+              <!-- a finished step is a button (mouse and keyboard go back to it); the current one says so -->
+              <li
+                key={step.page}
+                class={step.className}
+                aria-current={step.current}
+              >
+                <template lwc:if={step.passed}>
+                  <button
+                    type="button"
+                    class="step-go"
+                    data-page={step.page}
+                    onclick={handleStepClick}
+                  >
+                    <span class="step-number">{step.number}</span>
+                    <span class="step-label">{step.label}</span>
+                  </button>
+                </template>
+                <template lwc:else>
+                  <span class="step-number">{step.number}</span>
+                  <span class="step-label">{step.label}</span>
+                </template>
+              </li>
+            </template>
+          </ol>
+          <!-- the step: it comes in softly, and the keyboard starts here (Tab goes to the first field) -->
+          <div class="step-content" tabindex="-1">
+            <h2 class="eh-header eh-divider">{currentTitle}</h2>
+            <slot></slot>
+          </div>
+          <template lwc:if={showButtons}>
+            <div
+              class="eh-wizard-buttons slds-grid slds-grid_align-spread slds-m-top_large"
+            >
+              <!-- the empty span keeps Next on the right when there is no Back -->
+              <button
+                lwc:if={hasPrev}
+                type="button"
+                class="slds-button eh-button frame-button back"
+                onclick={handleBack}
+              >
+                {backLabel}
+              </button>
+              <span lwc:else></span>
+              <button
+                lwc:if={hasNext}
+                type="button"
+                class={nextClass}
+                aria-busy={ariaBusy}
+                onclick={handleNext}
+              >
+                {nextLabel}
+              </button>
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

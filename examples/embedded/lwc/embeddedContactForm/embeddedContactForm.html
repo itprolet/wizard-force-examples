@@ -1,0 +1,46 @@
+<template>
+  <div
+    class="slds-grid slds-grid_vertical slds-gutters_direct-medium slds-p-around_medium"
+  >
+    <prolet-input-text
+      label="Name"
+      name="name"
+      value={data.name}
+      required={_required.name}
+      read-only={_readOnly.name}
+      error={nameError}
+      onchange={handleChange}
+    >
+    </prolet-input-text>
+    <prolet-input-text
+      label="Email"
+      type="email"
+      name="email"
+      value={data.email}
+      required={_required.email}
+      read-only={_readOnly.email}
+      error={emailError}
+      onchange={handleChange}
+    >
+    </prolet-input-text>
+    <prolet-input-text
+      label="Message"
+      name="message"
+      value={data.message}
+      required={_required.message}
+      read-only={_readOnly.message}
+      error={messageError}
+      onchange={handleChange}
+    >
+    </prolet-input-text>
+    <!-- Send button hidden for now — completion logic TBD. submitHandler kept in JS. -->
+    <!-- <div class="slds-m-top_medium">
+            <prolet-input-button
+                classname="active"
+                disabled={isSubmitDisabled}
+                onclicked={submitHandler}>
+                Send
+            </prolet-input-button>
+        </div> -->
+  </div>
+</template>

@@ -1,0 +1,66 @@
+<template>
+  <!-- WIZARD-MAKER:frame (the wizard's own steps and buttons; change them with "npm run make layout") -->
+  <c-club-membership-frame
+    page={page}
+    model={model}
+    data={data}
+    l={l}
+    state={state}
+    errors={errors}
+  >
+    <article class="eh-page">
+      <section>
+        <div class="slds-m-around_medium">
+          <!-- WIZARD-MAKER:layout (arranged with "npm run make layout") -->
+          <div class="slds-grid slds-gutters_medium slds-wrap">
+            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+              <prolet-input-combobox
+                label={_l.ClubMembership_lbl_payment_method}
+                name="method"
+                items={methodOptions}
+                value={data.method}
+                required={required.method}
+                error={errors.method}
+                onchange={changeHandler}
+              ></prolet-input-combobox>
+            </div>
+            <template lwc:if={showIban}>
+              <div
+                class="slds-col slds-size_1-of-1 slds-large-size_1-of-2 wm-shown"
+              >
+                <!-- WIZARD-MAKER: shown only if (method='bank'). The condition is in Rules__c. -->
+                <prolet-input-text
+                  type="text"
+                  label={_l.ClubMembership_lbl_payment_iban}
+                  name="iban"
+                  value={data.iban}
+                  required={required.iban}
+                  error={errors.iban}
+                  onchange={changeHandler}
+                ></prolet-input-text>
+              </div>
+            </template>
+            <div
+              class="slds-col slds-size_1-of-1 slds-large-size_1-of-2 wm-checkbox"
+            >
+              <prolet-input-checkbox
+                label={_l.ClubMembership_lbl_payment_acceptRules}
+                name="acceptRules"
+                checked={data.acceptRules}
+                required={required.acceptRules}
+                error={errors.acceptRules}
+                onchange={changeHandler}
+              ></prolet-input-checkbox>
+            </div>
+          </div>
+          <!-- WIZARD-MAKER:layout end -->
+          <!-- WIZARD-MAKER example: show fields only when a condition is true.
+             The getter (e.g. showOtherDetails) goes in the JS, see the examples in PART 2.
+        <template lwc:if={showOtherDetails}>
+          …one or more fields…
+        </template>
+        --></div>
+      </section>
+    </article>
+  </c-club-membership-frame>
+</template>

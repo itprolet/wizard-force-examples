@@ -1,0 +1,47 @@
+<template>
+  <div class="frame frame-medium">
+    <nav class="steps">
+      <template for:each={steps} for:item="step">
+        <prolet-page-progress-item
+          key={step.page}
+          class={step.className}
+          label={step.label}
+          value={step.number}
+          active={activeNumber}
+          data-page={step.page}
+          onclick={handleStepClick}
+        ></prolet-page-progress-item>
+      </template>
+    </nav>
+    <!-- the step: it comes in softly, and the keyboard starts here (Tab goes to the first field) -->
+    <div class="step-content" tabindex="-1">
+      <h2 class="eh-header eh-divider">{currentTitle}</h2>
+      <slot></slot>
+    </div>
+    <template lwc:if={showButtons}>
+      <div
+        class="eh-wizard-buttons slds-grid slds-grid_align-spread slds-m-top_large"
+      >
+        <!-- the empty span keeps Next on the right when there is no Back -->
+        <button
+          lwc:if={hasPrev}
+          type="button"
+          class="slds-button eh-button frame-button back"
+          onclick={handleBack}
+        >
+          {backLabel}
+        </button>
+        <span lwc:else></span>
+        <button
+          lwc:if={hasNext}
+          type="button"
+          class={nextClass}
+          aria-busy={ariaBusy}
+          onclick={handleNext}
+        >
+          {nextLabel}
+        </button>
+      </div>
+    </template>
+  </div>
+</template>

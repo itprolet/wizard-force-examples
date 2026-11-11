@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>64.0</apiVersion>
+    <description>Picture tiles of the carRental wizard: a dropdown shown as cards</description>
+    <isExposed>false</isExposed>
+</LightningComponentBundle>

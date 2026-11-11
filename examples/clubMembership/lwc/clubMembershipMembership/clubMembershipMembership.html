@@ -1,0 +1,106 @@
+<template>
+  <!-- WIZARD-MAKER:frame (the wizard's own steps and buttons; change them with "npm run make layout") -->
+  <c-club-membership-frame
+    page={page}
+    model={model}
+    data={data}
+    l={l}
+    state={state}
+    errors={errors}
+  >
+    <article class="eh-page">
+      <section>
+        <div class="slds-m-around_medium">
+          <!-- WIZARD-MAKER:layout (arranged with "npm run make layout") -->
+          <div class="slds-grid slds-gutters_medium slds-wrap">
+            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+              <prolet-input-combobox
+                label={_l.ClubMembership_lbl_membership_plan}
+                name="plan"
+                items={planOptions}
+                value={data.plan}
+                required={required.plan}
+                error={errors.plan}
+                onchange={changeHandler}
+              ></prolet-input-combobox>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+              <prolet-input-text
+                type="date"
+                label={_l.ClubMembership_lbl_membership_startDate}
+                name="startDate"
+                value={data.startDate}
+                required={required.startDate}
+                error={errors.startDate}
+                onchange={changeHandler}
+              ></prolet-input-text>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+              <prolet-input-text
+                type="number"
+                label={_l.ClubMembership_lbl_membership_familyMembers}
+                name="familyMembers"
+                value={data.familyMembers}
+                required={required.familyMembers}
+                error={errors.familyMembers}
+                onchange={changeHandler}
+              ></prolet-input-text>
+            </div>
+            <template lwc:if={showFamilyNames}>
+              <div
+                class="slds-col slds-size_1-of-1 slds-large-size_1-of-2 wm-shown"
+              >
+                <!-- WIZARD-MAKER: shown only if (familyMembers > 0). The condition is in Rules__c. -->
+                <prolet-input-text
+                  type="text"
+                  label={_l.ClubMembership_lbl_membership_familyNames}
+                  name="familyNames"
+                  value={data.familyNames}
+                  required={required.familyNames}
+                  error={errors.familyNames}
+                  onchange={changeHandler}
+                  multiline
+                ></prolet-input-text>
+              </div>
+            </template>
+            <template lwc:if={showPremiumWishes}>
+              <div
+                class="slds-col slds-size_1-of-1 slds-large-size_1-of-2 wm-shown"
+              >
+                <!-- WIZARD-MAKER: shown only if (plan='premium'). The condition is in Rules__c. -->
+                <prolet-input-text
+                  type="text"
+                  label={_l.ClubMembership_lbl_membership_premiumWishes}
+                  name="premiumWishes"
+                  value={data.premiumWishes}
+                  required={required.premiumWishes}
+                  error={errors.premiumWishes}
+                  onchange={changeHandler}
+                  multiline
+                ></prolet-input-text>
+              </div>
+            </template>
+            <div
+              class="slds-col slds-size_1-of-1 slds-large-size_1-of-2 wm-checkbox wm-beside"
+            >
+              <prolet-input-checkbox
+                label={_l.ClubMembership_lbl_membership_hasCompany}
+                name="hasCompany"
+                checked={data.hasCompany}
+                required={required.hasCompany}
+                error={errors.hasCompany}
+                onchange={changeHandler}
+              ></prolet-input-checkbox>
+            </div>
+          </div>
+          <!-- WIZARD-MAKER:layout end -->
+          <!-- WIZARD-MAKER example: show fields only when a condition is true.
+             The getter (e.g. showOtherDetails) goes in the JS, see the examples in PART 2.
+        <template lwc:if={showOtherDetails}>
+          …one or more fields…
+        </template>
+        --></div>
+      </section>
+    </article>
+  </c-club-membership-frame>
+</template>

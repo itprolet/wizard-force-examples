@@ -6,7 +6,8 @@
   "scripts": {
     "lint": "eslint \"examples/**/{aura,lwc}/**/*.js\"",
     "prettier": "prettier --write \"**/*.{css,html,js,json,md,yaml,yml}\"",
-    "prettier:check": "prettier --check \"**/*.{css,html,js,json,md,yaml,yml}\""
+    "prettier:check": "prettier --check \"**/*.{css,html,js,json,md,yaml,yml}\"",
+    "check:links": "node tools/check-links.mjs"
   },
   "devDependencies": {
     "@lwc/eslint-plugin-lwc": "^2.0.0",

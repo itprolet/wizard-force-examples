@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Child_Seats__c</fullName>
+    <label>Child Seats</label>
+    <type>Number</type>
+    <precision>18</precision>   <!-- total digits, including the decimals -->
+    <scale>0</scale>               <!-- decimal places -->
+    <!-- <defaultValue>0</defaultValue>   a formula for the value of new records -->
+    <description>WIZARD-MAKER mapping: CarRentalExtras.childSeats</description>
+    <!-- <inlineHelpText>Shown to users as (i) next to the field</inlineHelpText> -->
+    <!-- WIZARD-MAKER: keep required=false. The wizard checks required fields per page and condition;
+         required=true in the database breaks conditional fields and cannot be in a permission set. -->
+    <required>false</required>
+    <unique>false</unique>           <!-- true: no two records may have the same value -->
+    <externalId>false</externalId>   <!-- true: an Id from another system, usable for imports and upserts -->
+    <trackHistory>false</trackHistory>     <!-- true: log changes (needs enableHistory on the object) -->
+    <trackTrending>false</trackTrending>
+</CustomField>

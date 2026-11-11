@@ -1,0 +1,12 @@
+<template>
+    <prolet-wizard
+        plan-config={_plan}
+        rules-config={_rules}
+        initial-model={_initialModel}
+        wizard-title-config="Contact us"
+        page-registry={_pageRegistry}
+        validator-registry={_validatorRegistry}
+        onwizardchange={handleChange}
+        onwizardcomplete={handleComplete}>
+    </prolet-wizard>
+</template>

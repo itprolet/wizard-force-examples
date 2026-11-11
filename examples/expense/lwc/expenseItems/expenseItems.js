@@ -9,25 +9,26 @@ const EMPTY_EDIT = {
   amount: null,
   receiptNumber: null
 };
-/** Review data keys: `expenses[id=e1].amount` (change a field) or `expenses[id=e2]` (delete the item) */
-const REVIEW_KEY = /^expenses\[id=(.+?)\](?:\.(\w+))?$/;
+/** Keys of the requested changes: `expenses[id=e1].amount` (change a field) or `expenses[id=e2]` (delete the item) */
+const REQUESTED_KEY = /^expenses\[id=(.+?)\](?:\.(\w+))?$/;
 
 /**
  * Page 3 - Expenses.
  *
  * Page model:
  *   expenses: [{ id, type, date, amount, receiptNumber }]  - the list (ids and amounts are STRINGS,
- *                                                            review mode compares them with ===)
+ *                                                            the server compares the requested changes as text)
  *   edit:     { id, type, date, amount, receiptNumber }    - the form above the table
  *
- * Rules: required ["expenses"] (empty list blocks Next), page validator ValidateExpenseLimit (JS + Apex),
- * pageFieldMapping { expenses: { amount: "edit.amount", ... } }.
+ * Rules: required ["expenses"] (empty list blocks Next), page validator ValidateExpenseLimit (JS + Apex).
  *
- * Review mode: the manager can ask to change the amount of an item or to delete an item.
- *   - Only those rows get enabled edit / delete icons (read from `reviewData`).
- *   - When a requested item is loaded into `edit`, pageFieldMapping tells the framework that
- *     `expenses[id=x].amount` is edited through `edit.amount`, so it unlocks that form field
- *     and marks it "Change required" until the value differs from the old one.
+ * Changes requested by the manager ($ctx.requestedChanges): the manager can ask to change the amount
+ * of an item or to delete an item.
+ *   - Only those rows get enabled edit / delete icons, and no item can be added; of a row only its
+ *     amount can change (the page shows the other form fields read-only: the form is a draft, not
+ *     kept by the server, so a draft stored earlier never shows over the row being edited).
+ *   - The resubmit is refused on the server until every requested change was made.
+ * Locked (submitted): nothing can be changed.
  */
 export default class ExpenseItems extends ExpensePageBase {
   defaults() {
@@ -61,17 +62,20 @@ export default class ExpenseItems extends ExpensePageBase {
 
   // ---- rule results for the nested `edit` object ----
   get editReadOnly() {
-    return this._readOnly.edit || {};
+    const readOnly = this._readOnly.edit || {};
+    return this.changesRequested
+      ? { ...readOnly, type: true, date: true, receiptNumber: true }
+      : readOnly;
   }
   get editErrors() {
     return { ...(this._errors.edit || {}), ...this.localErrors };
   }
 
-  // ---- what may the user do (ACTIVE: everything, REVIEW: only requested items, else: nothing) ----
+  // ---- what may the user do (ACTIVE: everything; changes requested: only those; locked: nothing) ----
   get reviewRequests() {
     const result = { change: new Set(), remove: new Set() };
-    Object.keys(this.reviewData?.[this.page] || {}).forEach((key) => {
-      const match = key.match(REVIEW_KEY);
+    Object.keys(this.requestedChanges).forEach((key) => {
+      const match = key.match(REQUESTED_KEY);
       if (match) {
         (match[2] ? result.change : result.remove).add(match[1]);
       }
@@ -79,23 +83,23 @@ export default class ExpenseItems extends ExpensePageBase {
     return result;
   }
   canEdit(row) {
-    if (this.isReview) {
+    if (this.changesRequested) {
       return this.reviewRequests.change.has(row.id);
     }
     return this.isEditable;
   }
   canDelete(row) {
-    if (this.isReview) {
+    if (this.changesRequested) {
       return this.reviewRequests.remove.has(row.id);
     }
     return this.isEditable;
   }
-  /** In REVIEW new items cannot be added (the server would ignore them), only requested ones edited. */
+  /** With changes requested no item can be added, only the requested ones edited. */
   get showForm() {
     if (!this.isEditable) {
       return false;
     }
-    return this.isReview ? this.isEditing : true;
+    return this.changesRequested ? this.isEditing : true;
   }
 
   // ---- table ----
@@ -203,13 +207,20 @@ export default class ExpenseItems extends ExpensePageBase {
       this.localErrors = errors;
       return;
     }
-    const item = {
-      id: edit.id || newId(),
-      type: edit.type,
-      date: edit.date,
-      amount: String(edit.amount),
-      receiptNumber: edit.receiptNumber
-    };
+    // with changes requested only the amount of a requested row changes: the rest stays as it was
+    // submitted (the form shows it read-only, the server refuses anything else)
+    const requestedRow = this.changesRequested
+      ? this.data.expenses.find((e) => e.id === edit.id)
+      : null;
+    const item = requestedRow
+      ? { ...requestedRow, amount: String(edit.amount) }
+      : {
+          id: edit.id || newId(),
+          type: edit.type,
+          date: edit.date,
+          amount: String(edit.amount),
+          receiptNumber: edit.receiptNumber
+        };
     const exists = this.data.expenses.some((e) => e.id === item.id);
     const expenses = exists
       ? this.data.expenses.map((e) => (e.id === item.id ? item : e))
@@ -225,7 +236,7 @@ function toNumber(value) {
   return Number.isNaN(number) ? 0 : number;
 }
 
-/** Item ids must be strings without special characters - they are used in `expenses[id=...]` review keys. */
+/** Item ids must be strings without special characters - they are used in `expenses[id=...]` keys of the requested changes. */
 function newId() {
   return `e${Date.now().toString(36)}${Math.floor(Math.random() * 1000)}`;
 }

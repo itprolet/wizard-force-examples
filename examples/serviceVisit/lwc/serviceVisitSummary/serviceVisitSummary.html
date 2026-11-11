@@ -1,0 +1,221 @@
+<template>
+  <article class="eh-page">
+    <section class="slds-m-around_medium">
+      <!-- the step's title, and Edit: back to that step to change its answers -->
+      <div class="summary-head">
+        <h2 class="eh-header eh-divider">Customer</h2>
+        <template lwc:if={canEdit}>
+          <button
+            type="button"
+            class="summary-edit"
+            data-page="ServiceVisitCustomer"
+            onclick={editStep}
+          >
+            Edit
+          </button>
+        </template>
+      </div>
+      <!-- the answers in two columns (one on a phone) -->
+      <div class="slds-grid slds-wrap slds-gutters_medium">
+        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+          <prolet-input-text
+            label="Account"
+            value={customer.accountName}
+            read-only
+            readonly-textlike
+          ></prolet-input-text>
+        </div>
+        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+          <prolet-input-text
+            label="Contact"
+            value={customer.contactName}
+            read-only
+            readonly-textlike
+          ></prolet-input-text>
+        </div>
+        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+          <prolet-input-text
+            label="Contact Email"
+            value={customer.contactEmail}
+            read-only
+            readonly-textlike
+          ></prolet-input-text>
+        </div>
+      </div>
+    </section>
+    <section class="slds-m-around_medium">
+      <!-- the step's title, and Edit: back to that step to change its answers -->
+      <div class="summary-head">
+        <h2 class="eh-header eh-divider">Visit</h2>
+        <template lwc:if={canEdit}>
+          <button
+            type="button"
+            class="summary-edit"
+            data-page="ServiceVisitVisit"
+            onclick={editStep}
+          >
+            Edit
+          </button>
+        </template>
+      </div>
+      <!-- the answers in two columns (one on a phone) -->
+      <div class="slds-grid slds-wrap slds-gutters_medium">
+        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+          <prolet-input-text
+            label="Visit Type"
+            value={visitVisitTypeLabel}
+            read-only
+            readonly-textlike
+          ></prolet-input-text>
+        </div>
+        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+          <prolet-input-text
+            label="Visit Date"
+            value={visit.visitDate}
+            read-only
+            readonly-textlike
+          ></prolet-input-text>
+        </div>
+        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+          <prolet-input-text
+            label="Devices"
+            value={visit.devices}
+            read-only
+            readonly-textlike
+          ></prolet-input-text>
+        </div>
+        <template lwc:if={showVisitDevicesNote}>
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label="Devices Note"
+              value={visit.devicesNote}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+        </template>
+        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+          <prolet-input-text
+            label="Urgent"
+            value={visitUrgentLabel}
+            read-only
+            readonly-textlike
+          ></prolet-input-text>
+        </div>
+        <template lwc:if={showVisitUrgentReason}>
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label="Urgent Reason"
+              value={visit.urgentReason}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+        </template>
+      </div>
+    </section>
+    <template lwc:if={showRepairDetails}>
+      <section class="slds-m-around_medium">
+        <!-- the step's title, and Edit: back to that step to change its answers -->
+        <div class="summary-head">
+          <h2 class="eh-header eh-divider">Repair Details</h2>
+          <template lwc:if={canEdit}>
+            <button
+              type="button"
+              class="summary-edit"
+              data-page="ServiceVisitRepairDetails"
+              onclick={editStep}
+            >
+              Edit
+            </button>
+          </template>
+        </div>
+        <!-- the answers in two columns (one on a phone) -->
+        <div class="slds-grid slds-wrap slds-gutters_medium">
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label="Problem"
+              value={repairDetails.problem}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label="Under Warranty"
+              value={repairDetailsUnderWarrantyLabel}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label="Serial Code"
+              value={repairDetails.serialCode}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+        </div>
+      </section>
+    </template>
+    <!-- WIZARD-MAKER example: show a field only when a condition is true (getter in the JS):
+    <template lwc:if={showGuest}>
+      <prolet-input-text label="Guest name" value={somePage.guestName} read-only readonly-textlike></prolet-input-text>
+    </template>
+    -->
+
+    <!-- WIZARD-MAKER: submit. The wizard's own buttons are hidden on this page ("navigationByChild" in Rules__c). -->
+    <section class="slds-m-around_medium">
+      <template lwc:if={submitError}>
+        <prolet-elem-alert type="error">{submitError}</prolet-elem-alert>
+      </template>
+
+      <template lwc:if={isSubmitted}>
+        <prolet-elem-alert type="success"
+          >Thank you! Your answers were submitted.</prolet-elem-alert
+        >
+        <div class="slds-m-top_medium">
+          <button
+            type="button"
+            class="slds-button eh-button summary-button active"
+            onclick={startNew}
+          >
+            Start again
+          </button>
+        </div>
+      </template>
+      <template lwc:else>
+        <prolet-input-checkbox
+          label="I confirm the information above is correct"
+          name="confirmed"
+          checked={data.confirmed}
+          onchange={changeHandler}
+        ></prolet-input-checkbox>
+
+        <div
+          class="eh-wizard-buttons slds-grid slds-grid_align-spread slds-m-top_large"
+        >
+          <!-- the framework's button style (eh-button): <prolet-input-button> has no style outside the framework's template -->
+          <button
+            type="button"
+            class="slds-button eh-button summary-button back"
+            onclick={handleBack}
+            disabled={isSubmitting}
+          >
+            Back
+          </button>
+          <button
+            type="button"
+            class={submitClass}
+            onclick={handleSubmit}
+            disabled={isSubmitting}
+            aria-busy={submitBusy}
+          >
+            Submit
+          </button>
+        </div>
+      </template>
+    </section>
+  </article>
+</template>

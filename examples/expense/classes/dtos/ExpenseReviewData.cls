@@ -10,6 +10,8 @@ public class ExpenseReviewData {
     @AuraEnabled public String comment;
     @AuraEnabled public Decimal totalAmount;
     @AuraEnabled public List<Line> lines = new List<Line>();
+    /** The user's own report: shown, but they cannot decide on it (ExpenseReportService) */
+    @AuraEnabled public Boolean ownReport = false;
 
     public class Line {
         /** Id of the item in the wizard model (ExpenseItems.expenses[].id) */

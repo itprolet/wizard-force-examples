@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Wizard_Link_Is_Fixed</fullName>
+    <active>true</active>
+    <description>The wizard of a report is set once, by its submit (ExpenseReportService.submitReport). Linking a report to another wizard afterwards would let its reviewer open that wizard. Clearing it (the wizard was deleted) is allowed.</description>
+    <errorConditionFormula>AND(NOT(ISNEW()), ISCHANGED(Wizard__c), NOT(ISBLANK(Wizard__c)))</errorConditionFormula>
+    <errorDisplayField>Wizard__c</errorDisplayField>
+    <errorMessage>The wizard of an expense report cannot be changed.</errorMessage>
+</ValidationRule>

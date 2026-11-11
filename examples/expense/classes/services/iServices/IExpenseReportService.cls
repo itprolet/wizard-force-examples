@@ -1,7 +1,7 @@
 public interface IExpenseReportService {
     /**
      * @description Creates (or, after a review, updates) Expense_Report__c with its Expense_Line__c records
-     * from the wizard model and locks the wizard (State__c = SIGNED).
+     * from the wizard model and locks the wizard (WizardApi.lock): a second submit is refused.
      * @param wizardId ID of the Wizard__c record
      * @param agreedToDeclaration User confirmed the declaration on the summary page
      * @return ID of the Expense_Report__c record
@@ -19,13 +19,14 @@ public interface IExpenseReportService {
     /**
      * @description Data for the manager review panel.
      * @param reportId ID of the Expense_Report__c record
-     * @return report, lines and wizard state
+     * @return report, lines and wizard state (ACTIVE or LOCKED)
      */
     ExpenseReviewData getReview(Id reportId);
 
     /**
-     * @description Sends a submitted report back to the employee (State__c = REVIEW) and fills
-     * Wizard__c.Review_Data__c, so review mode unlocks only the requested fields.
+     * @description Sends a submitted report back to the employee: the wizard is ACTIVE again
+     * (WizardApi.unlock), and what must change is put in its context ($ctx.requestedChanges), so the
+     * pages let the employee change only that, and a resubmit is refused until it was changed.
      * @param reportId ID of the Expense_Report__c record
      * @param amountLineKeys model ids of the expenses whose amount must change
      * @param deleteLineKeys model ids of the expenses that must be removed
@@ -36,7 +37,8 @@ public interface IExpenseReportService {
             String comment);
 
     /**
-     * @description Final approval (State__c = APPROVED).
+     * @description Final approval: the report is Approved, the wizard stays locked ($ctx.reportStatus
+     * tells the employee).
      * @param reportId ID of the Expense_Report__c record
      */
     void approveReport(Id reportId);

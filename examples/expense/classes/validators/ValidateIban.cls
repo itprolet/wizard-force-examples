@@ -10,7 +10,7 @@
  *
  * Declared `global` so the managed package can instantiate it when the example lives in a subscriber org.
  */
-global with sharing class ValidateIban implements IValidator {
+global with sharing class ValidateIban implements prolet.IValidator {
 
     private static final String DEFAULT_MESSAGE = 'Invalid IBAN';
 

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Expense AccountId</label>
+    <protected>false</protected>
+    <!-- WIZARD-MAKER: the Smart Lookup of the field "accountId" (lookup-name="Expense_AccountId" in the page).
+         Change the query here; the page does not have to change.
+           :query          what the user types, already as %text% (use it with LIKE)
+           :arg0 … :arg9   extra values from the page: add arg0-value={…} to the field
+         The query must select the fields named in key-field and name-field of the page: Id, Name. -->
+    <values>
+        <field>prolet__Soql__c</field>
+        <value xsi:type="xsd:string">SELECT Id, Name FROM Account WHERE Name LIKE :query ORDER BY Name LIMIT 30</value>
+    </values>
+    <values>
+        <field>prolet__ApexClass__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>prolet__ApexMethod__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <!-- WIZARD-MAKER: only for a wizard opened on a record page (record-id={…} on the field):
+         ArgsBaseObjectType__c = the record's object, ArgsFieldNames__c = its fields that become :arg0, :arg1 … -->
+    <values>
+        <field>prolet__ArgsBaseObjectType__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>prolet__ArgsFieldNames__c</field>
+        <value xsi:nil="true"/>
+    </values>
+</CustomMetadata>

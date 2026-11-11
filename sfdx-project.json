@@ -1,17 +1,32 @@
 {
   "packageDirectories": [
     {
-      "path": "examples/basic-wizard",
+      "path": "examples/vacation",
       "default": true
     },
     {
-      "path": "examples/feedback-wizard"
+      "path": "examples/embedded"
     },
     {
-      "path": "examples/embedded-form"
+      "path": "examples/feedback"
     },
     {
-      "path": "examples/complaint-wizard"
+      "path": "examples/serviceVisit"
+    },
+    {
+      "path": "examples/complaint"
+    },
+    {
+      "path": "examples/clubMembership"
+    },
+    {
+      "path": "examples/showcase"
+    },
+    {
+      "path": "examples/expense"
+    },
+    {
+      "path": "examples/carRental"
     }
   ],
   "name": "wizard-force-examples",

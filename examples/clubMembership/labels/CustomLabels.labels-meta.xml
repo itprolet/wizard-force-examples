@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>ClubMembership_act_edit</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Edit</shortDescription>
+        <value>Edit</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_act_startAgain</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Start again</shortDescription>
+        <value>Start again</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_act_submit</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Submit</shortDescription>
+        <value>Submit</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_err_clubEmail</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Please use your own email</shortDescription>
+        <value>Please use your own email</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_err_companyPage</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Please check the company</shortDescription>
+        <value>Please check the company</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_err_confirm</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Please confirm before submitting.</shortDescription>
+        <value>Please confirm before submitting.</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_err_submit</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Something went wrong. Please try again.</shortDescription>
+        <value>Something went wrong. Please try again.</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_lbl_applicant_address</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Address</shortDescription>
+        <value>Address</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_lbl_applicant_birthDate</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Birth Date</shortDescription>
+        <value>Birth Date</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_lbl_applicant_email</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Email</shortDescription>
+        <value>Email</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_lbl_applicant_fullName</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Full Name</shortDescription>
+        <value>Full Name</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_lbl_applicant_personalId</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Personal Id</shortDescription>
+        <value>Personal Id</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_lbl_applicant_phone</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Mobile Phone</shortDescription>
+        <value>Mobile Phone</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_lbl_applicant_portalPin</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Portal Pin</shortDescription>
+        <value>Portal Pin</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_lbl_applicant_website</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Website</shortDescription>
+        <value>Website</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_lbl_company_bigClient</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Big Client</shortDescription>
+        <value>Big Client</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_lbl_company_company</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Company</shortDescription>
+        <value>Company</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_lbl_company_contactPerson</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Contact Person</shortDescription>
+        <value>Contact Person</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_lbl_company_partnerClub</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Partner Club</shortDescription>
+        <value>Partner Club</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_lbl_company_referredBy</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Referred By</shortDescription>
+        <value>Referred By</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_lbl_company_vatNumber</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Vat Number</shortDescription>
+        <value>Vat Number</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_lbl_confirm</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>I confirm the information above is correct</shortDescription>
+        <value>I confirm the information above is correct</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_lbl_membership_familyMembers</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Family Members</shortDescription>
+        <value>Family Members</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_lbl_membership_familyNames</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Family Names</shortDescription>
+        <value>Family Names</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_lbl_membership_hasCompany</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>I apply for a company</shortDescription>
+        <value>I apply for a company</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_lbl_membership_plan</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Plan</shortDescription>
+        <value>Plan</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_lbl_membership_premiumWishes</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Premium Wishes</shortDescription>
+        <value>Premium Wishes</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_lbl_membership_startDate</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Start Date</shortDescription>
+        <value>Start Date</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_lbl_payment_acceptRules</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>I accept the club rules</shortDescription>
+        <value>I accept the club rules</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_lbl_payment_iban</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>IBAN</shortDescription>
+        <value>IBAN</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_lbl_payment_method</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Payment Method</shortDescription>
+        <value>Payment Method</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_msg_no</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>No</shortDescription>
+        <value>No</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_msg_submitted</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Thank you! Your answers were submitted.</shortDescription>
+        <value>Thank you! Your answers were submitted.</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_msg_yes</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Yes</shortDescription>
+        <value>Yes</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_opt_membership_plan_basic</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Basic</shortDescription>
+        <value>Basic</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_opt_membership_plan_premium</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Premium</shortDescription>
+        <value>Premium</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_opt_membership_plan_standard</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Standard</shortDescription>
+        <value>Standard</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_opt_payment_method_bank</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Bank transfer</shortDescription>
+        <value>Bank transfer</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_opt_payment_method_card</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Card</shortDescription>
+        <value>Card</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_pag_applicant</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Applicant</shortDescription>
+        <value>Applicant</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_pag_company</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Company</shortDescription>
+        <value>Company</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_pag_membership</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Membership</shortDescription>
+        <value>Membership</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_pag_payment</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Payment and Rules</shortDescription>
+        <value>Payment and Rules</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_pag_summary</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Summary</shortDescription>
+        <value>Summary</value>
+    </labels>
+    <labels>
+        <fullName>ClubMembership_title</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Club Membership</shortDescription>
+        <value>Club Membership</value>
+    </labels>
+</CustomLabels>

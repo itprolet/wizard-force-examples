@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>64.0</apiVersion>
+    <description>Car page of the carRental wizard</description>
+    <isExposed>false</isExposed>
+    <masterLabel>Car</masterLabel>
+    <!-- WIZARD-MAKER: required for every wizard page. The wizard loads pages by name at runtime. -->
+    <capabilities>
+        <capability>lightning__dynamicComponent</capability>
+    </capabilities>
+</LightningComponentBundle>

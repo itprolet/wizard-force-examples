@@ -30,7 +30,7 @@ private class ValidateIbanTest {
     @IsTest
     static void worksThroughTheFrameworkInterface() {
         // This is how the framework creates it: Type.forName(<name from Rules__c>)
-        IValidator validator = (IValidator) Type.forName('ValidateIban').newInstance();
+        prolet.IValidator validator = (prolet.IValidator) Type.forName('ValidateIban').newInstance();
         Assert.isNull(validator.validate('BG80BNBG96611020345678', null));
     }
 }

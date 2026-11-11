@@ -4,14 +4,17 @@ import { notifyRecordUpdateAvailable } from "lightning/uiRecordApi";
 import getReview from "@salesforce/apex/ExpenseReviewController.getReview";
 import requestChanges from "@salesforce/apex/ExpenseReviewController.requestChanges";
 import approveReport from "@salesforce/apex/ExpenseReviewController.approveReport";
+import { errorMessage } from "prolet/wizardUtils";
 
 /**
  * Manager side of the Expense Report example (record page of Expense_Report__c).
  *
- * "Request changes" puts the wizard in REVIEW state and fills Wizard__c.Review_Data__c, e.g.
+ * "Request changes" makes the wizard ACTIVE again and puts what must change into its context
+ * ($ctx.requestedChanges), e.g.
  *   { "ExpenseItems": { "expenses[id=e1].amount": "540", "expenses[id=e2]": "" },
  *     "ExpenseReimbursement": { "iban": "BG80..." } }
- * When the employee opens the wizard again, only these fields are editable and must be changed.
+ * When the employee opens the wizard again, only these can be changed, and must be changed before
+ * the report is submitted again. Decisions are made on a submitted report only (its status).
  */
 export default class ExpenseReviewPanel extends LightningElement {
   @api recordId;
@@ -33,7 +36,7 @@ export default class ExpenseReviewPanel extends LightningElement {
       this.review = await getReview({ reportId: this.recordId });
       this.error = undefined;
     } catch (error) {
-      this.error = errorMessage(error);
+      this.error = messageOf(error);
     }
     this.amountKeys = new Set();
     this.deleteKeys = new Set();
@@ -42,14 +45,22 @@ export default class ExpenseReviewPanel extends LightningElement {
   }
 
   get canReview() {
-    return this.review?.wizardState === "SIGNED";
+    return (
+      this.review?.status === "Submitted" &&
+      this.review?.wizardState !== "ACTIVE" &&
+      !this.review?.ownReport
+    );
   }
 
   get stateMessage() {
-    switch (this.review?.wizardState) {
-      case "REVIEW":
+    if (this.review?.ownReport && this.review?.status === "Submitted") {
+      // the server refuses it too: someone else reviews it
+      return "This is your own report: someone else reviews it.";
+    }
+    switch (this.review?.status) {
+      case "Changes Requested":
         return "Changes were requested. Waiting for the employee to submit corrections.";
-      case "APPROVED":
+      case "Approved":
         return "The report is approved.";
       default:
         return "The report is not submitted yet.";
@@ -112,7 +123,7 @@ export default class ExpenseReviewPanel extends LightningElement {
       this.dispatchEvent(
         new ShowToastEvent({
           title: "Error",
-          message: errorMessage(error),
+          message: messageOf(error),
           variant: "error"
         })
       );
@@ -122,6 +133,7 @@ export default class ExpenseReviewPanel extends LightningElement {
   }
 }
 
-function errorMessage(error) {
-  return error?.body?.message || error?.message || "Unexpected error";
+/** The server's message (see errorMessage of c/wizardUtils), or a word when it says nothing */
+function messageOf(error) {
+  return errorMessage(error) || "Unexpected error";
 }

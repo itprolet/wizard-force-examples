@@ -1,0 +1,40 @@
+<template>
+  <article class="eh-page">
+    <section>
+      <div class="slds-m-around_medium">
+        <prolet-input-text
+          type="text"
+          label="Problem"
+          name="problem"
+          value={data.problem}
+          required={required.problem}
+          error={errors.problem}
+          onchange={changeHandler}
+          multiline
+        ></prolet-input-text>
+        <prolet-input-checkbox
+          label="Under Warranty"
+          name="underWarranty"
+          checked={data.underWarranty}
+          error={errors.underWarranty}
+          onchange={changeHandler}
+        ></prolet-input-checkbox>
+        <prolet-input-fixed
+          label="Serial Code"
+          name="serialCode"
+          size="6"
+          value={data.serialCode}
+          required={required.serialCode}
+          error={errors.serialCode}
+          onchange={changeHandler}
+        ></prolet-input-fixed>
+        <!-- WIZARD-MAKER example: show fields only when a condition is true.
+             The getter (e.g. showOtherDetails) goes in the JS, see the examples in PART 2.
+        <template lwc:if={showOtherDetails}>
+          …one or more fields…
+        </template>
+        -->
+      </div>
+    </section>
+  </article>
+</template>

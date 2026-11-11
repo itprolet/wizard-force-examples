@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Urgent__c</fullName>
+    <label>Urgent</label>
+    <type>Checkbox</type>
+    <defaultValue>false</defaultValue>
+    <description>WIZARD-MAKER mapping: ServiceVisitVisit.urgent</description>
+    <!-- <inlineHelpText>Shown to users as (i) next to the field</inlineHelpText> -->
+    <trackHistory>false</trackHistory>     <!-- true: log changes (needs enableHistory on the object) -->
+    <trackTrending>false</trackTrending>
+</CustomField>

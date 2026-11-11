@@ -1,0 +1,343 @@
+<template>
+  <!-- WIZARD-MAKER:frame (the wizard's own steps and buttons; change them with "npm run make layout") -->
+  <c-club-membership-frame
+    page={page}
+    model={model}
+    data={data}
+    l={l}
+    state={state}
+    errors={errors}
+    hide-buttons
+  >
+    <article class="eh-page">
+      <section class="slds-m-around_medium">
+        <!-- the step's title, and Edit: back to that step to change its answers -->
+        <div class="summary-head">
+          <h2 class="eh-header eh-divider">
+            {_l.ClubMembership_pag_applicant}
+          </h2>
+          <template lwc:if={canEdit}>
+            <button
+              type="button"
+              class="summary-edit"
+              data-page="ClubMembershipApplicant"
+              onclick={editStep}
+            >
+              {_l.ClubMembership_act_edit}
+            </button>
+          </template>
+        </div>
+        <!-- the answers in two columns (one on a phone) -->
+        <div class="slds-grid slds-wrap slds-gutters_medium">
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label={_l.ClubMembership_lbl_applicant_fullName}
+              value={applicant.fullName}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label={_l.ClubMembership_lbl_applicant_email}
+              value={applicant.email}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label={_l.ClubMembership_lbl_applicant_phone}
+              value={applicant.phone}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label={_l.ClubMembership_lbl_applicant_website}
+              value={applicant.website}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label={_l.ClubMembership_lbl_applicant_birthDate}
+              value={applicant.birthDate}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label={_l.ClubMembership_lbl_applicant_personalId}
+              value={applicant.personalId}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label={_l.ClubMembership_lbl_applicant_portalPin}
+              value={applicantPortalPinMasked}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label={_l.ClubMembership_lbl_applicant_address}
+              value={applicant.address}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+        </div>
+      </section>
+      <section class="slds-m-around_medium">
+        <!-- the step's title, and Edit: back to that step to change its answers -->
+        <div class="summary-head">
+          <h2 class="eh-header eh-divider">
+            {_l.ClubMembership_pag_membership}
+          </h2>
+          <template lwc:if={canEdit}>
+            <button
+              type="button"
+              class="summary-edit"
+              data-page="ClubMembershipMembership"
+              onclick={editStep}
+            >
+              {_l.ClubMembership_act_edit}
+            </button>
+          </template>
+        </div>
+        <!-- the answers in two columns (one on a phone) -->
+        <div class="slds-grid slds-wrap slds-gutters_medium">
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label={_l.ClubMembership_lbl_membership_plan}
+              value={membershipPlanLabel}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label={_l.ClubMembership_lbl_membership_startDate}
+              value={membership.startDate}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label={_l.ClubMembership_lbl_membership_familyMembers}
+              value={membership.familyMembers}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+          <template lwc:if={showMembershipFamilyNames}>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+              <prolet-input-text
+                label={_l.ClubMembership_lbl_membership_familyNames}
+                value={membership.familyNames}
+                read-only
+                readonly-textlike
+              ></prolet-input-text>
+            </div>
+          </template>
+          <template lwc:if={showMembershipPremiumWishes}>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+              <prolet-input-text
+                label={_l.ClubMembership_lbl_membership_premiumWishes}
+                value={membership.premiumWishes}
+                read-only
+                readonly-textlike
+              ></prolet-input-text>
+            </div>
+          </template>
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label={_l.ClubMembership_lbl_membership_hasCompany}
+              value={membershipHasCompanyLabel}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+        </div>
+      </section>
+      <section class="slds-m-around_medium">
+        <!-- the step's title, and Edit: back to that step to change its answers -->
+        <div class="summary-head">
+          <h2 class="eh-header eh-divider">{_l.ClubMembership_pag_payment}</h2>
+          <template lwc:if={canEdit}>
+            <button
+              type="button"
+              class="summary-edit"
+              data-page="ClubMembershipPayment"
+              onclick={editStep}
+            >
+              {_l.ClubMembership_act_edit}
+            </button>
+          </template>
+        </div>
+        <!-- the answers in two columns (one on a phone) -->
+        <div class="slds-grid slds-wrap slds-gutters_medium">
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label={_l.ClubMembership_lbl_payment_method}
+              value={paymentMethodLabel}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+          <template lwc:if={showPaymentIban}>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+              <prolet-input-text
+                label={_l.ClubMembership_lbl_payment_iban}
+                value={payment.iban}
+                read-only
+                readonly-textlike
+              ></prolet-input-text>
+            </div>
+          </template>
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label={_l.ClubMembership_lbl_payment_acceptRules}
+              value={paymentAcceptRulesLabel}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+        </div>
+      </section>
+      <section class="slds-m-around_medium">
+        <!-- the step's title, and Edit: back to that step to change its answers -->
+        <div class="summary-head">
+          <h2 class="eh-header eh-divider">{_l.ClubMembership_pag_company}</h2>
+          <template lwc:if={canEdit}>
+            <button
+              type="button"
+              class="summary-edit"
+              data-page="ClubMembershipCompany"
+              onclick={editStep}
+            >
+              {_l.ClubMembership_act_edit}
+            </button>
+          </template>
+        </div>
+        <!-- the answers in two columns (one on a phone) -->
+        <div class="slds-grid slds-wrap slds-gutters_medium">
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label={_l.ClubMembership_lbl_company_company}
+              value={company.companyName}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label={_l.ClubMembership_lbl_company_contactPerson}
+              value={company.contactPersonName}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label={_l.ClubMembership_lbl_company_partnerClub}
+              value={company.partnerClubName}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label={_l.ClubMembership_lbl_company_bigClient}
+              value={company.bigClientName}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label={_l.ClubMembership_lbl_company_referredBy}
+              value={company.referredByName}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <prolet-input-text
+              label={_l.ClubMembership_lbl_company_vatNumber}
+              value={company.vatNumber}
+              read-only
+              readonly-textlike
+            ></prolet-input-text>
+          </div>
+        </div>
+      </section>
+      <!-- WIZARD-MAKER example: show a field only when a condition is true (getter in the JS):
+    <template lwc:if={showGuest}>
+      <prolet-input-text label="Guest name" value={somePage.guestName} read-only readonly-textlike></prolet-input-text>
+    </template>
+    -->
+
+      <!-- WIZARD-MAKER: submit. The wizard's own buttons are hidden on this page ("navigationByChild" in Rules__c). -->
+      <section class="slds-m-around_medium">
+        <template lwc:if={submitError}>
+          <prolet-elem-alert type="error">{submitError}</prolet-elem-alert>
+        </template>
+
+        <template lwc:if={isSubmitted}>
+          <prolet-elem-alert type="success"
+            >{_l.ClubMembership_msg_submitted}</prolet-elem-alert
+          >
+          <div class="slds-m-top_medium">
+            <button
+              type="button"
+              class="slds-button eh-button summary-button active"
+              onclick={startNew}
+            >
+              {_l.ClubMembership_act_startAgain}
+            </button>
+          </div>
+        </template>
+        <template lwc:else>
+          <prolet-input-checkbox
+            label={_l.ClubMembership_lbl_confirm}
+            name="confirmed"
+            checked={data.confirmed}
+            onchange={changeHandler}
+          ></prolet-input-checkbox>
+
+          <div
+            class="eh-wizard-buttons slds-grid slds-grid_align-spread slds-m-top_large"
+          >
+            <!-- the framework's button style (eh-button): <prolet-input-button> has no style outside the framework's template -->
+            <button
+              type="button"
+              class="slds-button eh-button summary-button back"
+              onclick={handleBack}
+              disabled={isSubmitting}
+            >
+              {_l.Wizard_act_back}
+            </button>
+            <button
+              type="button"
+              class={submitClass}
+              onclick={handleSubmit}
+              disabled={isSubmitting}
+              aria-busy={submitBusy}
+            >
+              {_l.ClubMembership_act_submit}
+            </button>
+          </div>
+        </template>
+      </section>
+    </article>
+  </c-club-membership-frame>
+</template>

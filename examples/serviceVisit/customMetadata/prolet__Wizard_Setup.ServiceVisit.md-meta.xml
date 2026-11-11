@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Service Visit</label>
+    <protected>false</protected>
+    <values>
+        <field>prolet__Title__c</field>
+        <value xsi:type="xsd:string">Service Visit</value>
+    </values>
+    <values>
+        <field>prolet__Plan__c</field>
+        <value xsi:type="xsd:string">{
+  "Customer": "ServiceVisitCustomer",
+  "Visit": "ServiceVisitVisit",
+  "if (ServiceVisitVisit.visitType='repair')": {
+    "Repair Details": "ServiceVisitRepairDetails"
+  },
+  "Summary": "ServiceVisitSummary"
+}</value>
+    </values>
+    <values>
+        <field>prolet__Rules__c</field>
+        <value xsi:type="xsd:string">{
+  "ServiceVisitCustomer": {
+    "required": [
+      "account",
+      "contact",
+      "contactEmail"
+    ]
+  },
+  "ServiceVisitVisit": {
+    "required": [
+      "visitType",
+      "visitDate",
+      "devices"
+    ],
+    "if (devices &gt; 3)": {
+      "required": [
+        "devicesNote"
+      ]
+    },
+    "if (not(devices &gt; 3))": {
+      "hidden": [
+        "devicesNote"
+      ]
+    },
+    "if (urgent)": {
+      "required": [
+        "urgentReason"
+      ]
+    },
+    "if (not(urgent))": {
+      "hidden": [
+        "urgentReason"
+      ]
+    }
+  },
+  "ServiceVisitRepairDetails": {
+    "required": [
+      "problem"
+    ]
+  },
+  "ServiceVisitSummary": {
+    "navigationByChild": true
+  }
+}</value>
+    </values>
+</CustomMetadata>
