@@ -1,10 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>64.0</apiVersion>
-    <description>Registers the Feedback example pages with the wizard runtime registry. Place on the same Experience Builder page as &lt;c-wizard&gt;.</description>
+    <description>Feedback example (Wizard_Setup.Feedback). Place it on a Lightning App page or an Experience Builder page: it renders &lt;c-wizard&gt; with the example's pages and validator.</description>
     <isExposed>true</isExposed>
     <masterLabel>Feedback — Page Registry</masterLabel>
     <targets>
+        <target>lightning__AppPage</target>
         <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
     </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__AppPage">
+            <property name="primaryColor" type="String" label="Primary color (CSS color)" default="#8dc8ff" />
+            <property name="secondaryColor" type="String" label="Secondary color (CSS color)" default="#535857" />
+            <property name="shape" type="String" label="Shape" datasource="round,sharp" default="sharp" />
+        </targetConfig>
+        <targetConfig targets="lightningCommunity__Default">
+            <property name="primaryColor" type="Color" label="Primary color" default="#8dc8ff" />
+            <property name="secondaryColor" type="Color" label="Secondary color" default="#535857" />
+            <property name="shape" type="String" label="Shape" datasource="round,sharp" default="sharp" />
+        </targetConfig>
+    </targetConfigs>
 </LightningComponentBundle>

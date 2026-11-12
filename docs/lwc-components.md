@@ -26,17 +26,18 @@ The package's components that your pages can use. Each is `prolet-...` in your t
 
 ## Inputs
 
-All inputs take `name`, `label`, `required`, `read-only`, `disabled`, `error`, `message` and send `change` with `{ name, value }`, which `handleChange` of `wizardPageBase` understands.
+The text, combobox and fixed inputs take `name`, `label`, `required`, `read-only`, `disabled`, `error`, `message` and send `change` with `{ name, value }`. The checkbox takes the same, but its answer is `checked`, and its `change` carries `{ name, checked }`. `handleChange` of `wizardPageBase` understands both. The tabset and the suggester have no `name`: see their rows.
 
-| Component                                         | Use                                                                                                      | Its own attributes                                                                                                                                                   |
-| ------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `prolet-input-text`                               | Text, number, date, email, a multi-line text                                                             | `type`, `value`, `placeholder`, `pattern`, `restrict-to-pattern`, `min`, `max`, `max-length`, `multiline`, `strip-whitespace`, `hint`, `accept`, `readonly-textlike` |
-| `prolet-input-checkbox`                           | A yes / no answer, a consent                                                                             | `value` (checked)                                                                                                                                                    |
-| `prolet-input-combobox`                           | A choice from a list                                                                                     | `items` (`[{ label, value }]`), `value`, `placeholder`, `hint`, `dropdown-direction`, `readonly-textlike`                                                            |
-| `prolet-input-fixed`                              | A fixed-length code (one box per character)                                                              | `size`, `size-long`, `placeholder`, `hint`                                                                                                                           |
-| `prolet-input-suggester`                          | A lookup: search as you type                                                                             | see below                                                                                                                                                            |
-| `prolet-input-button`, `prolet-input-button-icon` | Buttons in the package's style                                                                           | `icon`, `size`, `disabled`, `loading`, `classname` / `title`, `bg-color`; they send `clicked`                                                                        |
-| `prolet-input-tabset`                             | Tabs over parts of a page: each child `<div data-role="tab" data-value="..." data-label="...">` is a tab | `value` (the open tab), `disabled`, `read-only`; it sends `change`                                                                                                   |
+| Component                  | Use                                                                                                      | Its own attributes                                                                                                                                                   |
+| -------------------------- | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `prolet-input-text`        | Text, number, date, email, a multi-line text                                                             | `type`, `value`, `placeholder`, `pattern`, `restrict-to-pattern`, `min`, `max`, `max-length`, `multiline`, `strip-whitespace`, `hint`, `accept`, `readonly-textlike` |
+| `prolet-input-checkbox`    | A yes / no answer, a consent                                                                             | `checked` (not `value`: a `value` is ignored, and the box never shows its answer)                                                                                    |
+| `prolet-input-combobox`    | A choice from a list                                                                                     | `items` (`[{ label, value }]`), `value`, `placeholder`, `hint`, `dropdown-direction`, `readonly-textlike`                                                            |
+| `prolet-input-fixed`       | A fixed-length code (one box per character)                                                              | `size`, `size-long`, `placeholder`, `hint`                                                                                                                           |
+| `prolet-input-suggester`   | A lookup: search as you type                                                                             | see below                                                                                                                                                            |
+| `prolet-input-button`      | A button in the package's style                                                                          | `icon`, `size`, `disabled`, `loading`, `classname`; it sends `clicked` (`onclicked`)                                                                                 |
+| `prolet-input-button-icon` | An icon button                                                                                           | `icon`, `size`, `disabled`, `classname`, `title`, `bg-color`; it sends a plain `click` (`onclick`)                                                                   |
+| `prolet-input-tabset`      | Tabs over parts of a page: each child `<div data-role="tab" data-value="..." data-label="...">` is a tab | `value` (the open tab), `disabled`, `read-only`; no `name`: its `change` carries only `{ value }`, so handle it yourself, not with `handleChange`                    |
 
 ## Lookups: `<prolet-input-suggester>`
 
@@ -48,9 +49,9 @@ What a lookup may read is decided only on the server, by a `prolet__Smart_Lookup
   lookup-name="Expense_AccountId"
   key-field="Id"
   name-field="Name"
-  selected-id="{data.accountId}"
-  selected-name="{data.accountIdName}"
-  onsmartlookupselected="{accountSelected}"
+  selected-id={data.accountId}
+  selected-name={data.accountIdName}
+  onsmartlookupselected={accountSelected}
 ></prolet-input-suggester>
 ```
 
@@ -58,26 +59,31 @@ On a choice it sends `smartlookupselected` with `{ lookupId, selectedId, selecte
 
 The setting:
 
-| Field                                                        | What it holds                                                                                             |
-| ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
-| `prolet__Soql__c`                                            | A query with `:query` (the typed text, as a `LIKE` pattern) and `:arg0` … `:arg9`.                        |
-| `prolet__ArgsBaseObjectType__c`, `prolet__ArgsFieldNames__c` | Arguments read from the record of `record-id`: its object and its fields (comma-separated, dotted paths). |
-| `prolet__ApexClass__c`, `prolet__ApexMethod__c`              | Your `System.Callable` class and its method, instead of a query.                                          |
-| `prolet__RequiredPermission__c`                              | A custom permission the user needs; empty means anyone who can open the wizard.                           |
+| Field                                                        | What it holds                                                                                                                                                   |
+| ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `prolet__Soql__c`                                            | A query with `:query` (the typed text, as a `LIKE` pattern) and `:arg0` … `:arg9`.                                                                              |
+| `prolet__ArgsBaseObjectType__c`, `prolet__ArgsFieldNames__c` | Arguments read from the record of `record-id`: its object and its fields (comma-separated, dotted paths).                                                       |
+| `prolet__ApexClass__c`, `prolet__ApexMethod__c`              | Your `System.Callable` class and its method, instead of a query.                                                                                                |
+| `prolet__RequiredPermission__c`                              | A custom permission the user needs: one of your org (`Name`), of another namespace (`ns__Name`), or of the package. Empty means anyone who can open the wizard. |
 
-Every lookup runs as the user (`USER_MODE`: sharing and field access), returns at most 50 records, and gives the browser one general message on any error (the reason is in the debug log). The search rules: the text anywhere in the field, `*` is the user's wildcard (`A*` starts with A), a space matches anything between two words, `%` and `_` are plain characters. See the [serviceVisit](../examples/serviceVisit) and [clubMembership](../examples/clubMembership) examples.
+Every lookup runs as the user (`USER_MODE`: sharing and field access), returns at most 50 records, and gives the browser one general message on any error (the reason is in the debug log). The search rules: the text anywhere in the field, `*` is the user's wildcard (`A*` starts with A), a space matches anything between two words, `%` and `_` are plain characters. See the [serviceVisit](https://github.com/itprolet/wizard-force-examples/tree/main/examples/serviceVisit) and [clubMembership](https://github.com/itprolet/wizard-force-examples/tree/main/examples/clubMembership) examples.
 
 ## Elements
 
-| Component               | Use                                    | Attributes                               |
-| ----------------------- | -------------------------------------- | ---------------------------------------- |
-| `prolet-elem-alert`     | An info, success, warning or error box | `type`, `show`, `closable`, `icon`       |
-| `prolet-elem-chip`      | A coloured label                       | `color`, `icon`, `block`                 |
-| `prolet-elem-tile`      | A choice shown as a tile               | `icon`, `state`, `classname`             |
-| `prolet-elem-marquee`   | A status line                          | `icon`, `prefix`, `status`               |
-| `prolet-elem-preloader` | A spinner                              | `text`, `large`, `absolute`, `badge`     |
-| `prolet-elem-toast`     | A toast                                | `icon`, `show`, `item-id`, `items-count` |
-| `prolet-page-progress`  | The steps, for a frame of your own     | `pages`, `read-only`, `allow-forward`    |
+| Component               | Use                                    | Attributes                                               |
+| ----------------------- | -------------------------------------- | -------------------------------------------------------- |
+| `prolet-elem-alert`     | An info, success, warning or error box | `type`, `closable`, `icon`; the text goes inside the tag |
+| `prolet-elem-chip`      | A coloured label                       | `color`, `icon`, `block`                                 |
+| `prolet-elem-tile`      | A choice shown as a tile               | `icon`, `state`, `classname`                             |
+| `prolet-elem-marquee`   | A status line                          | `icon`, `prefix`, `status`                               |
+| `prolet-elem-preloader` | A spinner                              | `text`, `large`, `absolute`, `badge`                     |
+| `prolet-elem-toast`     | A toast                                | `icon`, `item-id`, `items-count`                         |
+| `prolet-page-progress`  | The steps, for a frame of your own     | `pages`, `read-only`, `allow-forward`                    |
+
+**Methods.** `show` is a method, not an attribute:
+
+- `prolet-elem-alert`: an alert with text inside the tag and not `closable` shows itself; a `closable` one stays hidden until `alert.show()`. Without text inside the tag it is never shown (it has no `message` attribute).
+- `prolet-elem-toast`: `toast.show(text, type, duration)`; `type` is `error` (the default, it stays until closed), `warning`, `info` or `success`; `duration` in milliseconds (5000 by default).
 
 ## A Table: `<prolet-elem-datatable>`
 
@@ -92,8 +98,27 @@ Every lookup runs as the user (`USER_MODE`: sharing and field access), returns a
 | `hide-pagination`                                                      | `false` | No pages                             |
 | `total`                                                                |         | Server-side paging (`page` event)    |
 
-A column: `fieldName`, `label`, `type`, `typeData`, `align`, `sortable`, `width`, `classname`, `style`. Types: `text` (default), `number`, `boolean`, `date`, `time`, `datetime`, `richtext`, `url` (`{ icon, disabled }`), `link` (`{ url, callback, dataField, disabled, target }`), `icon` (`{ icon, title, dataField, callback, disabled }`), `chip` (`{ chipItems: [{ value, color, icon }] }`).
+A column: `fieldName`, `label`, `type`, `typeData`, `align`, `sortable`, `width`, `classname`, `style`. Types: `text` (default), `number`, `boolean`, `date`, `time`, `datetime`, `richtext`, `url` (`{ icon, disabled }`), `link` (`{ url, callback, dataField, disabled, target }`), `icon` (`{ icon, title, dataField, callback, disabled }`), `chip` (`{ chipItems: [{ value, color, icon }] }`), `component` (`{ component: "c/myCell" }`: a component of your org draws the cell).
+
+A `component` cell gets `value`, `row` and `col` (its `typeData` holds anything else you put there); a `change` or `cellclick` it sends reaches the table as `cellchange` / `cellclick`:
+
+```js
+// c/myCell
+import { LightningElement, api } from "lwc";
+export default class MyCell extends LightningElement {
+  @api value;
+  @api row;
+  @api col;
+}
+```
+
+```js
+columns = [
+  { fieldName: "name", label: "Name" },
+  { fieldName: "amount", label: "Amount", type: "component", typeData: { component: "c/myCell" } }
+];
+```
 
 Links open only for `http:`, `https:`, `mailto:`, `tel:` and paths of the site; anything else is shown as text. Events: `sort` (`{ sortBy, direction }`), `page` (`{ rowOffset, pageSize, total }`).
 
-See the [showcase example](../examples/showcase), which uses every component.
+The [showcase example](https://github.com/itprolet/wizard-force-examples/tree/main/examples/showcase) uses the text, combobox, checkbox, button, tabset, datatable and alert.

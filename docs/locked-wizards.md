@@ -54,15 +54,18 @@ public with sharing class FeedbackService {
 
 - `assertCompleted` refuses a wizard that is locked already (a second click on Submit creates nothing), whose path did not reach the last page of its plan, or with a page before the last one that does not pass its checks (`Wizard_err_not_completed`, naming the page). The last page is the one the submit is made from: its answers (a GDPR tick, say) go to your submit as parameters, so your page and your submit check them.
 - `lock` on a locked wizard changes nothing.
-- Each method reads the wizard locked (`FOR UPDATE`) until the end of the transaction, and returns a `prolet.WizardVersionChange` (the version before and after), which a page sends with its `refresh` so that its own tab does not see a conflict.
+- Each method reads the wizard locked (`FOR UPDATE`) until the end of the transaction. `lock`, `unlock` and `updateContext` return a `prolet.WizardVersionChange` (the version before and after), which a page sends with its `refresh` so that its own tab does not see a conflict; `updateContext` returns `null` for an empty patch, and `assertCompleted` returns nothing.
 
-The [feedback](../examples/feedback), [complaint](../examples/complaint) and [expense](../examples/expense) examples submit this way.
+The examples show the steps, not one of them all four:
+
+- [feedback](https://github.com/itprolet/wizard-force-examples/tree/main/examples/feedback) and [complaint](https://github.com/itprolet/wizard-force-examples/tree/main/examples/complaint): `assertCompleted`, their own insert, `lock` (no `updateContext`).
+- [expense](https://github.com/itprolet/wizard-force-examples/tree/main/examples/expense): `updateContext`, `lock` and `unlock`; instead of `assertCompleted` it checks `prolet.WizardStates.isLocked` itself, because its report is submitted again after changes.
 
 ## Sending a Wizard Back
 
 `prolet.WizardApi.unlock(wizardId)` makes a locked wizard `ACTIVE` again, for its user to change it: a submit that failed later, a manager who asks for changes, a mistake. Only Apex can unlock; the user cannot.
 
-The [expense example](../examples/expense) does this for a manager's review: "Request changes" unlocks the wizard and writes into `$ctx` what has to change; its rules make the other pages read-only while the report is in that status.
+The [expense example](https://github.com/itprolet/wizard-force-examples/tree/main/examples/expense) does this for a manager's review: "Request changes" unlocks the wizard and writes into `$ctx` what has to change; its rules make the other pages read-only while the report is in that status.
 
 ## When the Page Is Done
 
@@ -70,4 +73,4 @@ A page that sends the action `complete` ends the wizard in the browser: the wiza
 
 ## Upgrading From 0.1.0
 
-0.1.0 had a REVIEW state, `Review_Data__c` and `reviewData` for pages. They are gone in 0.2.0: a beta cannot be upgraded, so an org with 0.1.0 uninstalls it first. Wizards saved with an old state count as locked.
+0.1.0 had a REVIEW state, `Review_Data__c` and `reviewData` for pages. They are gone in 0.2.0. 0.1.0 was a beta, and a beta cannot be upgraded: an org with 0.1.0 uninstalls it first, which removes its wizards too, so 0.2.0 starts with none.

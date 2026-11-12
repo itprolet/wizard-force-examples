@@ -28,10 +28,10 @@ examples/
   embedded/            a single form inside your own component, nothing stored
   feedback/            a full flow: own object, submit in Apex, a locked wizard
   serviceVisit/        a conditional page and lookups from metadata
-  complaint/           labels, attachments, patterns, hints, page errors
+  complaint/           labels, patterns, hints, page errors, a new wizard after a locked one
   clubMembership/      a lookup written in Apex, ticked boxes, page validators, translations
-  showcase/            every input and element of the package
-  expense/             constants, server validators, two tabs, locking, a manager's review
+  showcase/            text, combobox, checkbox, button, tabset, datatable, alert
+  expense/             constants, server validators, two tabs, locking, a manager's review decided by access to the report
   carRental/           an advanced look: tiles, photos, two objects
 sfdx-project.json      one package directory per example
 ```
@@ -101,15 +101,15 @@ export default class FeedbackWizardRegistry extends LightningElement {
 ```html
 <template>
   <prolet-wizard
-    page-registry="{pageRegistry}"
-    validator-registry="{validatorRegistry}"
+    page-registry={pageRegistry}
+    validator-registry={validatorRegistry}
     wizard-type-config="Feedback"
   >
   </prolet-wizard>
 </template>
 ```
 
-Your own components stay in `c/`; only the package's are `prolet/`. The [feedback example](../examples/feedback) has the whole wizard: registry, pages, metadata, validator and submit.
+Your own components stay in `c/`; only the package's are `prolet/`. The [feedback example](https://github.com/itprolet/wizard-force-examples/tree/main/examples/feedback) has the whole wizard: registry, pages, metadata, validator and submit.
 
 ## Supported Apex Surface
 

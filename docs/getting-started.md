@@ -69,7 +69,7 @@ The registry renders the package's wizard with its pages:
 ```html
 <template>
   <prolet-wizard
-    page-registry="{_pageRegistry}"
+    page-registry={_pageRegistry}
     wizard-type-config="Vacation"
   ></prolet-wizard>
 </template>
@@ -92,4 +92,4 @@ FROM prolet__Wizard__c ORDER BY CreatedDate DESC LIMIT 1
 
 - [Build a Wizard](build-a-wizard.md): your own type, pages on `wizardPageBase`, a submit.
 - [Namespace](namespace.md): which names need `prolet` in your code.
-- The [feedback example](../examples/feedback): the same with its own object and a submit in Apex.
+- The [feedback example](https://github.com/itprolet/wizard-force-examples/tree/main/examples/feedback): the same with its own object and a submit in Apex.

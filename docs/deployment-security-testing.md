@@ -34,14 +34,14 @@ Guest users (a public Experience Cloud site without login) are **not supported**
 
 ## A Process That Writes Someone Else's Wizard
 
-A manager's decision or a review writes a wizard the manager does not own. The package does not give Modify All (in Salesforce it includes Delete). Your process decides who may act, checks it in its own Apex, and only then writes the wizard. The [expense example](../examples/expense) shows one way: access to the expense report decides, and the report-to-wizard link is set on the server and checked before anything is read.
+A manager's decision or a review writes a wizard the manager does not own. The package does not give Modify All (in Salesforce it includes Delete). Your process decides who may act, checks it in its own Apex, and only then writes the wizard. The [expense example](https://github.com/itprolet/wizard-force-examples/tree/main/examples/expense) shows one way: access to the expense report decides, and the report-to-wizard link is set on the server and checked before anything is read.
 
 ## Your Own Apex
 
 - Controllers `with sharing`, queries `WITH USER_MODE` (or `stripInaccessible`).
 - A lookup class: keep `WITH USER_MODE`; the package also removes fields the user may not read from what it returns.
-- `prolet__Smart_Lookup_Setting__mdt.prolet__RequiredPermission__c` limits a lookup to users with a custom permission (staff data on a customer site, say).
-- Validators and lookup classes are `global`, so the package can create them.
+- `prolet__Smart_Lookup_Setting__mdt.prolet__RequiredPermission__c` limits a lookup to users with a custom permission (staff data on a customer site, say): a permission of your org by its name, given through a permission set or the profile.
+- Validators and lookup classes are `global` (a lookup's `call` method too): the package does not find a `public` class of your org.
 
 ## Testing
 
@@ -61,11 +61,10 @@ insert wizard;
 - A test user needs `prolet__Wizard_Framework_User` (assign it inside `System.runAs`).
 - `prolet.WizardApi.parsePageRules(page, rules, model)` reads your rules as the package does, for tests of conditions; put `'$ctx'` / `'$con'` into the model when a condition reads them.
 
-Each example has its tests in `classes/tests`.
+The examples with Apex have their tests in `classes/tests` (clubMembership also one next to its lookup, in `classes/lookups`); vacation and embedded have no Apex.
 
 ## Installing and Upgrading
 
-- 0.2.0 is not an upgrade of the 0.1.0 beta: a beta cannot be upgraded. Uninstall 0.1.0 first, then install 0.2.0.
-- Wizards saved with a state from before 0.2.0 (`SIGNED`, `REVIEW`, `APPROVED`) count as locked.
-- `prolet__Wizard_Type__c` is a text field in 0.2.0 (it was a picklist): a new type needs only its `Wizard_Setup__mdt` record.
-- Moving `prolet__Wizard__c` to Private makes Salesforce recalculate sharing: users lose access to other users' wizards at once. Try it in a sandbox first, and give `Wizard_Framework_Back_Office` to the people who must see everything.
+- 0.2.0 is not an upgrade of the 0.1.0 beta: a beta cannot be upgraded. Uninstall 0.1.0 first (that removes its wizards too), then install 0.2.0.
+- `prolet__Wizard_Type__c` is a text field: a new type needs only its `Wizard_Setup__mdt` record.
+- `prolet__Wizard__c` is Private: a user sees their own wizards. Give `prolet__Wizard_Framework_Back_Office` to the people who must read everyone's.

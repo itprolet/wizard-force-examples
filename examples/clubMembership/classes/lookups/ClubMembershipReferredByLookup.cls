@@ -4,10 +4,13 @@
  * names this class and the method 'search'.
  *
  * WIZARD-MAKER: created once by "npm run make page"; write your own search here.
+ *
+ * global, and its call() too: the package finds a class of the org that installed it only when
+ * it is global (Type.forName returns null for a public one).
  */
-public with sharing class ClubMembershipReferredByLookup implements Callable {
+global with sharing class ClubMembershipReferredByLookup implements Callable {
 
-    public Object call(String action, Map<String, Object> arguments) {
+    global Object call(String action, Map<String, Object> arguments) {
         switch on action {
             when 'search' {
                 return search((String) arguments.get('$searchValue'), arguments);

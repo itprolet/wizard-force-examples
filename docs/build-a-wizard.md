@@ -4,7 +4,7 @@ title: Build a Wizard
 
 # Build a Wizard
 
-A wizard of your own, end to end: a type, a plan with a condition, pages on `wizardPageBase`, a registry, a validator and a submit. The [feedback example](../examples/feedback) is this walkthrough, finished.
+A wizard of your own, end to end: a type, a plan with a condition, pages on `wizardPageBase`, a registry, a validator and a submit. It is a shortened version of the [feedback example](https://github.com/itprolet/wizard-force-examples/tree/main/examples/feedback). The example has more: rules for its summary page (`navigationByChild`, the consent box), a frame of its own, and templates written before `wizardPageBase` (`{_required.x}` / `{_errors.x}`; new pages use `{fields.x.required}` / `{fields.x.error}`, as below).
 
 ## Navigation
 
@@ -18,7 +18,7 @@ A wizard of your own, end to end: a type, a plan with a condition, pages on `wiz
 `customMetadata/prolet__Wizard_Setup.Feedback.md-meta.xml`:
 
 ```xml
-<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata">
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <label>Feedback</label>
     <protected>false</protected>
     <values>
@@ -62,11 +62,11 @@ export default class FeedbackComment extends WizardPageBase {
   <prolet-input-text
     label="E-mail"
     name="email"
-    value="{data.email}"
-    required="{fields.email.required}"
-    error="{fields.email.error}"
-    read-only="{fields.email.readOnly}"
-    onchange="{handleChange}"
+    value={data.email}
+    required={fields.email.required}
+    error={fields.email.error}
+    read-only={fields.email.readOnly}
+    onchange={handleChange}
   ></prolet-input-text>
 </template>
 ```
@@ -108,8 +108,8 @@ export default class FeedbackWizardRegistry extends LightningElement {
 ```html
 <template>
   <prolet-wizard
-    page-registry="{_pageRegistry}"
-    validator-registry="{_validatorRegistry}"
+    page-registry={_pageRegistry}
+    validator-registry={_validatorRegistry}
     wizard-type-config="Feedback"
   ></prolet-wizard>
 </template>
@@ -136,13 +136,13 @@ public with sharing class FeedbackController {
 }
 ```
 
-On the page, call it while the wizard is locked for the wait, then refresh:
+On the summary page (`feedbackAgreeGdpr` is a property of the page, ticked by the user), call it while the wizard is locked for the wait, then refresh:
 
 ```js
 async submit() {
   this.uiLock(true);
   try {
-    await submitFeedback({ wizardId: this.wizardId, agreedToGdpr: this.data.agree });
+    await submitFeedback({ wizardId: this.wizardId, agreedToGdpr: this.feedbackAgreeGdpr });
     this.refresh({ pageModel: null });
   } finally {
     this.uiLock(false);
@@ -161,6 +161,6 @@ sf org assign permset --target-org <your org> --name prolet__Wizard_Framework_Us
 
 ## Larger Examples
 
-- [complaint](../examples/complaint): labels, attachments, patterns, hints, page errors.
-- [clubMembership](../examples/clubMembership): a lookup in Apex, `ticked`, `hidden`, page validators, translations.
-- [expense](../examples/expense): constants, server validators, a manager's review, two tabs.
+- [complaint](https://github.com/itprolet/wizard-force-examples/tree/main/examples/complaint): labels, patterns, hints, page errors, a new wizard after a locked one.
+- [clubMembership](https://github.com/itprolet/wizard-force-examples/tree/main/examples/clubMembership): a lookup in Apex, `ticked`, `hidden`, page validators, translations.
+- [expense](https://github.com/itprolet/wizard-force-examples/tree/main/examples/expense): constants, server validators, a manager's review decided by access to the report, two tabs.
