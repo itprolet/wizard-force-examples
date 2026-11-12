@@ -40,8 +40,8 @@ A manager's decision or a review writes a wizard the manager does not own. The p
 
 - Controllers `with sharing`, queries `WITH USER_MODE` (or `stripInaccessible`).
 - A lookup class: keep `WITH USER_MODE`; the package also removes fields the user may not read from what it returns.
-- `prolet__Smart_Lookup_Setting__mdt.prolet__RequiredPermission__c` limits a lookup to users with a custom permission (staff data on a customer site, say).
-- Validators and lookup classes are `global`, so the package can create them.
+- `prolet__Smart_Lookup_Setting__mdt.prolet__RequiredPermission__c` limits a lookup to users with a custom permission (staff data on a customer site, say): a permission of your org by its name, given through a permission set or the profile.
+- Validators and lookup classes are `global` (a lookup's `call` method too): the package does not find a `public` class of your org.
 
 ## Testing
 

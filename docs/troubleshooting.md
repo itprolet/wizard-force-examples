@@ -47,7 +47,7 @@ Two saves of one wizard at the same moment (a double click, two tabs). Trying ag
 
 ## A lookup shows "The list could not be loaded"
 
-The browser always gets this one message; the reason is in the debug log of the user. Common ones: the setting has neither a query nor a class, the class is not found (in an org with its own namespace, write `myns.MyLookup`), the user lacks the `RequiredPermission__c`, or the query selects a field the user may not read. A message in the list itself names what the page did not pass: "lookup-name is missing", "key-field is missing", "name-field is missing", or "key-field and name-field are missing".
+The browser always gets this one message; the reason is in the debug log of the user. Common ones: the setting has neither a query nor a class, the class is not found (it is not `global`, or in an org with its own namespace, write `myns.MyLookup`), the user lacks the `RequiredPermission__c`, or the query selects a field the user may not read. A message in the list itself names what the page did not pass: "lookup-name is missing", "key-field is missing", "name-field is missing", or "key-field and name-field are missing".
 
 ## A page stays empty, or the wizard waits
 

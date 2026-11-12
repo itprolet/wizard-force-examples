@@ -59,12 +59,12 @@ On a choice it sends `smartlookupselected` with `{ lookupId, selectedId, selecte
 
 The setting:
 
-| Field                                                        | What it holds                                                                                             |
-| ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
-| `prolet__Soql__c`                                            | A query with `:query` (the typed text, as a `LIKE` pattern) and `:arg0` … `:arg9`.                        |
-| `prolet__ArgsBaseObjectType__c`, `prolet__ArgsFieldNames__c` | Arguments read from the record of `record-id`: its object and its fields (comma-separated, dotted paths). |
-| `prolet__ApexClass__c`, `prolet__ApexMethod__c`              | Your `System.Callable` class and its method, instead of a query.                                          |
-| `prolet__RequiredPermission__c`                              | A custom permission the user needs; empty means anyone who can open the wizard.                           |
+| Field                                                        | What it holds                                                                                                                                                   |
+| ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `prolet__Soql__c`                                            | A query with `:query` (the typed text, as a `LIKE` pattern) and `:arg0` … `:arg9`.                                                                              |
+| `prolet__ArgsBaseObjectType__c`, `prolet__ArgsFieldNames__c` | Arguments read from the record of `record-id`: its object and its fields (comma-separated, dotted paths).                                                       |
+| `prolet__ApexClass__c`, `prolet__ApexMethod__c`              | Your `System.Callable` class and its method, instead of a query.                                                                                                |
+| `prolet__RequiredPermission__c`                              | A custom permission the user needs: one of your org (`Name`), of another namespace (`ns__Name`), or of the package. Empty means anyone who can open the wizard. |
 
 Every lookup runs as the user (`USER_MODE`: sharing and field access), returns at most 50 records, and gives the browser one general message on any error (the reason is in the debug log). The search rules: the text anywhere in the field, `*` is the user's wildcard (`A*` starts with A), a space matches anything between two words, `%` and `_` are plain characters. See the [serviceVisit](https://github.com/itprolet/wizard-force-examples/tree/main/examples/serviceVisit) and [clubMembership](https://github.com/itprolet/wizard-force-examples/tree/main/examples/clubMembership) examples.
 
@@ -98,8 +98,27 @@ Every lookup runs as the user (`USER_MODE`: sharing and field access), returns a
 | `hide-pagination`                                                      | `false` | No pages                             |
 | `total`                                                                |         | Server-side paging (`page` event)    |
 
-A column: `fieldName`, `label`, `type`, `typeData`, `align`, `sortable`, `width`, `classname`, `style`. Types: `text` (default), `number`, `boolean`, `date`, `time`, `datetime`, `richtext`, `url` (`{ icon, disabled }`), `link` (`{ url, callback, dataField, disabled, target }`), `icon` (`{ icon, title, dataField, callback, disabled }`), `chip` (`{ chipItems: [{ value, color, icon }] }`).
+A column: `fieldName`, `label`, `type`, `typeData`, `align`, `sortable`, `width`, `classname`, `style`. Types: `text` (default), `number`, `boolean`, `date`, `time`, `datetime`, `richtext`, `url` (`{ icon, disabled }`), `link` (`{ url, callback, dataField, disabled, target }`), `icon` (`{ icon, title, dataField, callback, disabled }`), `chip` (`{ chipItems: [{ value, color, icon }] }`), `component` (`{ component: "c/myCell" }`: a component of your org draws the cell).
+
+A `component` cell gets `value`, `row` and `col` (its `typeData` holds anything else you put there); a `change` or `cellclick` it sends reaches the table as `cellchange` / `cellclick`:
+
+```js
+// c/myCell
+import { LightningElement, api } from "lwc";
+export default class MyCell extends LightningElement {
+  @api value;
+  @api row;
+  @api col;
+}
+```
+
+```js
+columns = [
+  { fieldName: "name", label: "Name" },
+  { fieldName: "amount", label: "Amount", type: "component", typeData: { component: "c/myCell" } }
+];
+```
 
 Links open only for `http:`, `https:`, `mailto:`, `tel:` and paths of the site; anything else is shown as text. Events: `sort` (`{ sortBy, direction }`), `page` (`{ rowOffset, pageSize, total }`).
 
-See the [showcase example](https://github.com/itprolet/wizard-force-examples/tree/main/examples/showcase), which uses every component.
+The [showcase example](https://github.com/itprolet/wizard-force-examples/tree/main/examples/showcase) uses the text, combobox, checkbox, button, tabset, datatable and alert.

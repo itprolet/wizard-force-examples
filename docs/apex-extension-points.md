@@ -94,7 +94,7 @@ global with sharing class ValidateExpenseLimit implements prolet.IPageValidator 
 
 ## Lookups in Apex
 
-A `prolet__Smart_Lookup_Setting__mdt` record can name your class (`prolet__ApexClass__c`) and its method (`prolet__ApexMethod__c`) instead of a query. The class implements `System.Callable`; the package calls `call(methodName, arguments)`, where `arguments` holds the field's arguments (`arg0` … `arg9`) and what the user typed under `'$searchValue'`, and returns a `List<SObject>`. What it returns is checked against the user's access: records they may not see are left out, fields they may not read are removed. Search with `prolet.WizardApi.likePattern(searchValue)` and keep `WITH USER_MODE` in your queries. See the [clubMembership example](https://github.com/itprolet/wizard-force-examples/tree/main/examples/clubMembership).
+A `prolet__Smart_Lookup_Setting__mdt` record can name your class (`prolet__ApexClass__c`) and its method (`prolet__ApexMethod__c`) instead of a query. The class implements `System.Callable` and is `global`, and so is its `call` method: the package does not find a `public` class of your org (it reads as "does not exist" in the debug log). The package calls `call(methodName, arguments)`, where `arguments` holds the field's arguments (`arg0` … `arg9`) and what the user typed under `'$searchValue'`, and returns a `List<SObject>`. What it returns is checked against the user's access: records they may not see are left out, fields they may not read are removed. Search with `prolet.WizardApi.likePattern(searchValue)` and keep `WITH USER_MODE` in your queries. See the [clubMembership example](https://github.com/itprolet/wizard-force-examples/tree/main/examples/clubMembership).
 
 ## Not Part of the Contract
 
