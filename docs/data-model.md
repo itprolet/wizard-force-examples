@@ -44,7 +44,7 @@ try {
 return change; // the page sends it: refresh({ pageModel: null, versionChange: change })
 ```
 
-`prolet.WizardApi` methods return a `WizardVersionChange` themselves.
+`prolet.WizardApi.lock`, `unlock` and `updateContext` return a `WizardVersionChange` themselves (`updateContext` returns `null` for an empty patch: nothing was written); `assertCompleted` returns nothing.
 
 ## `prolet__Wizard_Setup__mdt`
 
@@ -60,7 +60,7 @@ The plan is checked when a wizard opens: a step without a page, a condition with
 
 ## Constants: `prolet__Wizard_Contstant__mdt`
 
-A value per `DeveloperName` in `prolet__Value__c`, read as `$con.Name` in the plan and the rules (`"pattern": "$con.regex_cyrillic"`). Only the constants a wizard's plan or rules name reach the browser. Your Apex reads them directly (`prolet__Wizard_Contstant__mdt.getInstance('Name')`).
+A value per `DeveloperName` in `prolet__Value__c`, read as `$con.Name` in the plan and the rules (`"pattern": "$con.regex_cyrillic"`). Only the constants a wizard's plan or rules name reach the browser. Your Apex reads them with a query: `[SELECT prolet__Value__c FROM prolet__Wizard_Contstant__mdt WHERE DeveloperName = 'Name']`. Not with `getInstance('Name')`: `prolet__Value__c` is a long text, and `getInstance` / `getAll` cut it at 255 characters, so a long pattern would differ from what the rules get.
 
 ## The DTOs
 
@@ -88,4 +88,4 @@ With `wizard-type-config` the order is: the Id the tab remembers for this type, 
 
 ## Single-Page Mode
 
-A parent component can hold a one-page form itself: nothing is stored, no `prolet__Wizard__c` is created, nothing is sent to the server. The parent passes `plan-config` (one page), `rules-config` (usually with `"hideProgress": true` and `"navigationByChild": true`), `initial-model`, and optionally `wizard-title-config`, `context-config` (`$ctx`) and `constants-config` (`$con`). On every change the wizard sends `wizardchange` with `{ model, page, pageModel, valid, errors }`; `wizardcomplete` comes when the page sends `complete`. See the [embedded example](../examples/embedded).
+A parent component can hold a one-page form itself: nothing is stored, no `prolet__Wizard__c` is created, nothing is sent to the server. The parent passes `plan-config` (one page), `rules-config` (usually with `"hideProgress": true` and `"navigationByChild": true`), `initial-model`, and optionally `wizard-title-config`, `context-config` (`$ctx`) and `constants-config` (`$con`). On every change the wizard sends `wizardchange` with `{ model, page, pageModel, valid, errors }`; `wizardcomplete` comes when the page sends `complete`. See the [embedded example](https://github.com/itprolet/wizard-force-examples/tree/main/examples/embedded).

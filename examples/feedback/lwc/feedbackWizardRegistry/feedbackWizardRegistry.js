@@ -13,7 +13,8 @@ export default class FeedbackWizardRegistry extends LightningElement {
 
   _validatorRegistry = { validateFeedbackEmail };
 
-  @api primaryColor;
-  @api secondaryColor;
-  @api shape;
+  // the look of the wizard; App Builder and Experience Builder can change them
+  @api primaryColor = "#8dc8ff";
+  @api secondaryColor = "#535857";
+  @api shape = "sharp";
 }

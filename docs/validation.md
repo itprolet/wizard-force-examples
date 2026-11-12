@@ -54,7 +54,7 @@ Checks are written once, in the rules (`prolet__Rules__c`), and run in the brows
 
 Field lists accept dotted paths (`address.city`), `*` for every field, and `-name` to leave one out (`["*", "-comment"]`). `address` written exactly covers all of its fields.
 
-A message (`message`, `pageErrors`, `hints`, `messages`) may be a label name: it is translated from the wizard's labels and the org's custom labels.
+A message (`message`, `pageErrors`, `hints`, `messages`) may be a label name. In the browser it is translated only from the package's labels and the wizard's `label-registry`: a custom label of your org that is not in the registry shows as its name. Put your labels into `label-registry` (see [Registry API](registry-api.md)).
 
 ## Conditions
 
@@ -89,7 +89,7 @@ On **Next** the server checks every page of the path; a page that does not pass 
 
 ## Validators of Your Own
 
-A validator has the same name on both sides: a JavaScript function in the browser, an Apex class on the server. A side that has no validator of that name skips it and logs it once. `"scope": "client"` in the rule runs it only in the browser, `"scope": "server"` only on the server.
+A validator has the same name on both sides: a JavaScript function in the browser, an Apex class on the server. A side that has no validator of that name skips it: the browser logs it once in the console, the server writes a warning to the debug log on each check. `"scope": "client"` in the rule runs it only in the browser, `"scope": "server"` only on the server.
 
 **In the browser**, register the functions in your registry:
 
@@ -119,9 +119,9 @@ export function validateExpenseLimit(page, model, props, errors) {
 
 ```html
 <prolet-wizard
-  page-registry="{pageRegistry}"
-  validator-registry="{validatorRegistry}"
-  page-validator-registry="{pageValidatorRegistry}"
+  page-registry={pageRegistry}
+  validator-registry={validatorRegistry}
+  page-validator-registry={pageValidatorRegistry}
   wizard-type-config="Expense"
 ></prolet-wizard>
 ```
@@ -149,7 +149,7 @@ A pattern is read by Java on the server and by JavaScript in the browser. Use on
 
 ## Examples
 
-- [feedback](../examples/feedback): a field validator (`validatorFeedbackEmail`)
-- [embedded](../examples/embedded): a validator in the single-page mode
-- [clubMembership](../examples/clubMembership): `ticked`, `hidden`, page validators
-- [expense](../examples/expense): constants, `IValidator` and `IPageValidator` on the server
+- [feedback](https://github.com/itprolet/wizard-force-examples/tree/main/examples/feedback): a field validator (`validateFeedbackEmail`, in the module `validatorFeedbackEmail`)
+- [embedded](https://github.com/itprolet/wizard-force-examples/tree/main/examples/embedded): a validator in the single-page mode
+- [clubMembership](https://github.com/itprolet/wizard-force-examples/tree/main/examples/clubMembership): `ticked`, `hidden`, page validators
+- [expense](https://github.com/itprolet/wizard-force-examples/tree/main/examples/expense): constants, `IValidator` and `IPageValidator` on the server

@@ -20,10 +20,10 @@ The package never imports your pages. A registry LWC of yours hands them to `<pr
 ```html
 <template>
   <prolet-wizard
-    page-registry="{_pageRegistry}"
-    validator-registry="{_validatorRegistry}"
-    page-validator-registry="{_pageValidatorRegistry}"
-    label-registry="{_labelRegistry}"
+    page-registry={_pageRegistry}
+    validator-registry={_validatorRegistry}
+    page-validator-registry={_pageValidatorRegistry}
+    label-registry={_labelRegistry}
     wizard-type-config="MyType"
   ></prolet-wizard>
 </template>
@@ -84,11 +84,11 @@ export default class MyPage extends WizardPageBase {
 ```html
 <prolet-input-text
   name="address.city"
-  value="{data.address.city}"
-  required="{fields.address.city.required}"
-  error="{fields.address.city.error}"
-  read-only="{fields.address.city.readOnly}"
-  onchange="{handleChange}"
+  value={data.address.city}
+  required={fields.address.city.required}
+  error={fields.address.city.error}
+  read-only={fields.address.city.readOnly}
+  onchange={handleChange}
 ></prolet-input-text>
 ```
 
@@ -109,6 +109,6 @@ Rules: do not declare the wizard's properties again (`@api model`, `@api errors`
 
 ## Examples
 
-- [vacation](../examples/vacation): pages written without the base, every property by hand
-- [feedback](../examples/feedback), [complaint](../examples/complaint), [showcase](../examples/showcase): pages on `wizardPageBase`
-- [embedded](../examples/embedded): the single-page mode
+- [vacation](https://github.com/itprolet/wizard-force-examples/tree/main/examples/vacation): pages written without the base, every property by hand
+- [feedback](https://github.com/itprolet/wizard-force-examples/tree/main/examples/feedback), [complaint](https://github.com/itprolet/wizard-force-examples/tree/main/examples/complaint), [showcase](https://github.com/itprolet/wizard-force-examples/tree/main/examples/showcase): pages on `wizardPageBase`
+- [embedded](https://github.com/itprolet/wizard-force-examples/tree/main/examples/embedded): the single-page mode

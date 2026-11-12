@@ -3,8 +3,9 @@
 // fetched. Run: node tools/check-links.mjs
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SKIP = new Set(["node_modules", ".git", ".sf", ".sfdx"]);
 
 function markdownFiles(dir) {
@@ -25,7 +26,9 @@ function withoutCode(text) {
 export function anchors(text) {
   const seen = new Map();
   const result = new Set();
-  for (const [, heading] of withoutCode(text).matchAll(/^#{1,6}\s+(.+?)\s*#*\s*$/gm)) {
+  for (const [, heading] of withoutCode(text).matchAll(
+    /^#{1,6}\s+(.+?)\s*#*\s*$/gm
+  )) {
     const base = heading
       .replace(/<[^>]+>/g, "")
       .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
@@ -46,16 +49,39 @@ export function check(root = ROOT) {
     if (!cache.has(file)) cache.set(file, anchors(readFileSync(file, "utf8")));
     return cache.get(file);
   };
+  const docs = path.join(root, "docs");
   for (const file of markdownFiles(root)) {
-    const text = withoutCode(readFileSync(file, "utf8"));
-    for (const [, target] of text.matchAll(/!?\[[^\]]*\]\(\s*<?([^)\s>]+)>?(?:\s+"[^"]*")?\s*\)/g)) {
+    const source = readFileSync(file, "utf8");
+    const where = path.relative(root, file);
+    source.split("\n").forEach((line, index) => {
+      if (/=\s*"\{[^"}]*\}"/.test(line)) {
+        problems.push(
+          `${where}:${index + 1}: a binding in quotes (write value={x}, not value="{x}")`
+        );
+      }
+    });
+    const text = withoutCode(source);
+    for (const [, target] of text.matchAll(
+      /!?\[[^\]]*\]\(\s*<?([^)\s>]+)>?(?:\s+"[^"]*")?\s*\)/g
+    )) {
       if (/^[a-z][a-z0-9+.-]*:/i.test(target)) continue; // https:, mailto:, ...
       const [linkPath, anchor] = target.split("#");
-      const to = linkPath ? path.resolve(path.dirname(file), decodeURI(linkPath)) : file;
-      const where = path.relative(root, file);
-      if (!existsSync(to)) {
+      const to = linkPath
+        ? path.resolve(path.dirname(file), decodeURI(linkPath))
+        : file;
+      const inDocs = (name) =>
+        name === docs || name.startsWith(docs + path.sep);
+      if (inDocs(file) && !inDocs(to)) {
+        problems.push(
+          `${where}: ${target}: leaves docs/, which the site does not have; use a full GitHub link`
+        );
+      } else if (!existsSync(to)) {
         problems.push(`${where}: ${target}: no such file`);
-      } else if (anchor && to.endsWith(".md") && !anchorsOf(to).has(decodeURI(anchor).toLowerCase())) {
+      } else if (
+        anchor &&
+        to.endsWith(".md") &&
+        !anchorsOf(to).has(decodeURI(anchor).toLowerCase())
+      ) {
         problems.push(`${where}: ${target}: no such heading`);
       }
     }
@@ -63,9 +89,16 @@ export function check(root = ROOT) {
   return problems;
 }
 
-if (process.argv[1] === new URL(import.meta.url).pathname) {
+if (
+  process.argv[1] &&
+  path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
+) {
   const problems = check();
   for (const problem of problems) console.error(problem);
-  console.log(problems.length === 0 ? "All links point somewhere." : `${problems.length} broken link(s).`);
+  console.log(
+    problems.length === 0
+      ? "All links point somewhere."
+      : `${problems.length} broken link(s).`
+  );
   process.exit(problems.length === 0 ? 0 : 1);
 }
