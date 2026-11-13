@@ -157,7 +157,10 @@ After the refresh the wizard is shown locked: every field read-only. See [Locked
 ```bash
 sf project deploy start --target-org <your org> --source-dir examples/feedback
 sf org assign permset --target-org <your org> --name prolet__Wizard_Framework_User
+sf org assign permset --target-org <your org> --name Feedback_Wizard_User
 ```
+
+`Feedback_Wizard_User` is the example's own permission set: create and read on `Feedback__c` and access to `FeedbackController`, for users who are not admins.
 
 ## Larger Examples
 

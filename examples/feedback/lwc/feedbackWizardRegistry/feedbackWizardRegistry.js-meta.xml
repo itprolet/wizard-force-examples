@@ -9,6 +9,7 @@
         <target>lightningCommunity__Page</target>
         <target>lightningCommunity__Default</target>
     </targets>
+    <!-- The defaults of the look are also in feedbackWizardRegistry.js; change all three places. -->
     <targetConfigs>
         <targetConfig targets="lightning__AppPage">
             <property name="primaryColor" type="String" label="Primary color (CSS color)" default="#8dc8ff" />
