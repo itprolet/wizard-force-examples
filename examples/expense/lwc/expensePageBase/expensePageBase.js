@@ -4,7 +4,7 @@ import { lockWizardUi } from "prolet/wizardUtils";
 /**
  * Base class for the Expense Report wizard pages.
  *
- * It implements the page contract of <c-wizard> ONCE, so every page only has to define:
+ * It implements the wizard's page contract ONCE, so every page only has to define:
  *   - defaults(): the page data model with default values;
  *   - its template and page-specific logic.
  *
@@ -140,7 +140,7 @@ export default class ExpensePageBase extends LightningElement {
   }
 
   /**
-   * @param direction what the page asks for (see c-wizard)
+   * @param direction what the page asks for (see the wizard's page contract)
    * @param versionChange with "refresh": what the page's own Apex did to the version of the
    * wizard ({ fromVersion, pathVersion }), so its tab is not out of date after its own change
    * @param pageModel the answers sent with it: the page's own by default; null sends none (a

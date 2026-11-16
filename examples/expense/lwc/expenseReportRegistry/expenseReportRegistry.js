@@ -21,7 +21,7 @@ registerLabels(L);
 /**
  * Registry of the Expense Report wizard (Wizard_Setup.ExpenseReport).
  * This is the only component placed on the page (Lightning App Builder or Experience Builder).
- * It renders <c-wizard> and passes all registries to it.
+ * It renders the wizard and passes all registries to it.
  *
  * In Lightning App Builder set "Wizard Type" to ExpenseReport (the DeveloperName of the
  * Wizard_Setup__mdt record) - it is pre-filled with that value.
@@ -32,7 +32,7 @@ registerLabels(L);
  *   prolet__Rules__c pageValidators   → _pageValidatorRegistry (ValidatePattern is pre-registered by the framework)
  */
 export default class ExpenseReportRegistry extends LightningElement {
-  /** Wizard type (Wizard_Setup__mdt DeveloperName) forwarded to <c-wizard>. Set in App Builder. */
+  /** Wizard type (Wizard_Setup__mdt DeveloperName) forwarded to the wizard. Set in App Builder. */
   @api wizardTypeConfig = "ExpenseReport";
 
   _pageRegistry = {

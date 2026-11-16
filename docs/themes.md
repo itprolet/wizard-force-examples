@@ -31,7 +31,7 @@ The look of a wizard is set on `<prolet-wizard>` with three attributes.
 ></prolet-wizard>
 ```
 
-A registry can let App Builder and Experience Builder change them: it declares them as its own `@api` properties, passes them to `<prolet-wizard>` (`primary-color={primaryColor}`), and lists them as `<property>` in its `js-meta.xml`, for `lightning__AppPage` (type `String`) and for `lightningCommunity__Default` (type `Color`). The [feedback registry](https://github.com/itprolet/wizard-force-examples/tree/main/examples/feedback/lwc/feedbackWizardRegistry) does this.
+A registry can let App Builder and Experience Builder change them: it declares them as its own `@api` properties, lists them as `<property>` in its `js-meta.xml`, for `lightning__AppPage` (type `String`) and for `lightningCommunity__Default` (type `Color`), and passes them to `<prolet-wizard>` through a check (`primary-color={wizardPrimaryColor}`). On an App page a color is free text, and the wizard writes it into an inline style: the check gives the default for anything that is not a plain CSS color ("8dc8ff", "sky", a `;`, an open bracket, `var(...)`, `initial`). The [feedback registry](https://github.com/itprolet/wizard-force-examples/tree/main/examples/feedback/lwc/feedbackWizardRegistry) does this; copy its `cssColor`.
 
 ## Your Own Styles
 

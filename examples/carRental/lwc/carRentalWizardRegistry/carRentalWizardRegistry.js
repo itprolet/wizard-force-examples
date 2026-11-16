@@ -20,7 +20,7 @@ registerLabels(L);
 
 /**
  * Registry of the "Car Rental" wizard (Wizard_Setup.CarRental).
- * The only component placed on the page: it renders <c-wizard> and passes the registries to it.
+ * The only component placed on the page: it renders the wizard and passes the registries to it.
  */
 export default class CarRentalWizardRegistry extends LightningElement {
   // Pages. Keys = page names used in prolet__Plan__c, prolet__Rules__c and the saved answers (model.<PageName>)

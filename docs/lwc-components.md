@@ -83,7 +83,7 @@ Every lookup runs as the user (`USER_MODE`: sharing and field access), returns a
 **Methods.** `show` is a method, not an attribute:
 
 - `prolet-elem-alert`: an alert with text inside the tag and not `closable` shows itself; a `closable` one stays hidden until `alert.show()`. Without text inside the tag it is never shown (it has no `message` attribute).
-- `prolet-elem-toast`: `toast.show(text, type, duration)`; `type` is `error` (the default, it stays until closed), `warning`, `info` or `success`; `duration` in milliseconds (5000 by default).
+- `prolet-elem-toast`: `toast.show(text, type, duration)`; `type` is `error` (the default), `warning`, `info` or `success`; `error` and `warning` stay until closed; `duration` in milliseconds (5000 by default).
 
 ## A Table: `<prolet-elem-datatable>`
 

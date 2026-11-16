@@ -20,7 +20,7 @@ registerLabels(L);
 
 /**
  * Registry of the "Club Membership" wizard (Wizard_Setup.ClubMembership).
- * The only component placed on the page: it renders <c-wizard> and passes the registries to it.
+ * The only component placed on the page: it renders the wizard and passes the registries to it.
  */
 export default class ClubMembershipWizardRegistry extends LightningElement {
   // Pages. Keys = page names used in Plan__c, prolet__Rules__c and the saved answers (model.<PageName>)

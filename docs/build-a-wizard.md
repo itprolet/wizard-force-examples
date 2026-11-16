@@ -4,7 +4,7 @@ title: Build a Wizard
 
 # Build a Wizard
 
-A wizard of your own, end to end: a type, a plan with a condition, pages on `wizardPageBase`, a registry, a validator and a submit. It is a shortened version of the [feedback example](https://github.com/itprolet/wizard-force-examples/tree/main/examples/feedback). The example has more: rules for its summary page (`navigationByChild`, the consent box), a frame of its own, and templates written before `wizardPageBase` (`{_required.x}` / `{_errors.x}`; new pages use `{fields.x.required}` / `{fields.x.error}`, as below).
+A wizard of your own, end to end: a type, a plan with a condition, pages on `wizardPageBase`, a registry, a validator and a submit. It is a shortened version of the [feedback example](https://github.com/itprolet/wizard-force-examples/tree/main/examples/feedback). The example has more: rules for its summary page (`navigationByChild`, the consent box), its own Back and Submit buttons on the summary page, and templates written before `wizardPageBase` (`{_required.x}` / `{_errors.x}`; new pages use `{fields.x.required}` / `{fields.x.error}`, as below).
 
 ## Navigation
 
@@ -157,7 +157,10 @@ After the refresh the wizard is shown locked: every field read-only. See [Locked
 ```bash
 sf project deploy start --target-org <your org> --source-dir examples/feedback
 sf org assign permset --target-org <your org> --name prolet__Wizard_Framework_User
+sf org assign permset --target-org <your org> --name Feedback_Wizard_User
 ```
+
+`Feedback_Wizard_User` is the example's own permission set, for users who are not admins: access to `FeedbackController`, and create and read on `Feedback__c`. `Feedback__c` is Private, so a user reads only the feedback they sent; whoever reads all of it needs View All or the org's sharing.
 
 ## Larger Examples
 

@@ -6,7 +6,9 @@
  * WIZARD-MAKER: created once by "npm run make page"; write your own search here.
  *
  * global, and its call() too: the package finds a class of the org that installed it only when
- * it is global (Type.forName returns null for a public one).
+ * it is global (Type.forName returns null for a public one). Deployed as source, as here, that
+ * costs nothing; if this folder is ever built into a managed package of its own, global makes the
+ * class and its call() part of that package's API, which later versions cannot remove or change.
  */
 global with sharing class ClubMembershipReferredByLookup implements Callable {
 
