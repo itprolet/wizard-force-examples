@@ -82,7 +82,7 @@ Every lookup runs as the user (`USER_MODE`: sharing and field access), returns a
 
 **Methods.** `show` is a method, not an attribute:
 
-- `prolet-elem-alert`: an alert with text inside the tag and not `closable` shows itself; a `closable` one stays hidden until `alert.show()`. Without text inside the tag it is never shown (it has no `message` attribute).
+- `prolet-elem-alert`: an alert with text inside the tag and not `closable` shows itself; a `closable` one stays hidden until `alert.show()`. Without text inside the tag it does not show itself (it has no `message` attribute); after `alert.show()` it is an empty box.
 - `prolet-elem-toast`: `toast.show(text, type, duration)`; `type` is `error` (the default), `warning`, `info` or `success`; `error` and `warning` stay until closed; `duration` in milliseconds (5000 by default).
 
 ## A Table: `<prolet-elem-datatable>`
@@ -98,7 +98,7 @@ Every lookup runs as the user (`USER_MODE`: sharing and field access), returns a
 | `hide-pagination`                                                      | `false` | No pages                             |
 | `total`                                                                |         | Server-side paging (`page` event)    |
 
-A column: `fieldName`, `label`, `type`, `typeData`, `align`, `sortable`, `width`, `classname`, `style`. Types: `text` (default), `number`, `boolean`, `date`, `time`, `datetime`, `richtext`, `url` (`{ icon, disabled }`), `link` (`{ url, callback, dataField, disabled, target }`), `icon` (`{ icon, title, dataField, callback, disabled }`), `chip` (`{ chipItems: [{ value, color, icon }] }`), `component` (`{ component: "c/myCell" }`: a component of your org draws the cell).
+A column: `fieldName`, `label`, `type`, `typeData`, `align`, `sortable`, `width`, `classname`, `style`. Types: `text` (default), `number`, `boolean`, `date`, `time`, `datetime`, `richtext`, `url` (`{ icon, disabled }`), `link` (`{ url, callback, dataField, disabled, target }`), `icon` (`{ icon, title, dataField, callback, disabled }`), `chip` (`{ chipItems: [{ value, color, icon }] }`), `component` (`{ component: "c/myCell" }`: a component of your org draws the cell). The cell loads it with a dynamic `import()`, which needs Lightning Web Security (the Lightning Web Security checkbox in Setup › Session Settings); Lightning Locker does not support dynamic components.
 
 A `component` cell gets `value`, `row` and `col` (its `typeData` holds anything else you put there); a `change` or `cellclick` it sends reaches the table as `cellchange` / `cellclick`:
 

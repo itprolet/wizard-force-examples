@@ -1,12 +1,25 @@
-// Checks the links between the markdown files of this repo: every relative link points to a file
-// or folder that exists, and every #anchor to a heading of its page. Links to the web are not
-// fetched. Run: node tools/check-links.mjs
-import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
+// Checks the markdown files of this repo: every relative link points to a file or folder that
+// exists, every #anchor to a heading of its page, and a full GitHub link into this repo's
+// examples/ to a path that exists here. Other links to the web are not fetched. It also finds a
+// binding written in quotes (value="{x}"), which LWC does not take. Run: node tools/check-links.mjs
+import {
+  existsSync,
+  readFileSync,
+  readdirSync,
+  realpathSync,
+  statSync
+} from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SKIP = new Set(["node_modules", ".git", ".sf", ".sfdx"]);
+// a link into this repo on GitHub: checked as the local path after it
+// (http or https, www. or not, any case), and the heading of a .md after its #
+const THIS_REPO =
+  /^https?:\/\/(?:www\.)?github\.com\/itprolet\/wizard-force-examples\/(?:tree|blob)\/main\/([^?#]*)(?:\?[^#]*)?(?:#(.*))?$/i;
+// a binding in quotes: value="{x}", value='{x}', value="{ x }"; not initial-model="{}" (JSON)
+const QUOTED_BINDING = /=\s*(["'])\{\s*[\w.]+\s*\}\1/;
 
 function markdownFiles(dir) {
   return readdirSync(dir).flatMap((name) => {
@@ -52,11 +65,46 @@ export function check(root = ROOT) {
     return cache.get(file);
   };
   const docs = path.join(root, "docs");
+  const inDocs = (name) => name === docs || name.startsWith(docs + path.sep);
+  const noHeading = (to, anchor) =>
+    anchor &&
+    to.endsWith(".md") &&
+    !anchorsOf(to).has(decodeURI(anchor).toLowerCase());
+
+  /** what is wrong with one link of a file, or null */
+  function linkProblem(file, target) {
+    const ours = THIS_REPO.exec(target);
+    if (ours) {
+      // a link into this repo on GitHub: the path must exist here, and its heading
+      const to = path.join(root, decodeURI(ours[1]));
+      if (!existsSync(to)) return "no such path in this repo";
+      return noHeading(to, ours[2]) ? "no such heading" : null;
+    }
+    if (/^[a-z][a-z0-9+.-]*:/i.test(target)) return null; // https:, mailto:, ...
+    const [linkPath, anchor] = target.split("#");
+    const to = linkPath
+      ? path.resolve(path.dirname(file), decodeURI(linkPath))
+      : file;
+    if (inDocs(file) && !inDocs(to)) {
+      return "leaves docs/, which the site does not have; use a full GitHub link";
+    }
+    if (!existsSync(to)) return "no such file";
+    return noHeading(to, anchor) ? "no such heading" : null;
+  }
+
   for (const file of markdownFiles(root)) {
     const source = readFileSync(file, "utf8");
     const where = path.relative(root, file);
+    // every line, code blocks included (where a template is shown, also in a JS template literal);
+    // not inline code in the text, where a troubleshooting entry shows the mistake itself
+    let fence = null;
     source.split("\n").forEach((line, index) => {
-      if (/=\s*"\{[^"}]*\}"/.test(line)) {
+      const opens = /^\s*(```|~~~)/.exec(line);
+      if (opens && (!fence || opens[1] === fence)) {
+        fence = fence ? null : opens[1];
+      }
+      const checked = fence ? line : line.replace(/`[^`\n]*`/g, "");
+      if (QUOTED_BINDING.test(checked)) {
         problems.push(
           `${where}:${index + 1}: a binding in quotes (write value={x}, not value="{x}")`
         );
@@ -66,41 +114,38 @@ export function check(root = ROOT) {
     for (const [, target] of text.matchAll(
       /!?\[[^\]]*\]\(\s*<?([^)\s>]+)>?(?:\s+"[^"]*")?\s*\)/g
     )) {
-      if (/^[a-z][a-z0-9+.-]*:/i.test(target)) continue; // https:, mailto:, ...
-      const [linkPath, anchor] = target.split("#");
-      const to = linkPath
-        ? path.resolve(path.dirname(file), decodeURI(linkPath))
-        : file;
-      const inDocs = (name) =>
-        name === docs || name.startsWith(docs + path.sep);
-      if (inDocs(file) && !inDocs(to)) {
+      try {
+        const problem = linkProblem(file, target);
+        if (problem) problems.push(`${where}: ${target}: ${problem}`);
+      } catch (error) {
+        // decodeURI on a malformed % (".../100%"): say where, not a stack trace
+        if (!(error instanceof URIError)) throw error;
         problems.push(
-          `${where}: ${target}: leaves docs/, which the site does not have; use a full GitHub link`
+          `${where}: ${target}: not a valid link (${error.message})`
         );
-      } else if (!existsSync(to)) {
-        problems.push(`${where}: ${target}: no such file`);
-      } else if (
-        anchor &&
-        to.endsWith(".md") &&
-        !anchorsOf(to).has(decodeURI(anchor).toLowerCase())
-      ) {
-        problems.push(`${where}: ${target}: no such heading`);
       }
     }
   }
   return problems;
 }
 
-if (
-  process.argv[1] &&
-  path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
-) {
+/** run as a script, also through a symbolic link (argv keeps the link, import.meta.url is real) */
+function runAsScript() {
+  if (!process.argv[1]) return false;
+  try {
+    return realpathSync(process.argv[1]) === fileURLToPath(import.meta.url);
+  } catch {
+    return false;
+  }
+}
+
+if (runAsScript()) {
   const problems = check();
   for (const problem of problems) console.error(problem);
   console.log(
     problems.length === 0
       ? "All links point somewhere."
-      : `${problems.length} broken link(s).`
+      : `${problems.length} problem(s).`
   );
   process.exit(problems.length === 0 ? 0 : 1);
 }
