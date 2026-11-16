@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>64.0</apiVersion>
-    <description>Expense Report wizard (Wizard_Setup.ExpenseReport). Place this component on a Lightning App page or an Experience Builder page - it renders c-wizard with all registries.</description>
+    <description>Expense Report wizard (Wizard_Setup.ExpenseReport). Place this component on a Lightning App page or an Experience Builder page - it renders the wizard with all registries.</description>
     <isExposed>true</isExposed>
     <masterLabel>Expense Report Wizard</masterLabel>
     <targets>
@@ -16,7 +16,7 @@
                 type="String"
                 label="Wizard Type"
                 default="ExpenseReport"
-                description="Wizard type developer name (Wizard_Setup__mdt), forwarded to the inner c-wizard. For this example: ExpenseReport."
+                description="Wizard type developer name (Wizard_Setup__mdt), forwarded to the wizard inside. For this example: ExpenseReport."
             />
         </targetConfig>
     </targetConfigs>

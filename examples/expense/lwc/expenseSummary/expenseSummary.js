@@ -163,7 +163,7 @@ export default class ExpenseSummary extends ExpensePageBase {
   }
 
   /**
-   * c-wizard keeps the current Wizard__c id per wizard type in sessionStorage and reopens it.
+   * The wizard keeps the current Wizard__c id per wizard type in sessionStorage and reopens it.
    * To start a new report, forget that id and reload the page without URL parameters.
    */
   startNewReport() {

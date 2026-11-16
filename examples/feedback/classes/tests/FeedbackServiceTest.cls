@@ -127,4 +127,49 @@ private class FeedbackServiceTest {
             Assert.areEqual(0, [SELECT COUNT() FROM Feedback__c], 'Nothing was created');
         }
     }
+
+    /** Standard User with the framework's and the example's permission sets, as the docs assign them */
+    private static User feedbackUser(String name) {
+        User user;
+        System.runAs(new User(Id = UserInfo.getUserId())) {
+            Profile standard = [SELECT Id FROM Profile WHERE Name = 'Standard User' LIMIT 1];
+            user = new User(
+                    ProfileId = standard.Id, LastName = name, Alias = name.left(8),
+                    Email = name + '@feedback.test', Username = name + Crypto.getRandomInteger() + '@feedback.test',
+                    TimeZoneSidKey = 'Europe/Sofia', LocaleSidKey = 'en_US', EmailEncodingKey = 'UTF-8',
+                    LanguageLocaleKey = 'en_US');
+            insert user;
+            List<PermissionSetAssignment> assignments = new List<PermissionSetAssignment>();
+            for (PermissionSet permissionSet : [
+                    SELECT Id FROM PermissionSet
+                    WHERE (Name = 'Wizard_Framework_User' AND NamespacePrefix = 'prolet')
+                        OR (Name = 'Feedback_Wizard_User' AND NamespacePrefix = null)
+            ]) {
+                assignments.add(new PermissionSetAssignment(PermissionSetId = permissionSet.Id, AssigneeId = user.Id));
+            }
+            Assert.areEqual(2, assignments.size(), 'prolet__Wizard_Framework_User and Feedback_Wizard_User');
+            insert assignments;
+        }
+        return user;
+    }
+
+    @isTest
+    static void aUserWhoIsNotAnAdminSubmitsAndReadsOnlyTheirOwnFeedback() {
+        User anna = feedbackUser('anna');
+        User ben = feedbackUser('ben');
+        Id feedbackId;
+        System.runAs(anna) {
+            // her own wizard (Wizard__c is Private), submitted through the controller
+            prolet__Wizard__c wizard = wizard(JSON.serialize(answers()), PATH);
+            Test.startTest();
+            feedbackId = FeedbackController.submitFeedback(wizard.Id, true);
+            Test.stopTest();
+            Assert.areEqual(1, [SELECT COUNT() FROM Feedback__c WHERE Id = :feedbackId], 'she reads her feedback');
+        }
+        System.runAs(ben) {
+            // Feedback__c is Private: the same permission sets do not show him hers, e-mail included
+            Assert.areEqual(0, [SELECT COUNT() FROM Feedback__c WHERE Id = :feedbackId], 'he does not read hers');
+        }
+        Assert.areEqual(anna.Id, [SELECT OwnerId FROM Feedback__c WHERE Id = :feedbackId].OwnerId);
+    }
 }

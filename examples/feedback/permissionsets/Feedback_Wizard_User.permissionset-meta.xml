@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
     <label>Feedback Wizard User</label>
-    <description>What a user who is not an admin needs to submit the feedback wizard: create and read Feedback__c and its fields, and call FeedbackController. Assign it with the framework's prolet__Wizard_Framework_User.</description>
+    <description>For users who are not admins: FeedbackController (the submit), create and read on Feedback__c. Feedback__c is Private: a user reads only their own. Assign it with prolet__Wizard_Framework_User.</description>
     <hasActivationRequired>false</hasActivationRequired>
     <classAccesses>
         <apexClass>FeedbackController</apexClass>

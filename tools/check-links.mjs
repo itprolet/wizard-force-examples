@@ -43,6 +43,8 @@ export function anchors(text) {
 }
 
 export function check(root = ROOT) {
+  // absolute, as the targets are (path.resolve): a relative root would put every link outside docs
+  root = path.resolve(root);
   const problems = [];
   const cache = new Map();
   const anchorsOf = (file) => {

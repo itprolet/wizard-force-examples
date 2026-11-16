@@ -10,19 +10,50 @@ const PRIMARY_COLOR = "#8dc8ff";
 const SECONDARY_COLOR = "#535857";
 const SHAPE = "sharp";
 
+// right for `color`, but in a custom property they mean "no value": the buttons would have no color
+const CSS_WIDE_KEYWORDS = [
+  "initial",
+  "inherit",
+  "unset",
+  "revert",
+  "revert-layer"
+];
+
+/** Every bracket is closed, and none is closed before it is opened */
+function bracketsClosed(text) {
+  let depth = 0;
+  for (const char of text) {
+    if (char === "(") {
+      depth++;
+    } else if (char === ")" && --depth < 0) {
+      return false;
+    }
+  }
+  return depth === 0;
+}
+
 /**
- * The color, or the default when it is not a CSS color. On App pages the colors are free text,
- * and <c-wizard> writes them into an inline style: "8dc8ff" or "sky" would leave the buttons
- * without a color, and a ";" would add declarations of its own.
+ * The color, or the default when it is not a plain CSS color. On App pages the colors are free
+ * text, and the wizard writes them into an inline style: "8dc8ff" or "sky" would leave the buttons
+ * without a color, and a ";", an open bracket or comment would change the rest of the style.
+ * CSS.supports alone is not enough: it closes an open bracket or comment itself, and says yes to
+ * the keywords and to var(), env() and attr(). Where CSS.supports is missing, the default is used.
  */
 function cssColor(value, fallback) {
-  if (!value) {
+  const text = typeof value === "string" ? value.trim() : "";
+  if (
+    !text ||
+    /[;{}!"'\\]|\/\*|\b(?:var|env|attr)\(/i.test(text) ||
+    CSS_WIDE_KEYWORDS.includes(text.toLowerCase()) ||
+    !bracketsClosed(text)
+  ) {
     return fallback;
   }
-  // CSS.supports is in every browser; the check is skipped only where it is missing (Jest)
-  // eslint-disable-next-line no-undef
-  const css = typeof CSS === "undefined" ? null : CSS;
-  return !css?.supports || css.supports("color", value) ? value : fallback;
+  const supported =
+    typeof CSS !== "undefined" &&
+    typeof CSS.supports === "function" &&
+    CSS.supports("color", text);
+  return supported ? text : fallback;
 }
 
 export default class FeedbackWizardRegistry extends LightningElement {

@@ -536,8 +536,11 @@ public inherited sharing class ExpenseReportService implements IExpenseReportSer
         if (constantName == null) {
             return fallback;
         }
-        prolet__Wizard_Contstant__mdt constant = prolet__Wizard_Contstant__mdt.getInstance(constantName);
-        Decimal value = constant == null ? null : toDecimal(constant.prolet__Value__c);
+        // a query, not getInstance: Value__c is a long text, and getInstance cuts it at 255 characters
+        List<prolet__Wizard_Contstant__mdt> constants = [
+            SELECT prolet__Value__c FROM prolet__Wizard_Contstant__mdt WHERE DeveloperName = :constantName LIMIT 1
+        ];
+        Decimal value = constants.isEmpty() ? null : toDecimal(constants[0].prolet__Value__c);
         return value != null && value > 0 ? value : fallback;
     }
 

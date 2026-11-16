@@ -8,7 +8,7 @@ import ServiceVisitSummary from "c/serviceVisitSummary";
 
 /**
  * Registry of the "Service Visit" wizard (Wizard_Setup.ServiceVisit).
- * The only component placed on the page: it renders <c-wizard> and passes the registries to it.
+ * The only component placed on the page: it renders the wizard and passes the registries to it.
  */
 export default class ServiceVisitWizardRegistry extends LightningElement {
   // Pages. Keys = page names used in prolet__Plan__c, prolet__Rules__c and the saved answers (model.<PageName>)
