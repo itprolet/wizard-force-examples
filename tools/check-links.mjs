@@ -1,12 +1,24 @@
-// Checks the links between the markdown files of this repo: every relative link points to a file
-// or folder that exists, and every #anchor to a heading of its page. Links to the web are not
-// fetched. Run: node tools/check-links.mjs
-import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
+// Checks the markdown files of this repo: every relative link points to a file or folder that
+// exists, every #anchor to a heading of its page, and a full GitHub link into this repo's
+// examples/ to a path that exists here. Other links to the web are not fetched. It also finds a
+// binding written in quotes (value="{x}"), which LWC does not take. Run: node tools/check-links.mjs
+import {
+  existsSync,
+  readFileSync,
+  readdirSync,
+  realpathSync,
+  statSync
+} from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SKIP = new Set(["node_modules", ".git", ".sf", ".sfdx"]);
+// a link into this repo on GitHub: checked as the local path after it
+const THIS_REPO =
+  /^https:\/\/github\.com\/itprolet\/wizard-force-examples\/(?:tree|blob)\/main\/([^?#]*)/;
+// a binding in quotes: value="{x}" or value='{x}'; not initial-model="{}" (JSON)
+const QUOTED_BINDING = /=\s*(["'])\{[\w.]+\}\1/;
 
 function markdownFiles(dir) {
   return readdirSync(dir).flatMap((name) => {
@@ -55,8 +67,10 @@ export function check(root = ROOT) {
   for (const file of markdownFiles(root)) {
     const source = readFileSync(file, "utf8");
     const where = path.relative(root, file);
+    // every line, code blocks included (where a template is shown); not inline code in the text,
+    // where a troubleshooting entry shows the mistake itself
     source.split("\n").forEach((line, index) => {
-      if (/=\s*"\{[^"}]*\}"/.test(line)) {
+      if (QUOTED_BINDING.test(line.replace(/`[^`\n]*`/g, ""))) {
         problems.push(
           `${where}:${index + 1}: a binding in quotes (write value={x}, not value="{x}")`
         );
@@ -66,6 +80,14 @@ export function check(root = ROOT) {
     for (const [, target] of text.matchAll(
       /!?\[[^\]]*\]\(\s*<?([^)\s>]+)>?(?:\s+"[^"]*")?\s*\)/g
     )) {
+      const ours = THIS_REPO.exec(target);
+      if (ours) {
+        // a link into this repo's examples (or any path of it) on GitHub: the path must exist here
+        if (!existsSync(path.join(root, decodeURI(ours[1])))) {
+          problems.push(`${where}: ${target}: no such path in this repo`);
+        }
+        continue;
+      }
       if (/^[a-z][a-z0-9+.-]*:/i.test(target)) continue; // https:, mailto:, ...
       const [linkPath, anchor] = target.split("#");
       const to = linkPath
@@ -91,16 +113,23 @@ export function check(root = ROOT) {
   return problems;
 }
 
-if (
-  process.argv[1] &&
-  path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
-) {
+/** run as a script, also through a symbolic link (argv keeps the link, import.meta.url is real) */
+function runAsScript() {
+  if (!process.argv[1]) return false;
+  try {
+    return realpathSync(process.argv[1]) === fileURLToPath(import.meta.url);
+  } catch {
+    return false;
+  }
+}
+
+if (runAsScript()) {
   const problems = check();
   for (const problem of problems) console.error(problem);
   console.log(
     problems.length === 0
       ? "All links point somewhere."
-      : `${problems.length} broken link(s).`
+      : `${problems.length} problem(s).`
   );
   process.exit(problems.length === 0 ? 0 : 1);
 }

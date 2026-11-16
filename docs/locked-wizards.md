@@ -59,7 +59,7 @@ public with sharing class FeedbackService {
 The examples show the steps, not one of them all four:
 
 - [feedback](https://github.com/itprolet/wizard-force-examples/tree/main/examples/feedback) and [complaint](https://github.com/itprolet/wizard-force-examples/tree/main/examples/complaint): `assertCompleted`, their own insert, `lock` (no `updateContext`).
-- [expense](https://github.com/itprolet/wizard-force-examples/tree/main/examples/expense): `updateContext`, `lock` and `unlock`; instead of `assertCompleted` it checks `prolet.WizardStates.isLocked` itself, because its report is submitted again after changes.
+- [expense](https://github.com/itprolet/wizard-force-examples/tree/main/examples/expense): `updateContext`, `lock` and `unlock`; instead of `assertCompleted` it checks `prolet.WizardStates.isLocked` itself.
 
 ## Sending a Wizard Back
 
