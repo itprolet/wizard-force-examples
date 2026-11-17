@@ -119,6 +119,11 @@ columns = [
 ];
 ```
 
+The cell loads `c/myCell` with a dynamic `import()`, which needs Lightning Web Security. Checked with 0.2.0.4:
+
+- **Lightning Experience** (an App page): the cell loads, and its `change` reaches the page as `cellchange`.
+- **An LWR site**: the site publishes only the components its pages use, and one that only a cell names is not among them. The cell stays empty, and the console says `LWR3008: Error loading ... c%2FmyCell`. Put the cell component on a page of the site once, so that it is published: in its `js-meta.xml` give it the target `lightningCommunity__Page`, drop it on a page (a hidden spot or a page nobody visits is fine) and publish the site. Then the cell loads, also with `cellchange`.
+
 Links open only for `http:`, `https:`, `mailto:`, `tel:` and paths of the site; anything else is shown as text. Events: `sort` (`{ sortBy, direction }`), `page` (`{ rowOffset, pageSize, total }`).
 
 The [showcase example](https://github.com/itprolet/wizard-force-examples/tree/main/examples/showcase) uses the text, combobox, checkbox, button, tabset, datatable and alert.

@@ -25,6 +25,26 @@ The wizard changed after the tab read it: another tab, another browser, or your 
 
 The plan has a mistake, listed in the message: a step without a page, a condition with a single value instead of an object (`"if (vip)": "Page"`), the same step twice in branches that can show together, or JSON that is not an object. Give a repeated page another step title, or a suffix (`Address_2`).
 
+## "You do not have access to this form. ..." (`Wizard_err_no_access`)
+
+The user may call the package's classes, but their permissions refused the read or the write of `prolet__Wizard__c` or one of its fields: the classes come from the profile or another permission set, and `prolet__Wizard_Framework_User` is missing or a field was taken away. Assign the permission set. The exact field is in the user's debug log.
+
+## "The Apex request is invalid" / "You do not have access to the Apex class named ..."
+
+Salesforce's own message, before the package's code runs: the user may not call the wizard's controller. Assign `prolet__Wizard_Framework_User` (it gives the classes). On a site, its users can get it too; its guests cannot use a wizard at all.
+
+## "You can view this form but not change it." (`Wizard_err_read_only`)
+
+The wizard is shared with the user to read only (a manual share, a sharing rule with Read), so they may look at it but not move on in it. The permission set does not help: share it with Edit, or let its owner fill it in.
+
+## "Please sign in to use this form." (`Wizard_err_guest`)
+
+A guest of an Experience Cloud site (not signed in) opened a wizard. Guests are not supported: put the page behind a login ([Deployment, Security, and Testing](deployment-security-testing.md#guest-users)).
+
+## "The type of a wizard does not change after it is created. ..." (`Wizard_err_type_fixed`)
+
+Something changed `prolet__Wizard_Type__c` of a wizard whose type has its setup: an inline edit, Data Loader, a flow or your Apex. Start a new wizard of the other type. To repair wizards whose `Wizard_Setup__mdt` record was renamed or deleted, see [The Type of a Wizard](deployment-security-testing.md#the-type-of-a-wizard).
+
 ## "Unknown wizard type ..." (`Wizard_err_unknown_type`)
 
 `prolet__Wizard_Type__c` must be the `DeveloperName` of a `prolet__Wizard_Setup__mdt` record, exactly (case included). Deploy the record with the wizard, or correct the type.

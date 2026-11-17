@@ -29,6 +29,7 @@ private class ExpenseReportLinkBackfillTest {
         return context == null ? null : ((Map<String, Object>) JSON.deserializeUntyped(context)).get(ExpenseReportService.CTX_REPORT);
     }
 
+    /** The manager's review is refused for the link (the test shares the report with them first) */
     private static void assertReviewRefused(User manager, Id reportId) {
         System.runAs(manager) {
             try {
@@ -46,6 +47,8 @@ private class ExpenseReportLinkBackfillTest {
         User manager = ExpenseReportTestData.userWith('mark', EXPENSE_SETS);
         Id wizardId = oldSubmittedWizard(employee);
         Id reportId = reportOf(wizardId);
+        // Expense_Report__c is Private: the manager reviews a report shared with them
+        ExpenseReportTestData.shareReport(reportId, manager.Id, 'Edit');
 
         // the ordinary review refuses a missing link: it does not fix it by itself
         assertReviewRefused(manager, reportId);
@@ -147,6 +150,11 @@ private class ExpenseReportLinkBackfillTest {
                 [SELECT prolet__Context__c FROM prolet__Wizard__c WHERE Id = :namesAnother].prolet__Context__c);
         context.put(ExpenseReportService.CTX_REPORT, copy.Id);
         update new prolet__Wizard__c(Id = namesAnother, prolet__Context__c = JSON.serialize(context));
+
+        // Expense_Report__c is Private: the manager gets the reports the review is tried on below
+        for (Id reportId : new List<Id>{ reportOf(duplicated), copy.Id, otherStatusReport }) {
+            ExpenseReportTestData.shareReport(reportId, manager.Id, 'Edit');
+        }
 
         ExpenseReportLinkBackfill backfill = new ExpenseReportLinkBackfill(true);
         backfill.run([SELECT Id, Wizard__c, Status__c FROM Expense_Report__c]);

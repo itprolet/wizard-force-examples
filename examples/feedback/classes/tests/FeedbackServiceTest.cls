@@ -139,15 +139,12 @@ private class FeedbackServiceTest {
                     TimeZoneSidKey = 'Europe/Sofia', LocaleSidKey = 'en_US', EmailEncodingKey = 'UTF-8',
                     LanguageLocaleKey = 'en_US');
             insert user;
+            List<String> permissionSets = new List<String>{ 'Wizard_Framework_User', 'Feedback_Wizard_User' };
             List<PermissionSetAssignment> assignments = new List<PermissionSetAssignment>();
-            for (PermissionSet permissionSet : [
-                    SELECT Id FROM PermissionSet
-                    WHERE (Name = 'Wizard_Framework_User' AND NamespacePrefix = 'prolet')
-                        OR (Name = 'Feedback_Wizard_User' AND NamespacePrefix = null)
-            ]) {
+            for (PermissionSet permissionSet : [SELECT Id FROM PermissionSet WHERE Name IN :permissionSets]) {
                 assignments.add(new PermissionSetAssignment(PermissionSetId = permissionSet.Id, AssigneeId = user.Id));
             }
-            Assert.areEqual(2, assignments.size(), 'prolet__Wizard_Framework_User and Feedback_Wizard_User');
+            Assert.areEqual(permissionSets.size(), assignments.size(), 'permission sets ' + permissionSets);
             insert assignments;
         }
         return user;

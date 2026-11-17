@@ -63,6 +63,9 @@ public inherited sharing class ExpenseReportService implements IExpenseReportSer
             throw new ExpenseReportException('The declaration must be confirmed before submitting.');
         }
         prolet__Wizard__c wizard = loadWizardForUpdate(wizardId);
+        // the caller submits a wizard they may change: only then is its report written without
+        // sharing (see SubmitOfTheReport)
+        requireWizardEdit(wizardId);
         if (wizard.prolet__Wizard_Type__c != WIZARD_TYPE) {
             throw new ExpenseReportException('This wizard is not an expense report.');
         }
@@ -85,49 +88,79 @@ public inherited sharing class ExpenseReportService implements IExpenseReportSer
             throw new ExpenseReportException('An expense is in the list more than once: ' + String.join(repeated, ', '));
         }
 
-        // Re-submission after a review updates the same report
-        Expense_Report__c report = findReportByWizard(wizardId);
-        Map<String, Object> requested = toMap(context.get(CTX_REQUESTED));
-        if (report != null && !requested.isEmpty()) {
-            // only what the manager asked for may change in the list (the other pages are read-only
-            // by their rules then, and the server keeps their stored values)
-            List<String> unrequested = findUnrequestedLineChanges(expenses, toMap(requested.get(PAGE_ITEMS)), report.Id);
-            if (!unrequested.isEmpty()) {
-                throw new ExpenseReportException('Only the requested changes can be made: ' + String.join(unrequested, ', '));
-            }
-        }
-        if (report == null) {
-            report = new Expense_Report__c(Wizard__c = wizardId);
-        }
-        mapReport(report, model, expenses, context);
-        report.Status__c = STATUS_SUBMITTED;
-        upsert report;
-
-        delete [SELECT Id FROM Expense_Line__c WHERE Expense_Report__c = :report.Id];
-        List<Expense_Line__c> lines = new List<Expense_Line__c>();
-        for (Map<String, Object> item : expenses) {
-            lines.add(buildLine(report.Id, item));
-        }
-        insert lines;
+        // Re-submission after a review updates the same report, also one the employee no longer sees
+        Expense_Report__c report = new SubmitOfTheReport().save(wizardId, model, expenses, context);
 
         // The declaration is part of the answers: the signed summary shows it ticked, and the page's
         // form, which has it ticked, is the same as the answers the wizard reads after the submit
         Map<String, Object> summary = toMap(model.get(PAGE_SUMMARY));
         summary.put('agreeDeclaration', true);
         model.put(PAGE_SUMMARY, summary);
-        wizard.prolet__Model__c = JSON.serialize(model);
-
-        // What the wizard holds is written while it is ACTIVE: a locked wizard refuses every write
-        context.remove(CTX_COMMENT);
-        context.remove(CTX_REQUESTED);
-        context.put(CTX_STATUS, STATUS_SUBMITTED);
-        context.put(CTX_REPORT, report.Id);
-        wizard.prolet__Context__c = JSON.serialize(context);
-        update wizard;
+        // The answers are written while the wizard is ACTIVE: a locked wizard refuses every write
+        update new prolet__Wizard__c(Id = wizard.Id, prolet__Model__c = JSON.serialize(model));
+        // The context through the framework, as the process's (its user may read it, not write it):
+        // the review that was asked for is done, the report is submitted
+        prolet.WizardApi.updateContext(wizard.Id, new Map<String, Object>{
+                CTX_COMMENT => null,
+                CTX_REQUESTED => null,
+                CTX_STATUS => STATUS_SUBMITTED,
+                CTX_REPORT => report.Id
+        });
         // Lock the wizard: every field is read-only, and a second submit is refused
         prolet.WizardApi.lock(wizardId);
 
         return report.Id;
+    }
+
+    /**
+     * The wizard's own report, read and written without sharing. Expense_Report__c is Private: the
+     * report may be given to a reviewer or a queue, and the employee may then not see it any more.
+     * With sharing, a re-submission would miss it, skip the check of the requested changes and
+     * insert a second report for the same wizard. The wizard is the caller's (read with their
+     * sharing, and requireWizardEdit), and the report is found by its link to the wizard, which only
+     * the submit sets and nobody can change (Wizard_Link_Is_Fixed): the same reasoning as
+     * ReviewOfTheReport. The service is inherited sharing, so what it calls from here runs without
+     * sharing too.
+     */
+    private without sharing class SubmitOfTheReport {
+        Expense_Report__c save(Id wizardId, Map<String, Object> model, List<Map<String, Object>> expenses,
+                Map<String, Object> context) {
+            Expense_Report__c report = findReportByWizard(wizardId);
+            Map<String, Object> requested = toMap(context.get(CTX_REQUESTED));
+            if (report != null && !requested.isEmpty()) {
+                // only what the manager asked for may change in the list (the other pages are
+                // read-only by their rules then, and the server keeps their stored values)
+                List<String> unrequested = findUnrequestedLineChanges(expenses, toMap(requested.get(PAGE_ITEMS)), report.Id);
+                if (!unrequested.isEmpty()) {
+                    throw new ExpenseReportException('Only the requested changes can be made: ' + String.join(unrequested, ', '));
+                }
+            }
+            if (report == null) {
+                report = new Expense_Report__c(Wizard__c = wizardId);
+            }
+            mapReport(report, model, expenses, context);
+            report.Status__c = STATUS_SUBMITTED;
+            upsert report;
+
+            delete [SELECT Id FROM Expense_Line__c WHERE Expense_Report__c = :report.Id];
+            List<Expense_Line__c> lines = new List<Expense_Line__c>();
+            for (Map<String, Object> item : expenses) {
+                lines.add(buildLine(report.Id, item));
+            }
+            insert lines;
+            return report;
+        }
+    }
+
+    /** The caller may edit the wizard (their own, or one shared with them to edit). */
+    private static void requireWizardEdit(Id wizardId) {
+        List<UserRecordAccess> access = [
+                SELECT RecordId, HasEditAccess FROM UserRecordAccess
+                WHERE UserId = :UserInfo.getUserId() AND RecordId = :wizardId
+        ];
+        if (access.isEmpty() || !access[0].HasEditAccess) {
+            throw new ExpenseReportException('Wizard not found, id= ' + wizardId);
+        }
     }
 
     // ------------------------------------------------------------------ $ctx
@@ -144,11 +177,14 @@ public inherited sharing class ExpenseReportService implements IExpenseReportSer
         Integer days = dateFrom != null && dateTo != null && dateTo >= dateFrom ? dateFrom.daysBetween(dateTo) + 1 : 0;
         Decimal rate = perDiemRate(strVal(trip, 'destinationType'));
 
-        context.put('perDiemDays', days);
-        context.put('perDiemRate', rate);
-        context.put('perDiemTotal', rate * days);
-        wizard.prolet__Context__c = JSON.serialize(context);
-        update wizard;
+        Map<String, Object> perDiem = new Map<String, Object>{
+                'perDiemDays' => days,
+                'perDiemRate' => rate,
+                'perDiemTotal' => rate * days
+        };
+        // through the framework, as the process's: the user may read the context, not write it
+        prolet.WizardApi.updateContext(wizard.Id, perDiem);
+        context.putAll(perDiem);
         return context;
     }
 
@@ -536,7 +572,7 @@ public inherited sharing class ExpenseReportService implements IExpenseReportSer
         if (constantName == null) {
             return fallback;
         }
-        // a query, not getInstance: Value__c is a long text, and getInstance cuts it at 255 characters
+        // a query, not getInstance: getInstance cuts a long text field at 255 characters
         List<prolet__Wizard_Contstant__mdt> constants = [
             SELECT prolet__Value__c FROM prolet__Wizard_Contstant__mdt WHERE DeveloperName = :constantName LIMIT 1
         ];

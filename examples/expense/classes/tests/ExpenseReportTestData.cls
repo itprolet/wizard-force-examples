@@ -66,6 +66,11 @@ public class ExpenseReportTestData {
 
     /** Standard User with the given permission sets (no role, so no hierarchy) */
     public static User userWith(String name, List<String> permissionSets) {
+        return userWith(name, permissionSets, null);
+    }
+
+    /** The same, in a role of the role hierarchy (null: none) */
+    public static User userWith(String name, List<String> permissionSets, Id roleId) {
         User user;
         System.runAs(new User(Id = UserInfo.getUserId())) {
             Profile standard = [SELECT Id FROM Profile WHERE Name = 'Standard User' LIMIT 1];
@@ -73,7 +78,7 @@ public class ExpenseReportTestData {
                     ProfileId = standard.Id, LastName = name, Alias = name.left(8),
                     Email = name + '@expense.test', Username = name + Crypto.getRandomInteger() + '@expense.test',
                     TimeZoneSidKey = 'Europe/Sofia', LocaleSidKey = 'en_US', EmailEncodingKey = 'UTF-8',
-                    LanguageLocaleKey = 'en_US');
+                    LanguageLocaleKey = 'en_US', UserRoleId = roleId);
             insert user;
             List<PermissionSetAssignment> assignments = new List<PermissionSetAssignment>();
             for (PermissionSet permissionSet : [SELECT Id FROM PermissionSet WHERE Name IN :permissionSets]) {
@@ -83,6 +88,57 @@ public class ExpenseReportTestData {
             insert assignments;
         }
         return user;
+    }
+
+    /**
+     * The employee and, above them in the role hierarchy, their manager: Expense_Report__c is
+     * Private, and a manager sees (and so reviews) the reports of the people under them.
+     * @return the employee, then the manager
+     */
+    public static List<User> employeeAndManager(List<String> permissionSets) {
+        UserRole managerRole;
+        UserRole employeeRole;
+        System.runAs(new User(Id = UserInfo.getUserId())) {
+            managerRole = new UserRole(Name = 'Expense Test Manager', DeveloperName = 'Expense_Test_Manager_' + Math.abs(Crypto.getRandomInteger()));
+            insert managerRole;
+            employeeRole = new UserRole(Name = 'Expense Test Employee', ParentRoleId = managerRole.Id,
+                    DeveloperName = 'Expense_Test_Employee_' + Math.abs(Crypto.getRandomInteger()));
+            insert employeeRole;
+        }
+        return new List<User>{
+                userWith('emma', permissionSets, employeeRole.Id),
+                userWith('mark', permissionSets, managerRole.Id)
+        };
+    }
+
+    /**
+     * A queue for expense reports with these members: a report it owns is theirs to review, and
+     * the employee who submitted it no longer sees it.
+     * @return the queue's Id
+     */
+    public static Id reviewQueue(List<User> members) {
+        Group queue;
+        System.runAs(new User(Id = UserInfo.getUserId())) {
+            queue = new Group(Name = 'Expense Test Review', Type = 'Queue');
+            insert queue;
+            insert new QueueSobject(QueueId = queue.Id, SobjectType = Expense_Report__c.SObjectType.getDescribe().getName());
+            List<GroupMember> memberships = new List<GroupMember>();
+            for (User member : members) {
+                memberships.add(new GroupMember(GroupId = queue.Id, UserOrGroupId = member.Id));
+            }
+            insert memberships;
+        }
+        return queue.Id;
+    }
+
+    /**
+     * Gives a user access to a report, as a sharing rule, a queue or a manual share does in an org
+     * (Expense_Report__c is Private). Its lines follow it (ControlledByParent).
+     * @param accessLevel 'Read' or 'Edit'
+     */
+    public static void shareReport(Id reportId, Id userId, String accessLevel) {
+        insert new Expense_Report__Share(ParentId = reportId, UserOrGroupId = userId, AccessLevel = accessLevel,
+                RowCause = Schema.Expense_Report__Share.RowCause.Manual);
     }
 
     /**

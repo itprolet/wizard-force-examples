@@ -199,8 +199,8 @@ private class ExpenseReportServiceTest {
         Assert.areEqual(1, report.Expense_Lines__r.size());
         Assert.areEqual(prolet.WizardStates.LOCKED, ExpenseReportTestData.reload(wizard.Id).prolet__State__c);
         Map<String, Object> context = context(wizard.Id);
-        Assert.isFalse(context.containsKey(ExpenseReportService.CTX_REQUESTED), 'the request is done');
-        Assert.isFalse(context.containsKey(ExpenseReportService.CTX_COMMENT));
+        Assert.isNull(context.get(ExpenseReportService.CTX_REQUESTED), 'the request is done');
+        Assert.isNull(context.get(ExpenseReportService.CTX_COMMENT));
         Assert.areEqual('Submitted', context.get(ExpenseReportService.CTX_STATUS));
     }
 
