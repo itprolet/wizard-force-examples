@@ -615,4 +615,51 @@ private class ExpenseReviewAccessTest {
         }
         System.Assert.isFalse((ExpenseReportTestData.reload(wizardId).prolet__Context__c ?? '').contains('perDiem'));
     }
+
+    @IsTest
+    static void aResubmitAfterTheReportWasDeletedMakesANewOne() {
+        List<User> people = ExpenseReportTestData.employeeAndManager(EXPENSE_SETS);
+        User employee = people[0];
+        User manager = people[1];
+        Id wizardId = submittedBy(employee);
+        Id reportId = reportOf(wizardId);
+        System.runAs(manager) {
+            ExpenseReviewController.requestChanges(reportId, new List<String>{ 'e1' }, null, false, 'Check hotel');
+        }
+        // the context still names it, and it is gone
+        delete new Expense_Report__c(Id = reportId);
+        System.runAs(employee) {
+            Map<String, Object> model = ExpenseReportTestData.validModel();
+            for (Object item : (List<Object>) ((Map<String, Object>) model.get('ExpenseItems')).get('expenses')) {
+                Map<String, Object> expense = (Map<String, Object>) item;
+                if (expense.get('id') == 'e1') {
+                    expense.put('amount', '123');
+                }
+            }
+            ExpenseReportTestData.updateModel(wizardId, model);
+            ExpenseReportController.submitReport(wizardId, true);
+        }
+        Id newReportId = reportOf(wizardId);
+        System.Assert.areNotEqual(reportId, newReportId);
+        System.Assert.areEqual(String.valueOf(newReportId), String.valueOf(
+                ((Map<String, Object>) JSON.deserializeUntyped(ExpenseReportTestData.reload(wizardId).prolet__Context__c)).get(ExpenseReportService.CTX_REPORT)));
+    }
+
+    @IsTest
+    static void aReportOfAWizardWhoseOwnerLeftIsTheSubmitters() {
+        List<User> people = ExpenseReportTestData.employeeAndManager(EXPENSE_SETS);
+        User employee = people[0];
+        User manager = people[1];
+        Id wizardId;
+        System.runAs(employee) {
+            wizardId = ExpenseReportTestData.insertWizard(ExpenseReportTestData.validModel(), 'ACTIVE').Id;
+        }
+        System.runAs(new User(Id = UserInfo.getUserId())) {
+            update new User(Id = employee.Id, IsActive = false);
+        }
+        System.runAs(manager) {
+            ExpenseReportController.submitReport(wizardId, true);
+        }
+        System.Assert.areEqual(manager.Id, [SELECT OwnerId FROM Expense_Report__c WHERE Wizard__c = :wizardId].OwnerId);
+    }
 }

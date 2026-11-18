@@ -120,7 +120,8 @@ public inherited sharing class ExpenseReportService implements IExpenseReportSer
      * sharing, and requireWizardEdit), and its report is checked from both sides, as in
      * ReviewOfTheReport: the one the context names, and only if it names this wizard back
      * (findReportOfTheWizard). A new report is the wizard owner's, also when someone above them
-     * submits it: Private, the owner decides who sees and reviews it. The service is inherited
+     * submits it: Private, the owner decides who sees and reviews it. The one who submitted for
+     * them may then also review it: "own" is the owner's (isOwnReport), not the submitter's. The service is inherited
      * sharing, so what it calls from here runs without sharing too.
      */
     private without sharing class SubmitOfTheReport {
@@ -138,8 +139,11 @@ public inherited sharing class ExpenseReportService implements IExpenseReportSer
             }
             if (report == null) {
                 report = new Expense_Report__c(Wizard__c = wizardId);
+                // the wizard owner's; when that owner is not an active user (a queue, someone who
+                // left), the one who submits, as the platform would refuse the insert
                 Id owner = [SELECT OwnerId FROM prolet__Wizard__c WHERE Id = :wizardId].OwnerId;
-                if (owner.getSObjectType() == User.SObjectType) {
+                if (owner.getSObjectType() == User.SObjectType
+                        && [SELECT COUNT() FROM User WHERE Id = :owner AND IsActive = true] == 1) {
                     report.OwnerId = owner;
                 }
             }
@@ -633,19 +637,24 @@ public inherited sharing class ExpenseReportService implements IExpenseReportSer
 
     /**
      * The report of the wizard, null before its first submit. Once submitted, the context names it
-     * (CTX_REPORT) and it must name the wizard back. A wizard whose context names none yet (submitted
-     * before the link, see ExpenseReportLinkBackfill) takes the one report that names it, and is
-     * refused when there are more.
+     * (CTX_REPORT), and a report that names another wizard is refused. A wizard whose context names
+     * none (submitted before the link, see ExpenseReportLinkBackfill), or names one that was deleted
+     * since, takes the one report that names it (none: the submit makes a new one), and is refused
+     * when there are more.
      */
     private static Expense_Report__c findReportOfTheWizard(Id wizardId, Object linked) {
         if (linked != null && String.isNotBlank(String.valueOf(linked))) {
             Id reportId = toId(String.valueOf(linked));
-            List<Expense_Report__c> reports = reportId == null ? new List<Expense_Report__c>()
-                    : [SELECT Id FROM Expense_Report__c WHERE Id = :reportId AND Wizard__c = :wizardId];
-            if (reports.isEmpty()) {
+            if (reportId == null) {
                 throw new ExpenseReportException(NOT_LINKED);
             }
-            return reports[0];
+            List<Expense_Report__c> reports = [SELECT Id, Wizard__c FROM Expense_Report__c WHERE Id = :reportId];
+            if (!reports.isEmpty()) {
+                if (reports[0].Wizard__c != wizardId) {
+                    throw new ExpenseReportException(NOT_LINKED);
+                }
+                return reports[0];
+            }
         }
         List<Expense_Report__c> reports = [SELECT Id FROM Expense_Report__c WHERE Wizard__c = :wizardId LIMIT 2];
         if (reports.size() > 1) {
