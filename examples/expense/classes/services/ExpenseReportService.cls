@@ -117,15 +117,16 @@ public inherited sharing class ExpenseReportService implements IExpenseReportSer
      * report may be given to a reviewer or a queue, and the employee may then not see it any more.
      * With sharing, a re-submission would miss it, skip the check of the requested changes and
      * insert a second report for the same wizard. The wizard is the caller's (read with their
-     * sharing, and requireWizardEdit), and the report is found by its link to the wizard, which only
-     * the submit sets and nobody can change (Wizard_Link_Is_Fixed): the same reasoning as
-     * ReviewOfTheReport. The service is inherited sharing, so what it calls from here runs without
-     * sharing too.
+     * sharing, and requireWizardEdit), and its report is checked from both sides, as in
+     * ReviewOfTheReport: the one the context names, and only if it names this wizard back
+     * (findReportOfTheWizard). A new report is the wizard owner's, also when someone above them
+     * submits it: Private, the owner decides who sees and reviews it. The service is inherited
+     * sharing, so what it calls from here runs without sharing too.
      */
     private without sharing class SubmitOfTheReport {
         Expense_Report__c save(Id wizardId, Map<String, Object> model, List<Map<String, Object>> expenses,
                 Map<String, Object> context) {
-            Expense_Report__c report = findReportByWizard(wizardId);
+            Expense_Report__c report = findReportOfTheWizard(wizardId, context.get(CTX_REPORT));
             Map<String, Object> requested = toMap(context.get(CTX_REQUESTED));
             if (report != null && !requested.isEmpty()) {
                 // only what the manager asked for may change in the list (the other pages are
@@ -137,6 +138,10 @@ public inherited sharing class ExpenseReportService implements IExpenseReportSer
             }
             if (report == null) {
                 report = new Expense_Report__c(Wizard__c = wizardId);
+                Id owner = [SELECT OwnerId FROM prolet__Wizard__c WHERE Id = :wizardId].OwnerId;
+                if (owner.getSObjectType() == User.SObjectType) {
+                    report.OwnerId = owner;
+                }
             }
             mapReport(report, model, expenses, context);
             report.Status__c = STATUS_SUBMITTED;
@@ -154,23 +159,35 @@ public inherited sharing class ExpenseReportService implements IExpenseReportSer
 
     /** The caller may edit the wizard (their own, or one shared with them to edit). */
     private static void requireWizardEdit(Id wizardId) {
-        List<UserRecordAccess> access = [
-                SELECT RecordId, HasEditAccess FROM UserRecordAccess
-                WHERE UserId = :UserInfo.getUserId() AND RecordId = :wizardId
-        ];
-        if (access.isEmpty() || !access[0].HasEditAccess) {
+        UserRecordAccess access = accessOf(wizardId);
+        if (access == null || !access.HasEditAccess) {
             throw new ExpenseReportException('Wizard not found, id= ' + wizardId);
         }
+    }
+
+    /** What the caller may do with the record (sharing included), null when nothing */
+    private static UserRecordAccess accessOf(Id recordId) {
+        List<UserRecordAccess> access = recordId == null ? new List<UserRecordAccess>() : [
+                SELECT RecordId, HasReadAccess, HasEditAccess FROM UserRecordAccess
+                WHERE UserId = :UserInfo.getUserId() AND RecordId = :recordId
+        ];
+        return access.isEmpty() ? null : access[0];
     }
 
     // ------------------------------------------------------------------ $ctx
 
     public Map<String, Object> calculatePerDiem(Id wizardId) {
         prolet__Wizard__c wizard = loadWizard(wizardId);
+        if (wizard.prolet__Wizard_Type__c != WIZARD_TYPE) {
+            throw new ExpenseReportException('This wizard is not an expense report.');
+        }
         Map<String, Object> context = parseJson(wizard.prolet__Context__c);
         if (prolet.WizardStates.isLocked(wizard.prolet__State__c)) {
             return context;
         }
+        // the context is written as the process's: only for a caller who may change the wizard,
+        // as the submit
+        requireWizardEdit(wizardId);
         Map<String, Object> trip = toMap(parseJson(wizard.prolet__Model__c).get(PAGE_TRIP));
         Date dateFrom = toDate(strVal(trip, 'dateFrom'));
         Date dateTo = toDate(strVal(trip, 'dateTo'));
@@ -231,15 +248,12 @@ public inherited sharing class ExpenseReportService implements IExpenseReportSer
      */
     @TestVisible
     private static void requireReportAccess(Id reportId, Boolean edit) {
-        List<UserRecordAccess> access = reportId == null ? new List<UserRecordAccess>() : [
-                SELECT RecordId, HasReadAccess, HasEditAccess FROM UserRecordAccess
-                WHERE UserId = :UserInfo.getUserId() AND RecordId = :reportId
-        ];
+        UserRecordAccess access = accessOf(reportId);
         Schema.DescribeSObjectResult reports = Expense_Report__c.SObjectType.getDescribe();
-        if (access.isEmpty() || !access[0].HasReadAccess || !reports.isAccessible()) {
+        if (access == null || !access.HasReadAccess || !reports.isAccessible()) {
             throw new ExpenseReportException('Expense report not found, id= ' + reportId);
         }
-        if (edit && (!access[0].HasEditAccess || !reports.isUpdateable())) {
+        if (edit && (!access.HasEditAccess || !reports.isUpdateable())) {
             throw new ExpenseReportException('You may not review this expense report.');
         }
     }
@@ -617,8 +631,26 @@ public inherited sharing class ExpenseReportService implements IExpenseReportSer
         return reports[0];
     }
 
-    private static Expense_Report__c findReportByWizard(Id wizardId) {
-        List<Expense_Report__c> reports = [SELECT Id FROM Expense_Report__c WHERE Wizard__c = :wizardId LIMIT 1];
+    /**
+     * The report of the wizard, null before its first submit. Once submitted, the context names it
+     * (CTX_REPORT) and it must name the wizard back. A wizard whose context names none yet (submitted
+     * before the link, see ExpenseReportLinkBackfill) takes the one report that names it, and is
+     * refused when there are more.
+     */
+    private static Expense_Report__c findReportOfTheWizard(Id wizardId, Object linked) {
+        if (linked != null && String.isNotBlank(String.valueOf(linked))) {
+            Id reportId = toId(String.valueOf(linked));
+            List<Expense_Report__c> reports = reportId == null ? new List<Expense_Report__c>()
+                    : [SELECT Id FROM Expense_Report__c WHERE Id = :reportId AND Wizard__c = :wizardId];
+            if (reports.isEmpty()) {
+                throw new ExpenseReportException(NOT_LINKED);
+            }
+            return reports[0];
+        }
+        List<Expense_Report__c> reports = [SELECT Id FROM Expense_Report__c WHERE Wizard__c = :wizardId LIMIT 2];
+        if (reports.size() > 1) {
+            throw new ExpenseReportException('This wizard has more than one expense report: ask your administrator.');
+        }
         return reports.isEmpty() ? null : reports[0];
     }
 

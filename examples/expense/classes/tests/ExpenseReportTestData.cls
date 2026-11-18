@@ -80,14 +80,33 @@ public class ExpenseReportTestData {
                     TimeZoneSidKey = 'Europe/Sofia', LocaleSidKey = 'en_US', EmailEncodingKey = 'UTF-8',
                     LanguageLocaleKey = 'en_US', UserRoleId = roleId);
             insert user;
+            // each set from its own package: the framework's (Wizard_Framework_...) and the
+            // example's (an org may also have a copy of the same name elsewhere)
+            String framework = namespaceOf(prolet__Wizard__c.SObjectType);
+            String example = namespaceOf(Expense_Report__c.SObjectType);
             List<PermissionSetAssignment> assignments = new List<PermissionSetAssignment>();
-            for (PermissionSet permissionSet : [SELECT Id FROM PermissionSet WHERE Name IN :permissionSets]) {
-                assignments.add(new PermissionSetAssignment(PermissionSetId = permissionSet.Id, AssigneeId = user.Id));
+            for (PermissionSet permissionSet : [
+                    SELECT Id, Name, NamespacePrefix FROM PermissionSet
+                    WHERE Name IN :permissionSets AND (NamespacePrefix = :framework OR NamespacePrefix = :example)
+            ]) {
+                String namespace = permissionSet.Name.startsWith('Wizard_Framework_') ? framework : example;
+                if (permissionSet.NamespacePrefix == namespace) {
+                    assignments.add(new PermissionSetAssignment(PermissionSetId = permissionSet.Id, AssigneeId = user.Id));
+                }
             }
             System.Assert.areEqual(permissionSets.size(), assignments.size(), 'permission sets ' + permissionSets);
             insert assignments;
         }
         return user;
+    }
+
+    /**
+     * The namespace of the package the custom object is in (prolet__Wizard__c), null for the org's
+     * own (Feedback__c). getLocalName() is no help: outside the package it keeps the namespace.
+     */
+    private static String namespaceOf(Schema.SObjectType type) {
+        String name = type.getDescribe().getName();
+        return name.countMatches('__') > 1 ? name.substringBefore('__') : null;
     }
 
     /**

@@ -494,11 +494,7 @@ private class ExpenseReviewAccessTest {
         }
         // shared with the colleague to read: the report would be written without sharing, so the
         // submit needs the right to change the wizard
-        SObject share = Schema.getGlobalDescribe().get(prolet__Wizard__c.SObjectType.getDescribe().getName().removeEnd('__c') + '__Share').newSObject();
-        share.put('ParentId', wizardId);
-        share.put('UserOrGroupId', colleague.Id);
-        share.put('AccessLevel', 'Read');
-        insert share;
+        insert new prolet__Wizard__Share(ParentId = wizardId, UserOrGroupId = colleague.Id, AccessLevel = 'Read');
         System.runAs(colleague) {
             try {
                 ExpenseReportController.submitReport(wizardId, true);
@@ -508,5 +504,115 @@ private class ExpenseReviewAccessTest {
             }
         }
         System.Assert.areEqual(0, [SELECT COUNT() FROM Expense_Report__c WHERE Wizard__c = :wizardId]);
+    }
+
+    @IsTest
+    static void aResubmitWritesTheReportTheWizardNamesNotAnotherThatNamesIt() {
+        List<User> people = ExpenseReportTestData.employeeAndManager(EXPENSE_SETS);
+        User employee = people[0];
+        User manager = people[1];
+        Id wizardId = submittedBy(employee);
+        Id reportId = reportOf(wizardId);
+        // a second report that names the wizard, made by an admin (or a data load)
+        Expense_Report__c copy = new Expense_Report__c(Wizard__c = wizardId, Status__c = 'Submitted');
+        insert copy;
+        System.runAs(manager) {
+            ExpenseReviewController.requestChanges(reportId, new List<String>{ 'e1' }, null, false, 'Check hotel');
+        }
+        System.runAs(employee) {
+            Map<String, Object> model = ExpenseReportTestData.validModel();
+            for (Object item : (List<Object>) ((Map<String, Object>) model.get('ExpenseItems')).get('expenses')) {
+                Map<String, Object> expense = (Map<String, Object>) item;
+                if (expense.get('id') == 'e1') {
+                    expense.put('amount', '123');
+                }
+            }
+            ExpenseReportTestData.updateModel(wizardId, model);
+            ExpenseReportController.submitReport(wizardId, true);
+        }
+        System.Assert.areEqual('Submitted', [SELECT Status__c FROM Expense_Report__c WHERE Id = :reportId].Status__c);
+        System.Assert.areEqual(123, [SELECT Amount__c FROM Expense_Line__c WHERE Expense_Report__c = :reportId AND Line_Key__c = 'e1'].Amount__c);
+        System.Assert.areEqual(0, [SELECT COUNT() FROM Expense_Line__c WHERE Expense_Report__c = :copy.Id], 'the copy is not written');
+        System.Assert.areEqual(String.valueOf(reportId), String.valueOf(
+                ((Map<String, Object>) JSON.deserializeUntyped(ExpenseReportTestData.reload(wizardId).prolet__Context__c)).get(ExpenseReportService.CTX_REPORT)));
+    }
+
+    @IsTest
+    static void aWizardThatNamesNoReportIsRefusedWhenTwoNameIt() {
+        User employee = userWith('emma', EXPENSE_SETS);
+        Id wizardId;
+        System.runAs(employee) {
+            wizardId = ExpenseReportTestData.insertWizard(ExpenseReportTestData.validModel(), 'ACTIVE').Id;
+        }
+        insert new List<Expense_Report__c>{
+                new Expense_Report__c(Wizard__c = wizardId, Status__c = 'Submitted'),
+                new Expense_Report__c(Wizard__c = wizardId, Status__c = 'Submitted')
+        };
+        System.runAs(employee) {
+            try {
+                ExpenseReportController.submitReport(wizardId, true);
+                System.Assert.fail('one of two reports was taken');
+            } catch (AuraHandledException e) {
+                System.Assert.isTrue(e.getMessage().contains('more than one expense report'), e.getMessage());
+            }
+        }
+        System.Assert.areEqual(0, [SELECT COUNT() FROM Expense_Line__c WHERE Expense_Report__r.Wizard__c = :wizardId]);
+    }
+
+    @IsTest
+    static void aReportSubmittedByTheManagerIsTheEmployees() {
+        List<User> people = ExpenseReportTestData.employeeAndManager(EXPENSE_SETS);
+        User employee = people[0];
+        User manager = people[1];
+        Id wizardId;
+        System.runAs(employee) {
+            wizardId = ExpenseReportTestData.insertWizard(ExpenseReportTestData.validModel(), 'ACTIVE').Id;
+        }
+        // above her in the role hierarchy, he may change her wizard and submits it
+        System.runAs(manager) {
+            ExpenseReportController.submitReport(wizardId, true);
+        }
+        Id reportId = reportOf(wizardId);
+        System.Assert.areEqual(employee.Id, [SELECT OwnerId FROM Expense_Report__c WHERE Id = :reportId].OwnerId);
+        System.runAs(employee) {
+            System.Assert.areEqual(1, [SELECT COUNT() FROM Expense_Report__c WHERE Id = :reportId], 'her own report');
+        }
+        // and he reviews it: it is not his own
+        System.runAs(manager) {
+            System.Assert.isFalse(ExpenseReviewController.getReview(reportId).ownReport);
+            ExpenseReviewController.approveReport(reportId);
+        }
+        System.Assert.areEqual('Approved', [SELECT Status__c FROM Expense_Report__c WHERE Id = :reportId].Status__c);
+    }
+
+    @IsTest
+    static void thePerDiemIsWrittenOnlyIntoAnExpenseWizardTheCallerMayChange() {
+        User employee = userWith('emma', EXPENSE_SETS);
+        User colleague = userWith('carl', EXPENSE_SETS);
+        Id wizardId;
+        prolet__Wizard__c carRental;
+        System.runAs(employee) {
+            wizardId = ExpenseReportTestData.insertWizard(ExpenseReportTestData.validModel(), 'ACTIVE').Id;
+            carRental = new prolet__Wizard__c(prolet__Wizard_Type__c = 'CarRental', prolet__State__c = prolet.WizardStates.ACTIVE,
+                    prolet__Model__c = JSON.serialize(ExpenseReportTestData.validModel()));
+            insert carRental;
+            try {
+                ExpenseReportController.calculatePerDiem(carRental.Id);
+                System.Assert.fail('the per diem went into a wizard of another process');
+            } catch (AuraHandledException e) {
+                System.Assert.areEqual('This wizard is not an expense report.', e.getMessage());
+            }
+        }
+        System.Assert.isFalse((ExpenseReportTestData.reload(carRental.Id).prolet__Context__c ?? '').contains('perDiem'));
+        insert new prolet__Wizard__Share(ParentId = wizardId, UserOrGroupId = colleague.Id, AccessLevel = 'Read');
+        System.runAs(colleague) {
+            try {
+                ExpenseReportController.calculatePerDiem(wizardId);
+                System.Assert.fail('a reader wrote the per diem');
+            } catch (AuraHandledException e) {
+                System.Assert.isTrue(e.getMessage().startsWith('Wizard not found'), e.getMessage());
+            }
+        }
+        System.Assert.isFalse((ExpenseReportTestData.reload(wizardId).prolet__Context__c ?? '').contains('perDiem'));
     }
 }

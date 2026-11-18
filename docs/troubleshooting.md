@@ -31,7 +31,7 @@ The user may call the package's classes, but their permissions refused the read 
 
 ## "The Apex request is invalid" / "You do not have access to the Apex class named ..."
 
-Salesforce's own message, before the package's code runs: the user may not call the wizard's controller. Assign `prolet__Wizard_Framework_User` (it gives the classes). On a site, its users can get it too; its guests cannot use a wizard at all.
+Salesforce's own message, before the package's code runs: the user may not call the wizard's controller. Assign `prolet__Wizard_Framework_User` (it gives the classes). On a site, its users can get it too from 0.2.0.5 (up to 0.2.0.4 their license refuses it, because it gives the Wizard app); its guests cannot use a wizard at all.
 
 ## "You can view this form but not change it." (`Wizard_err_read_only`)
 

@@ -65,7 +65,7 @@ The examples show the steps, not one of them all four:
 
 `prolet.WizardApi.unlock(wizardId)` makes a locked wizard `ACTIVE` again, for its user to change it: a submit that failed later, a manager who asks for changes, a mistake. Only Apex can unlock; the user cannot.
 
-The [expense example](https://github.com/itprolet/wizard-force-examples/tree/main/examples/expense) does this for a manager's review: its `Expense_Report__c` is Private, so the owner, the managers above them in the role hierarchy and those a report is shared with (a sharing rule, a queue) see and review it, and a colleague does not. "Request changes" unlocks the wizard and writes into `$ctx` what has to change; its rules make the other pages read-only while the report is in that status.
+The [expense example](https://github.com/itprolet/wizard-force-examples/tree/main/examples/expense) does this for a manager's review: its `Expense_Report__c` is Private, so its owner (the owner of the wizard, also when a manager submits it) sees it, the managers above them in the role hierarchy and those a report is shared with (a sharing rule, a queue) see and review it, and a colleague does not. Nobody reviews their own report. "Request changes" unlocks the wizard and writes into `$ctx` what has to change; its rules make the other pages read-only while the report is in that status.
 
 ## When the Page Is Done
 
