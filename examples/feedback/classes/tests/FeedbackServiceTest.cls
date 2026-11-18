@@ -139,18 +139,32 @@ private class FeedbackServiceTest {
                     TimeZoneSidKey = 'Europe/Sofia', LocaleSidKey = 'en_US', EmailEncodingKey = 'UTF-8',
                     LanguageLocaleKey = 'en_US');
             insert user;
+            List<String> permissionSets = new List<String>{ 'Wizard_Framework_User', 'Feedback_Wizard_User' };
+            // each set from its own package: the framework's, and the example's (an org may also
+            // have a copy of the same name elsewhere)
+            String framework = namespaceOf(prolet__Wizard__c.SObjectType);
+            String example = namespaceOf(Feedback__c.SObjectType);
             List<PermissionSetAssignment> assignments = new List<PermissionSetAssignment>();
             for (PermissionSet permissionSet : [
                     SELECT Id FROM PermissionSet
-                    WHERE (Name = 'Wizard_Framework_User' AND NamespacePrefix = 'prolet')
-                        OR (Name = 'Feedback_Wizard_User' AND NamespacePrefix = null)
+                    WHERE (Name = 'Wizard_Framework_User' AND NamespacePrefix = :framework)
+                    OR (Name = 'Feedback_Wizard_User' AND NamespacePrefix = :example)
             ]) {
                 assignments.add(new PermissionSetAssignment(PermissionSetId = permissionSet.Id, AssigneeId = user.Id));
             }
-            Assert.areEqual(2, assignments.size(), 'prolet__Wizard_Framework_User and Feedback_Wizard_User');
+            Assert.areEqual(permissionSets.size(), assignments.size(), 'permission sets ' + permissionSets);
             insert assignments;
         }
         return user;
+    }
+
+    /**
+     * The namespace of the package the custom object is in (prolet__Wizard__c), null for the org's
+     * own (Feedback__c). getLocalName() is no help: outside the package it keeps the namespace.
+     */
+    private static String namespaceOf(Schema.SObjectType type) {
+        String name = type.getDescribe().getName();
+        return name.countMatches('__') > 1 ? name.substringBefore('__') : null;
     }
 
     @isTest

@@ -16,7 +16,8 @@ private class ExpenseReportControllersTest {
         ExpenseReportTestData.giveToEmployee(wizard.Id);
         Assert.areEqual(change.pathVersion, submit.fromVersion, 'the submit starts from the version after the calculation');
         // the answers and the context, then the lock (WizardApi.lock within the page's own change)
-        Assert.areEqual(submit.fromVersion + 2, submit.pathVersion);
+        // three writes: the answers (the declaration), the context (through WizardApi.updateContext), the lock
+        Assert.areEqual(submit.fromVersion + 3, submit.pathVersion);
         Assert.areEqual(submit.pathVersion, ExpenseReportTestData.reload(wizard.Id).prolet__PathVersion__c, 'what the trigger stored');
         Assert.areEqual(prolet.WizardStates.LOCKED, ExpenseReportTestData.reload(wizard.Id).prolet__State__c);
         Id reportId = reportOf(wizard.Id);

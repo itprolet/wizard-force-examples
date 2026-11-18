@@ -1,6 +1,9 @@
 /**
  * @description The manager's review of a report whose wizard they may not see (Wizard__c is
  * Private, the manager is not the owner nor above them): access to the report decides.
+ * Expense_Report__c is Private too: a reviewer gets a report through the role hierarchy (above
+ * the employee) or a share (a sharing rule, a queue); here mostly a manual share, so the reviewer
+ * still does not see the wizard. Without either, a colleague does not see the report at all.
  */
 @IsTest
 private class ExpenseReviewAccessTest {
@@ -32,6 +35,7 @@ private class ExpenseReviewAccessTest {
         User manager = userWith('mark', EXPENSE_SETS);
         Id wizardId = submittedBy(employee);
         Id reportId = reportOf(wizardId);
+        ExpenseReportTestData.shareReport(reportId, manager.Id, 'Edit');
 
         System.runAs(manager) {
             // the wizard is the employee's: the manager does not see it
@@ -92,36 +96,45 @@ private class ExpenseReviewAccessTest {
     @IsTest
     static void readingTheReportIsNotEnoughToDecide() {
         User employee = userWith('emma', EXPENSE_SETS);
-        // may read reports, not edit them
+        // may read reports, not edit them: by the object permission (read only) ...
         User reader = userWith('rita', new List<String>{ 'Wizard_Framework_User' });
         System.runAs(new User(Id = UserInfo.getUserId())) {
             PermissionSet readOnly = new PermissionSet(
                     Name = 'Expense_Test_Read_Only_' + Datetime.now().getTime(), Label = 'Expense test: read only');
             insert readOnly;
+            // the objects' names from the schema: with a namespace, they have its prefix
             insert new List<ObjectPermissions>{
-                    new ObjectPermissions(ParentId = readOnly.Id, SobjectType = 'Expense_Report__c', PermissionsRead = true),
-                    new ObjectPermissions(ParentId = readOnly.Id, SobjectType = 'Expense_Line__c', PermissionsRead = true)
+                    new ObjectPermissions(ParentId = readOnly.Id, PermissionsRead = true,
+                            SobjectType = Expense_Report__c.SObjectType.getDescribe().getName()),
+                    new ObjectPermissions(ParentId = readOnly.Id, PermissionsRead = true,
+                            SobjectType = Expense_Line__c.SObjectType.getDescribe().getName())
             };
             insert new PermissionSetAssignment(PermissionSetId = readOnly.Id, AssigneeId = reader.Id);
         }
+        // ... or by the record: Expense_Report_User (edit on the object), the report shared to read
+        User sharedToRead = userWith('rosa', EXPENSE_SETS);
         Id wizardId = submittedBy(employee);
         Id reportId = reportOf(wizardId);
+        ExpenseReportTestData.shareReport(reportId, reader.Id, 'Read');
+        ExpenseReportTestData.shareReport(reportId, sharedToRead.Id, 'Read');
 
-        System.runAs(reader) {
-            // sees the review
-            System.Assert.areEqual(prolet.WizardStates.LOCKED, ExpenseReviewController.getReview(reportId).wizardState);
-            // but does not decide
-            try {
-                ExpenseReviewController.approveReport(reportId);
-                System.Assert.fail('approveReport with read access only');
-            } catch (AuraHandledException e) {
-                System.Assert.areEqual('You may not review this expense report.', e.getMessage());
-            }
-            try {
-                ExpenseReviewController.requestChanges(reportId, new List<String>{ 'e1' }, null, false, 'x');
-                System.Assert.fail('requestChanges with read access only');
-            } catch (AuraHandledException e) {
-                System.Assert.areEqual('You may not review this expense report.', e.getMessage());
+        for (User user : new List<User>{ reader, sharedToRead }) {
+            System.runAs(user) {
+                // sees the review
+                System.Assert.areEqual(prolet.WizardStates.LOCKED, ExpenseReviewController.getReview(reportId).wizardState, user.LastName);
+                // but does not decide
+                try {
+                    ExpenseReviewController.approveReport(reportId);
+                    System.Assert.fail(user.LastName + ': approveReport with read access only');
+                } catch (AuraHandledException e) {
+                    System.Assert.areEqual('You may not review this expense report.', e.getMessage(), user.LastName);
+                }
+                try {
+                    ExpenseReviewController.requestChanges(reportId, new List<String>{ 'e1' }, null, false, 'x');
+                    System.Assert.fail(user.LastName + ': requestChanges with read access only');
+                } catch (AuraHandledException e) {
+                    System.Assert.areEqual('You may not review this expense report.', e.getMessage(), user.LastName);
+                }
             }
         }
         System.Assert.areEqual(prolet.WizardStates.LOCKED, ExpenseReportTestData.reload(wizardId).prolet__State__c, 'nothing changed');
@@ -206,7 +219,7 @@ private class ExpenseReviewAccessTest {
             System.Assert.areEqual(prolet.WizardStates.LOCKED, after.prolet__State__c, 'the victim\'s wizard stays locked');
             Map<String, Object> context = after.prolet__Context__c == null ? new Map<String, Object>()
                     : (Map<String, Object>) JSON.deserializeUntyped(after.prolet__Context__c);
-            System.Assert.isFalse(context.containsKey(ExpenseReportService.CTX_COMMENT), 'no review was written in it');
+            System.Assert.isNull(context.get(ExpenseReportService.CTX_COMMENT), 'no review was written in it');
         }
     }
 
@@ -224,6 +237,7 @@ private class ExpenseReviewAccessTest {
         Id reportId = reportOf(wizard.Id);
         System.Assert.areNotEqual([SELECT CreatedById FROM prolet__Wizard__c WHERE Id = :wizard.Id].CreatedById,
                 [SELECT CreatedById FROM Expense_Report__c WHERE Id = :reportId].CreatedById, 'made by different users');
+        ExpenseReportTestData.shareReport(reportId, manager.Id, 'Edit');
 
         System.runAs(manager) {
             System.Assert.areEqual(2, ExpenseReviewController.getReview(reportId).lines.size());
@@ -282,6 +296,7 @@ private class ExpenseReviewAccessTest {
         Id wizardId = submittedBy(employee);
         Id reportId = reportOf(wizardId);
 
+        ExpenseReportTestData.shareReport(reportId, manager.Id, 'Edit');
         // without sharing (as the review calls it) the real link passes
         ExpenseReportService.requireExpenseLink(reportId);
         System.runAs(manager) {
@@ -312,9 +327,10 @@ private class ExpenseReviewAccessTest {
         User manager = userWith('mark', EXPENSE_SETS);
         Id wizardId = submittedBy(employee);
         Id reportId = reportOf(wizardId);
+        ExpenseReportTestData.shareReport(reportId, manager.Id, 'Edit');
 
         System.runAs(employee) {
-            // the report is ReadWrite: she may edit it, and so pass the report check
+            // her own report: she may edit it, and so pass the report check
             ExpenseReviewData review = ExpenseReviewController.getReview(reportId);
             System.Assert.isTrue(review.ownReport, 'her own report');
             System.Assert.areEqual(2, review.lines.size(), 'she sees it');
@@ -347,8 +363,10 @@ private class ExpenseReviewAccessTest {
         User manager = userWith('mark', EXPENSE_SETS);
         Id wizardId = submittedBy(employee);
         Id reportId = reportOf(wizardId);
-        // the report is given to the manager; the wizard stays the employee's
+        // the report is given to the manager, and shared back with the employee (Private: she would
+        // not see it otherwise); the wizard stays the employee's
         update new Expense_Report__c(Id = reportId, OwnerId = manager.Id);
+        ExpenseReportTestData.shareReport(reportId, employee.Id, 'Edit');
 
         for (User user : new List<User>{ employee, manager }) {
             System.runAs(user) {
@@ -362,5 +380,239 @@ private class ExpenseReviewAccessTest {
             }
         }
         System.Assert.areEqual('Submitted', [SELECT Status__c FROM Expense_Report__c WHERE Id = :reportId].Status__c);
+    }
+
+    // ------------------------------------------------------------------ who sees a report (Private)
+
+    @IsTest
+    static void aManagerAboveTheEmployeeReviewsTheirReport() {
+        List<User> people = ExpenseReportTestData.employeeAndManager(EXPENSE_SETS);
+        User employee = people[0];
+        User manager = people[1];
+        Id reportId = reportOf(submittedBy(employee));
+
+        // no share: the role hierarchy gives the manager the report
+        System.runAs(manager) {
+            System.Assert.isFalse(ExpenseReviewController.getReview(reportId).ownReport);
+            ExpenseReviewController.approveReport(reportId);
+        }
+        System.Assert.areEqual('Approved', [SELECT Status__c FROM Expense_Report__c WHERE Id = :reportId].Status__c);
+    }
+
+    @IsTest
+    static void aColleagueDoesNotSeeTheReport() {
+        // a colleague beside the employee: the same permission sets and the same role, nothing
+        // shared. Private: the role hierarchy gives a report only to those above its owner
+        List<User> people = ExpenseReportTestData.employeeAndManager(EXPENSE_SETS);
+        User employee = people[0];
+        User manager = people[1];
+        User colleague = ExpenseReportTestData.userWith('carl', EXPENSE_SETS, employee.UserRoleId);
+        Id wizardId = submittedBy(employee);
+        Id reportId = reportOf(wizardId);
+
+        System.runAs(manager) {
+            System.Assert.areEqual(1, [SELECT COUNT() FROM Expense_Report__c WHERE Id = :reportId], 'above her: sees it');
+        }
+        System.runAs(colleague) {
+            System.Assert.areEqual(0, [SELECT COUNT() FROM Expense_Report__c WHERE Id = :reportId]);
+            try {
+                ExpenseReviewController.getReview(reportId);
+                System.Assert.fail('a colleague read the review');
+            } catch (AuraHandledException e) {
+                System.Assert.isTrue(e.getMessage().startsWith('Expense report not found'), e.getMessage());
+            }
+            try {
+                ExpenseReviewController.approveReport(reportId);
+                System.Assert.fail('a colleague approved the report');
+            } catch (AuraHandledException e) {
+                System.Assert.isTrue(e.getMessage().startsWith('Expense report not found'), e.getMessage());
+            }
+        }
+        System.Assert.areEqual('Submitted', [SELECT Status__c FROM Expense_Report__c WHERE Id = :reportId].Status__c);
+        System.Assert.areEqual(prolet.WizardStates.LOCKED, ExpenseReportTestData.reload(wizardId).prolet__State__c);
+    }
+
+    @IsTest
+    static void aResubmitUpdatesTheReportTheEmployeeNoLongerSees() {
+        User employee = userWith('emma', EXPENSE_SETS);
+        User manager = userWith('mark', EXPENSE_SETS);
+        Id wizardId = submittedBy(employee);
+        Id reportId = reportOf(wizardId);
+        // the report goes to a review queue: the manager reviews it, the employee no longer sees it
+        update new Expense_Report__c(Id = reportId, OwnerId = ExpenseReportTestData.reviewQueue(new List<User>{ manager }));
+        System.runAs(employee) {
+            System.Assert.areEqual(0, [SELECT COUNT() FROM Expense_Report__c WHERE Id = :reportId], 'she does not see it');
+        }
+        System.runAs(manager) {
+            ExpenseReviewController.requestChanges(reportId, new List<String>{ 'e1' }, null, false, 'Check hotel');
+        }
+
+        System.runAs(employee) {
+            Map<String, Object> model = ExpenseReportTestData.validModel();
+            List<Object> expenses = (List<Object>) ((Map<String, Object>) model.get('ExpenseItems')).get('expenses');
+            Map<String, Object> other;
+            for (Object item : expenses) {
+                Map<String, Object> expense = (Map<String, Object>) item;
+                if (expense.get('id') == 'e1') {
+                    expense.put('amount', '123');
+                } else {
+                    other = expense;
+                }
+            }
+            // the requested change, and a line that was not asked for: refused, also when she does
+            // not see the report (the check reads its lines)
+            Object otherAmount = other.get('amount');
+            other.put('amount', '999');
+            ExpenseReportTestData.updateModel(wizardId, model);
+            try {
+                ExpenseReportController.submitReport(wizardId, true);
+                System.Assert.fail('a line that was not asked for changed');
+            } catch (AuraHandledException e) {
+                System.Assert.isTrue(e.getMessage().startsWith('Only the requested changes can be made'), e.getMessage());
+            }
+            // the requested change alone goes through, into the same report
+            other.put('amount', otherAmount);
+            ExpenseReportTestData.updateModel(wizardId, model);
+            ExpenseReportController.submitReport(wizardId, true);
+        }
+        List<Expense_Report__c> reports = [SELECT Id, Status__c FROM Expense_Report__c WHERE Wizard__c = :wizardId];
+        System.Assert.areEqual(1, reports.size(), 'one report for the wizard');
+        System.Assert.areEqual(reportId, reports[0].Id, 'the same report, updated');
+        System.Assert.areEqual('Submitted', reports[0].Status__c);
+        System.Assert.areEqual(123, [SELECT Amount__c FROM Expense_Line__c WHERE Expense_Report__c = :reportId AND Line_Key__c = 'e1'].Amount__c);
+        System.Assert.areEqual(String.valueOf(reportId), String.valueOf(
+                ((Map<String, Object>) JSON.deserializeUntyped(ExpenseReportTestData.reload(wizardId).prolet__Context__c)).get(ExpenseReportService.CTX_REPORT)));
+    }
+
+    @IsTest
+    static void aUserWhoMayOnlyReadTheWizardCannotSubmitIt() {
+        User employee = userWith('emma', EXPENSE_SETS);
+        User colleague = userWith('carl', EXPENSE_SETS);
+        Id wizardId;
+        System.runAs(employee) {
+            wizardId = ExpenseReportTestData.insertWizard(ExpenseReportTestData.validModel(), 'ACTIVE').Id;
+        }
+        // shared with the colleague to read: the report would be written without sharing, so the
+        // submit needs the right to change the wizard
+        insert new prolet__Wizard__Share(ParentId = wizardId, UserOrGroupId = colleague.Id, AccessLevel = 'Read');
+        System.runAs(colleague) {
+            try {
+                ExpenseReportController.submitReport(wizardId, true);
+                System.Assert.fail('a reader submitted the wizard');
+            } catch (AuraHandledException e) {
+                System.Assert.isTrue(e.getMessage().startsWith('Wizard not found'), e.getMessage());
+            }
+        }
+        System.Assert.areEqual(0, [SELECT COUNT() FROM Expense_Report__c WHERE Wizard__c = :wizardId]);
+    }
+
+    @IsTest
+    static void aResubmitWritesTheReportTheWizardNamesNotAnotherThatNamesIt() {
+        List<User> people = ExpenseReportTestData.employeeAndManager(EXPENSE_SETS);
+        User employee = people[0];
+        User manager = people[1];
+        Id wizardId = submittedBy(employee);
+        Id reportId = reportOf(wizardId);
+        // a second report that names the wizard, made by an admin (or a data load)
+        Expense_Report__c copy = new Expense_Report__c(Wizard__c = wizardId, Status__c = 'Submitted');
+        insert copy;
+        System.runAs(manager) {
+            ExpenseReviewController.requestChanges(reportId, new List<String>{ 'e1' }, null, false, 'Check hotel');
+        }
+        System.runAs(employee) {
+            Map<String, Object> model = ExpenseReportTestData.validModel();
+            for (Object item : (List<Object>) ((Map<String, Object>) model.get('ExpenseItems')).get('expenses')) {
+                Map<String, Object> expense = (Map<String, Object>) item;
+                if (expense.get('id') == 'e1') {
+                    expense.put('amount', '123');
+                }
+            }
+            ExpenseReportTestData.updateModel(wizardId, model);
+            ExpenseReportController.submitReport(wizardId, true);
+        }
+        System.Assert.areEqual('Submitted', [SELECT Status__c FROM Expense_Report__c WHERE Id = :reportId].Status__c);
+        System.Assert.areEqual(123, [SELECT Amount__c FROM Expense_Line__c WHERE Expense_Report__c = :reportId AND Line_Key__c = 'e1'].Amount__c);
+        System.Assert.areEqual(0, [SELECT COUNT() FROM Expense_Line__c WHERE Expense_Report__c = :copy.Id], 'the copy is not written');
+        System.Assert.areEqual(String.valueOf(reportId), String.valueOf(
+                ((Map<String, Object>) JSON.deserializeUntyped(ExpenseReportTestData.reload(wizardId).prolet__Context__c)).get(ExpenseReportService.CTX_REPORT)));
+    }
+
+    @IsTest
+    static void aWizardThatNamesNoReportIsRefusedWhenTwoNameIt() {
+        User employee = userWith('emma', EXPENSE_SETS);
+        Id wizardId;
+        System.runAs(employee) {
+            wizardId = ExpenseReportTestData.insertWizard(ExpenseReportTestData.validModel(), 'ACTIVE').Id;
+        }
+        insert new List<Expense_Report__c>{
+                new Expense_Report__c(Wizard__c = wizardId, Status__c = 'Submitted'),
+                new Expense_Report__c(Wizard__c = wizardId, Status__c = 'Submitted')
+        };
+        System.runAs(employee) {
+            try {
+                ExpenseReportController.submitReport(wizardId, true);
+                System.Assert.fail('one of two reports was taken');
+            } catch (AuraHandledException e) {
+                System.Assert.isTrue(e.getMessage().contains('more than one expense report'), e.getMessage());
+            }
+        }
+        System.Assert.areEqual(0, [SELECT COUNT() FROM Expense_Line__c WHERE Expense_Report__r.Wizard__c = :wizardId]);
+    }
+
+    @IsTest
+    static void aReportSubmittedByTheManagerIsTheEmployees() {
+        List<User> people = ExpenseReportTestData.employeeAndManager(EXPENSE_SETS);
+        User employee = people[0];
+        User manager = people[1];
+        Id wizardId;
+        System.runAs(employee) {
+            wizardId = ExpenseReportTestData.insertWizard(ExpenseReportTestData.validModel(), 'ACTIVE').Id;
+        }
+        // above her in the role hierarchy, he may change her wizard and submits it
+        System.runAs(manager) {
+            ExpenseReportController.submitReport(wizardId, true);
+        }
+        Id reportId = reportOf(wizardId);
+        System.Assert.areEqual(employee.Id, [SELECT OwnerId FROM Expense_Report__c WHERE Id = :reportId].OwnerId);
+        System.runAs(employee) {
+            System.Assert.areEqual(1, [SELECT COUNT() FROM Expense_Report__c WHERE Id = :reportId], 'her own report');
+        }
+        // and he reviews it: it is not his own
+        System.runAs(manager) {
+            System.Assert.isFalse(ExpenseReviewController.getReview(reportId).ownReport);
+            ExpenseReviewController.approveReport(reportId);
+        }
+        System.Assert.areEqual('Approved', [SELECT Status__c FROM Expense_Report__c WHERE Id = :reportId].Status__c);
+    }
+
+    @IsTest
+    static void thePerDiemIsWrittenOnlyIntoAnExpenseWizardTheCallerMayChange() {
+        User employee = userWith('emma', EXPENSE_SETS);
+        User colleague = userWith('carl', EXPENSE_SETS);
+        Id wizardId;
+        prolet__Wizard__c carRental;
+        System.runAs(employee) {
+            wizardId = ExpenseReportTestData.insertWizard(ExpenseReportTestData.validModel(), 'ACTIVE').Id;
+            carRental = new prolet__Wizard__c(prolet__Wizard_Type__c = 'CarRental', prolet__State__c = prolet.WizardStates.ACTIVE,
+                    prolet__Model__c = JSON.serialize(ExpenseReportTestData.validModel()));
+            insert carRental;
+            try {
+                ExpenseReportController.calculatePerDiem(carRental.Id);
+                System.Assert.fail('the per diem went into a wizard of another process');
+            } catch (AuraHandledException e) {
+                System.Assert.areEqual('This wizard is not an expense report.', e.getMessage());
+            }
+        }
+        System.Assert.isFalse((ExpenseReportTestData.reload(carRental.Id).prolet__Context__c ?? '').contains('perDiem'));
+        insert new prolet__Wizard__Share(ParentId = wizardId, UserOrGroupId = colleague.Id, AccessLevel = 'Read');
+        System.runAs(colleague) {
+            try {
+                ExpenseReportController.calculatePerDiem(wizardId);
+                System.Assert.fail('a reader wrote the per diem');
+            } catch (AuraHandledException e) {
+                System.Assert.isTrue(e.getMessage().startsWith('Wizard not found'), e.getMessage());
+            }
+        }
+        System.Assert.isFalse((ExpenseReportTestData.reload(wizardId).prolet__Context__c ?? '').contains('perDiem'));
     }
 }

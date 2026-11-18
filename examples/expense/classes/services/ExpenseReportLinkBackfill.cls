@@ -101,7 +101,10 @@ public without sharing class ExpenseReportLinkBackfill implements Database.Batch
             }
         }
         if (apply && !updates.isEmpty()) {
-            // only the context: the wizard trigger lets the process's Apex write it also when locked
+            // only the context, of a whole chunk in one write: the org's Apex in SYSTEM_MODE, which the
+            // wizard trigger lets write it also when locked. Not WizardApi.updateContext, which
+            // locks and writes one wizard at a time (a query and a write each, too many for a chunk).
+            // The user cannot do this: Context__c is read only in Wizard_Framework_User
             update updates;
         }
     }

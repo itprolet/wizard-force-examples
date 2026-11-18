@@ -63,6 +63,9 @@ public inherited sharing class ExpenseReportService implements IExpenseReportSer
             throw new ExpenseReportException('The declaration must be confirmed before submitting.');
         }
         prolet__Wizard__c wizard = loadWizardForUpdate(wizardId);
+        // the caller submits a wizard they may change: only then is its report written without
+        // sharing (see SubmitOfTheReport)
+        requireWizardEdit(wizardId);
         if (wizard.prolet__Wizard_Type__c != WIZARD_TYPE) {
             throw new ExpenseReportException('This wizard is not an expense report.');
         }
@@ -85,70 +88,120 @@ public inherited sharing class ExpenseReportService implements IExpenseReportSer
             throw new ExpenseReportException('An expense is in the list more than once: ' + String.join(repeated, ', '));
         }
 
-        // Re-submission after a review updates the same report
-        Expense_Report__c report = findReportByWizard(wizardId);
-        Map<String, Object> requested = toMap(context.get(CTX_REQUESTED));
-        if (report != null && !requested.isEmpty()) {
-            // only what the manager asked for may change in the list (the other pages are read-only
-            // by their rules then, and the server keeps their stored values)
-            List<String> unrequested = findUnrequestedLineChanges(expenses, toMap(requested.get(PAGE_ITEMS)), report.Id);
-            if (!unrequested.isEmpty()) {
-                throw new ExpenseReportException('Only the requested changes can be made: ' + String.join(unrequested, ', '));
-            }
-        }
-        if (report == null) {
-            report = new Expense_Report__c(Wizard__c = wizardId);
-        }
-        mapReport(report, model, expenses, context);
-        report.Status__c = STATUS_SUBMITTED;
-        upsert report;
-
-        delete [SELECT Id FROM Expense_Line__c WHERE Expense_Report__c = :report.Id];
-        List<Expense_Line__c> lines = new List<Expense_Line__c>();
-        for (Map<String, Object> item : expenses) {
-            lines.add(buildLine(report.Id, item));
-        }
-        insert lines;
+        // Re-submission after a review updates the same report, also one the employee no longer sees
+        Expense_Report__c report = new SubmitOfTheReport().save(wizardId, model, expenses, context);
 
         // The declaration is part of the answers: the signed summary shows it ticked, and the page's
         // form, which has it ticked, is the same as the answers the wizard reads after the submit
         Map<String, Object> summary = toMap(model.get(PAGE_SUMMARY));
         summary.put('agreeDeclaration', true);
         model.put(PAGE_SUMMARY, summary);
-        wizard.prolet__Model__c = JSON.serialize(model);
-
-        // What the wizard holds is written while it is ACTIVE: a locked wizard refuses every write
-        context.remove(CTX_COMMENT);
-        context.remove(CTX_REQUESTED);
-        context.put(CTX_STATUS, STATUS_SUBMITTED);
-        context.put(CTX_REPORT, report.Id);
-        wizard.prolet__Context__c = JSON.serialize(context);
-        update wizard;
+        // The answers are written while the wizard is ACTIVE: a locked wizard refuses every write
+        update new prolet__Wizard__c(Id = wizard.Id, prolet__Model__c = JSON.serialize(model));
+        // The context through the framework, as the process's (its user may read it, not write it):
+        // the review that was asked for is done, the report is submitted
+        prolet.WizardApi.updateContext(wizard.Id, new Map<String, Object>{
+                CTX_COMMENT => null,
+                CTX_REQUESTED => null,
+                CTX_STATUS => STATUS_SUBMITTED,
+                CTX_REPORT => report.Id
+        });
         // Lock the wizard: every field is read-only, and a second submit is refused
         prolet.WizardApi.lock(wizardId);
 
         return report.Id;
     }
 
+    /**
+     * The wizard's own report, read and written without sharing. Expense_Report__c is Private: the
+     * report may be given to a reviewer or a queue, and the employee may then not see it any more.
+     * With sharing, a re-submission would miss it, skip the check of the requested changes and
+     * insert a second report for the same wizard. The wizard is the caller's (read with their
+     * sharing, and requireWizardEdit), and its report is checked from both sides, as in
+     * ReviewOfTheReport: the one the context names, and only if it names this wizard back
+     * (findReportOfTheWizard). A new report is the wizard owner's, also when someone above them
+     * submits it: Private, the owner decides who sees and reviews it. The service is inherited
+     * sharing, so what it calls from here runs without sharing too.
+     */
+    private without sharing class SubmitOfTheReport {
+        Expense_Report__c save(Id wizardId, Map<String, Object> model, List<Map<String, Object>> expenses,
+                Map<String, Object> context) {
+            Expense_Report__c report = findReportOfTheWizard(wizardId, context.get(CTX_REPORT));
+            Map<String, Object> requested = toMap(context.get(CTX_REQUESTED));
+            if (report != null && !requested.isEmpty()) {
+                // only what the manager asked for may change in the list (the other pages are
+                // read-only by their rules then, and the server keeps their stored values)
+                List<String> unrequested = findUnrequestedLineChanges(expenses, toMap(requested.get(PAGE_ITEMS)), report.Id);
+                if (!unrequested.isEmpty()) {
+                    throw new ExpenseReportException('Only the requested changes can be made: ' + String.join(unrequested, ', '));
+                }
+            }
+            if (report == null) {
+                report = new Expense_Report__c(Wizard__c = wizardId);
+                Id owner = [SELECT OwnerId FROM prolet__Wizard__c WHERE Id = :wizardId].OwnerId;
+                if (owner.getSObjectType() == User.SObjectType) {
+                    report.OwnerId = owner;
+                }
+            }
+            mapReport(report, model, expenses, context);
+            report.Status__c = STATUS_SUBMITTED;
+            upsert report;
+
+            delete [SELECT Id FROM Expense_Line__c WHERE Expense_Report__c = :report.Id];
+            List<Expense_Line__c> lines = new List<Expense_Line__c>();
+            for (Map<String, Object> item : expenses) {
+                lines.add(buildLine(report.Id, item));
+            }
+            insert lines;
+            return report;
+        }
+    }
+
+    /** The caller may edit the wizard (their own, or one shared with them to edit). */
+    private static void requireWizardEdit(Id wizardId) {
+        UserRecordAccess access = accessOf(wizardId);
+        if (access == null || !access.HasEditAccess) {
+            throw new ExpenseReportException('Wizard not found, id= ' + wizardId);
+        }
+    }
+
+    /** What the caller may do with the record (sharing included), null when nothing */
+    private static UserRecordAccess accessOf(Id recordId) {
+        List<UserRecordAccess> access = recordId == null ? new List<UserRecordAccess>() : [
+                SELECT RecordId, HasReadAccess, HasEditAccess FROM UserRecordAccess
+                WHERE UserId = :UserInfo.getUserId() AND RecordId = :recordId
+        ];
+        return access.isEmpty() ? null : access[0];
+    }
+
     // ------------------------------------------------------------------ $ctx
 
     public Map<String, Object> calculatePerDiem(Id wizardId) {
         prolet__Wizard__c wizard = loadWizard(wizardId);
+        if (wizard.prolet__Wizard_Type__c != WIZARD_TYPE) {
+            throw new ExpenseReportException('This wizard is not an expense report.');
+        }
         Map<String, Object> context = parseJson(wizard.prolet__Context__c);
         if (prolet.WizardStates.isLocked(wizard.prolet__State__c)) {
             return context;
         }
+        // the context is written as the process's: only for a caller who may change the wizard,
+        // as the submit
+        requireWizardEdit(wizardId);
         Map<String, Object> trip = toMap(parseJson(wizard.prolet__Model__c).get(PAGE_TRIP));
         Date dateFrom = toDate(strVal(trip, 'dateFrom'));
         Date dateTo = toDate(strVal(trip, 'dateTo'));
         Integer days = dateFrom != null && dateTo != null && dateTo >= dateFrom ? dateFrom.daysBetween(dateTo) + 1 : 0;
         Decimal rate = perDiemRate(strVal(trip, 'destinationType'));
 
-        context.put('perDiemDays', days);
-        context.put('perDiemRate', rate);
-        context.put('perDiemTotal', rate * days);
-        wizard.prolet__Context__c = JSON.serialize(context);
-        update wizard;
+        Map<String, Object> perDiem = new Map<String, Object>{
+                'perDiemDays' => days,
+                'perDiemRate' => rate,
+                'perDiemTotal' => rate * days
+        };
+        // through the framework, as the process's: the user may read the context, not write it
+        prolet.WizardApi.updateContext(wizard.Id, perDiem);
+        context.putAll(perDiem);
         return context;
     }
 
@@ -195,15 +248,12 @@ public inherited sharing class ExpenseReportService implements IExpenseReportSer
      */
     @TestVisible
     private static void requireReportAccess(Id reportId, Boolean edit) {
-        List<UserRecordAccess> access = reportId == null ? new List<UserRecordAccess>() : [
-                SELECT RecordId, HasReadAccess, HasEditAccess FROM UserRecordAccess
-                WHERE UserId = :UserInfo.getUserId() AND RecordId = :reportId
-        ];
+        UserRecordAccess access = accessOf(reportId);
         Schema.DescribeSObjectResult reports = Expense_Report__c.SObjectType.getDescribe();
-        if (access.isEmpty() || !access[0].HasReadAccess || !reports.isAccessible()) {
+        if (access == null || !access.HasReadAccess || !reports.isAccessible()) {
             throw new ExpenseReportException('Expense report not found, id= ' + reportId);
         }
-        if (edit && (!access[0].HasEditAccess || !reports.isUpdateable())) {
+        if (edit && (!access.HasEditAccess || !reports.isUpdateable())) {
             throw new ExpenseReportException('You may not review this expense report.');
         }
     }
@@ -536,7 +586,7 @@ public inherited sharing class ExpenseReportService implements IExpenseReportSer
         if (constantName == null) {
             return fallback;
         }
-        // a query, not getInstance: Value__c is a long text, and getInstance cuts it at 255 characters
+        // a query, not getInstance: getInstance cuts a long text field at 255 characters
         List<prolet__Wizard_Contstant__mdt> constants = [
             SELECT prolet__Value__c FROM prolet__Wizard_Contstant__mdt WHERE DeveloperName = :constantName LIMIT 1
         ];
@@ -581,8 +631,26 @@ public inherited sharing class ExpenseReportService implements IExpenseReportSer
         return reports[0];
     }
 
-    private static Expense_Report__c findReportByWizard(Id wizardId) {
-        List<Expense_Report__c> reports = [SELECT Id FROM Expense_Report__c WHERE Wizard__c = :wizardId LIMIT 1];
+    /**
+     * The report of the wizard, null before its first submit. Once submitted, the context names it
+     * (CTX_REPORT) and it must name the wizard back. A wizard whose context names none yet (submitted
+     * before the link, see ExpenseReportLinkBackfill) takes the one report that names it, and is
+     * refused when there are more.
+     */
+    private static Expense_Report__c findReportOfTheWizard(Id wizardId, Object linked) {
+        if (linked != null && String.isNotBlank(String.valueOf(linked))) {
+            Id reportId = toId(String.valueOf(linked));
+            List<Expense_Report__c> reports = reportId == null ? new List<Expense_Report__c>()
+                    : [SELECT Id FROM Expense_Report__c WHERE Id = :reportId AND Wizard__c = :wizardId];
+            if (reports.isEmpty()) {
+                throw new ExpenseReportException(NOT_LINKED);
+            }
+            return reports[0];
+        }
+        List<Expense_Report__c> reports = [SELECT Id FROM Expense_Report__c WHERE Wizard__c = :wizardId LIMIT 2];
+        if (reports.size() > 1) {
+            throw new ExpenseReportException('This wizard has more than one expense report: ask your administrator.');
+        }
         return reports.isEmpty() ? null : reports[0];
     }
 
