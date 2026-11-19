@@ -121,8 +121,10 @@ public inherited sharing class ExpenseReportService implements IExpenseReportSer
      * ReviewOfTheReport: the one the context names, and only if it names this wizard back
      * (findReportOfTheWizard). A new report is the wizard owner's, also when someone above them
      * submits it: Private, the owner decides who sees and reviews it. The one who submitted for
-     * them may then also review it: "own" is the owner's (isOwnReport), not the submitter's. The service is inherited
-     * sharing, so what it calls from here runs without sharing too.
+     * them may then also review it: "own" is the owner's (isOwnReport), not the submitter's. When
+     * the wizard's owner cannot own the report (a queue, a user who left, a user without read on
+     * Expense_Report__c), the submitter owns it, and then may not review it. The
+     * service is inherited sharing, so what it calls from here runs without sharing too.
      */
     private without sharing class SubmitOfTheReport {
         Expense_Report__c save(Id wizardId, Map<String, Object> model, List<Map<String, Object>> expenses,
@@ -139,12 +141,11 @@ public inherited sharing class ExpenseReportService implements IExpenseReportSer
             }
             if (report == null) {
                 report = new Expense_Report__c(Wizard__c = wizardId);
-                // the wizard owner's; when that owner is not an active user (a queue, someone who
-                // left), the one who submits, as the platform would refuse the insert
-                Id owner = [SELECT OwnerId FROM prolet__Wizard__c WHERE Id = :wizardId].OwnerId;
-                if (owner.getSObjectType() == User.SObjectType
-                        && [SELECT COUNT() FROM User WHERE Id = :owner AND IsActive = true] == 1) {
-                    report.OwnerId = owner;
+                // the wizard owner's when the owner is an active user (Owner.IsActive is null for
+                // a queue) who may read reports; otherwise the one who submits
+                prolet__Wizard__c wizard = [SELECT OwnerId, Owner.IsActive FROM prolet__Wizard__c WHERE Id = :wizardId];
+                if (wizard.Owner.IsActive == true && mayReadReports(wizard.OwnerId)) {
+                    report.OwnerId = wizard.OwnerId;
                 }
             }
             mapReport(report, model, expenses, context);
@@ -159,6 +160,20 @@ public inherited sharing class ExpenseReportService implements IExpenseReportSer
             insert lines;
             return report;
         }
+    }
+
+    /**
+     * The user has read on Expense_Report__c, by their profile, a permission set or a permission
+     * set group. The platform lets a report be inserted for an owner without it, who then could
+     * not read their own report.
+     */
+    private static Boolean mayReadReports(Id userId) {
+        return [
+                SELECT COUNT() FROM ObjectPermissions
+                WHERE SobjectType = :Expense_Report__c.SObjectType.getDescribe().getName()
+                AND PermissionsRead = true
+                AND ParentId IN (SELECT PermissionSetId FROM PermissionSetAssignment WHERE AssigneeId = :userId)
+        ] > 0;
     }
 
     /** The caller may edit the wizard (their own, or one shared with them to edit). */
@@ -345,6 +360,9 @@ public inherited sharing class ExpenseReportService implements IExpenseReportSer
 
     @TestVisible
     private static final String NOT_LINKED = 'This expense report is not linked to its own expense wizard.';
+    @TestVisible
+    private static final String REPORT_DELETED =
+            'The expense report of this wizard was deleted: ask your administrator to restore it from the Recycle Bin.';
 
     private ExpenseReviewData reviewOf(Id reportId) {
         Expense_Report__c report = loadReport(reportId);
@@ -638,9 +656,16 @@ public inherited sharing class ExpenseReportService implements IExpenseReportSer
     /**
      * The report of the wizard, null before its first submit. Once submitted, the context names it
      * (CTX_REPORT), and a report that names another wizard is refused. A wizard whose context names
-     * none (submitted before the link, see ExpenseReportLinkBackfill), or names one that was deleted
-     * since, takes the one report that names it (none: the submit makes a new one), and is refused
-     * when there are more.
+     * none (submitted before the link, see ExpenseReportLinkBackfill) takes the one report that
+     * names it (none: the submit makes a new one), and is refused when there are more.
+     *
+     * A named report that was deleted is refused too (REPORT_DELETED), not replaced: a new report
+     * would skip the check of the requested changes (the employee may delete their own report) and
+     * lose the manager's comment and the report's shares, and another report that names the wizard
+     * may be a copy. The way back is the Recycle Bin: the restored report keeps its Id, and the
+     * submit goes on. The same holds for a wizard that is LOCKED (Submitted or Approved) when its
+     * report is deleted: without the report nobody can request changes and unlock it, and a report
+     * made again has another Id, which the context does not name (NOT_LINKED).
      */
     private static Expense_Report__c findReportOfTheWizard(Id wizardId, Object linked) {
         if (linked != null && String.isNotBlank(String.valueOf(linked))) {
@@ -649,12 +674,13 @@ public inherited sharing class ExpenseReportService implements IExpenseReportSer
                 throw new ExpenseReportException(NOT_LINKED);
             }
             List<Expense_Report__c> reports = [SELECT Id, Wizard__c FROM Expense_Report__c WHERE Id = :reportId];
-            if (!reports.isEmpty()) {
-                if (reports[0].Wizard__c != wizardId) {
-                    throw new ExpenseReportException(NOT_LINKED);
-                }
-                return reports[0];
+            if (reports.isEmpty()) {
+                throw new ExpenseReportException(REPORT_DELETED);
             }
+            if (reports[0].Wizard__c != wizardId) {
+                throw new ExpenseReportException(NOT_LINKED);
+            }
+            return reports[0];
         }
         List<Expense_Report__c> reports = [SELECT Id FROM Expense_Report__c WHERE Wizard__c = :wizardId LIMIT 2];
         if (reports.size() > 1) {
