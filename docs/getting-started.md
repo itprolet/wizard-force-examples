@@ -15,7 +15,7 @@ The smallest working wizard: install the package, deploy the vacation example, p
 
 ## 1. Install the Package
 
-Install the latest version of the Wizard Framework package into a sandbox, a developer org or a scratch org, from its install link or with the CLI:
+Install the latest version of the Wizard Framework package into a sandbox, a developer org or a scratch org, from its install link or with the CLI. The org needs **Lightning Web Security** (Setup › Session Settings › "Use Lightning Web Security for Lightning web components and Aura components", on by default in new orgs): with Lightning Locker, the framework's table does not load in Lightning Experience, and neither does a wizard with a table on one of its pages.
 
 ```bash
 sf package install --target-org <your org> --package <04t... id of the version> --wait 20
