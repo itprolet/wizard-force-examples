@@ -574,6 +574,8 @@ private class ExpenseReviewAccessTest {
         }
         Id reportId = reportOf(wizardId);
         System.Assert.areEqual(employee.Id, [SELECT OwnerId FROM Expense_Report__c WHERE Id = :reportId].OwnerId);
+        System.Assert.areEqual('Submitted', [SELECT Status__c FROM Expense_Report__c WHERE Id = :reportId].Status__c);
+        System.Assert.areEqual(expenseCount(), [SELECT COUNT() FROM Expense_Line__c WHERE Expense_Report__c = :reportId]);
         System.runAs(employee) {
             System.Assert.areEqual(1, [SELECT COUNT() FROM Expense_Report__c WHERE Id = :reportId], 'her own report');
         }
@@ -614,5 +616,139 @@ private class ExpenseReviewAccessTest {
             }
         }
         System.Assert.isFalse((ExpenseReportTestData.reload(wizardId).prolet__Context__c ?? '').contains('perDiem'));
+    }
+
+    /** The model with the given amounts of its expenses, by their keys */
+    private static Map<String, Object> modelWithAmounts(Map<String, String> amounts) {
+        Map<String, Object> model = ExpenseReportTestData.validModel();
+        for (Object item : (List<Object>) ((Map<String, Object>) model.get('ExpenseItems')).get('expenses')) {
+            Map<String, Object> expense = (Map<String, Object>) item;
+            if (amounts.containsKey((String) expense.get('id'))) {
+                expense.put('amount', amounts.get((String) expense.get('id')));
+            }
+        }
+        return model;
+    }
+
+    private static Integer expenseCount() {
+        return ((List<Object>) ((Map<String, Object>) ExpenseReportTestData.validModel().get('ExpenseItems')).get('expenses')).size();
+    }
+
+    private static void assertSubmitRefused(Id wizardId, String message) {
+        try {
+            ExpenseReportController.submitReport(wizardId, true);
+            System.Assert.fail('the submit went through');
+        } catch (AuraHandledException e) {
+            System.Assert.areEqual(message, e.getMessage());
+        }
+    }
+
+    @IsTest
+    static void aResubmitAfterTheReportWasDeletedIsRefusedUntilItIsRestored() {
+        List<User> people = ExpenseReportTestData.employeeAndManager(EXPENSE_SETS);
+        User employee = people[0];
+        User manager = people[1];
+        Id wizardId = submittedBy(employee);
+        Id reportId = reportOf(wizardId);
+        System.runAs(manager) {
+            ExpenseReviewController.requestChanges(reportId, new List<String>{ 'e1' }, null, false, 'Check hotel');
+        }
+        // another report that names the wizard (an admin's copy, a data load)
+        Expense_Report__c copy = new Expense_Report__c(Wizard__c = wizardId, Status__c = 'Submitted');
+        insert copy;
+        // the employee deletes their own report and changes more than was asked for
+        System.runAs(employee) {
+            delete new Expense_Report__c(Id = reportId);
+            ExpenseReportTestData.updateModel(wizardId, modelWithAmounts(new Map<String, String>{ 'e1' => '123', 'e2' => '999' }));
+            assertSubmitRefused(wizardId, ExpenseReportService.REPORT_DELETED);
+        }
+        System.Assert.areEqual(copy.Id, reportOf(wizardId), 'no new report');
+        System.Assert.areEqual(0, [SELECT COUNT() FROM Expense_Line__c WHERE Expense_Report__c = :copy.Id], 'the copy is not written');
+        System.Assert.areEqual(String.valueOf(reportId), String.valueOf(
+                ((Map<String, Object>) JSON.deserializeUntyped(ExpenseReportTestData.reload(wizardId).prolet__Context__c)).get(ExpenseReportService.CTX_REPORT)));
+
+        // restored from the Recycle Bin: the same report, and only the requested change goes in
+        undelete new Expense_Report__c(Id = reportId);
+        delete copy;
+        System.runAs(employee) {
+            try {
+                ExpenseReportController.submitReport(wizardId, true);
+                System.Assert.fail('an unrequested change went in');
+            } catch (AuraHandledException e) {
+                System.Assert.isTrue(e.getMessage().startsWith('Only the requested changes can be made'), e.getMessage());
+            }
+            ExpenseReportTestData.updateModel(wizardId, modelWithAmounts(new Map<String, String>{ 'e1' => '123' }));
+            ExpenseReportController.submitReport(wizardId, true);
+        }
+        System.Assert.areEqual('Submitted', [SELECT Status__c FROM Expense_Report__c WHERE Id = :reportId].Status__c);
+        System.Assert.areEqual(123, [SELECT Amount__c FROM Expense_Line__c WHERE Expense_Report__c = :reportId AND Line_Key__c = 'e1'].Amount__c);
+    }
+
+    @IsTest
+    static void aResubmitOfAWizardThatNamesAForeignOrMalformedReportIsRefused() {
+        List<User> people = ExpenseReportTestData.employeeAndManager(EXPENSE_SETS);
+        User employee = people[0];
+        User manager = people[1];
+        Id wizardId = submittedBy(employee);
+        Id reportId = reportOf(wizardId);
+        Id foreignReportId = reportOf(submittedBy(userWith('fred', EXPENSE_SETS)));
+        System.runAs(manager) {
+            ExpenseReviewController.requestChanges(reportId, new List<String>{ 'e1' }, null, false, 'Check hotel');
+        }
+        System.runAs(employee) {
+            ExpenseReportTestData.updateModel(wizardId, modelWithAmounts(new Map<String, String>{ 'e1' => '123' }));
+        }
+        for (String named : new List<String>{ foreignReportId, 'not-an-id' }) {
+            prolet.WizardApi.updateContext(wizardId, new Map<String, Object>{ ExpenseReportService.CTX_REPORT => named });
+            System.runAs(employee) {
+                assertSubmitRefused(wizardId, 'This expense report is not linked to its own expense wizard.');
+            }
+        }
+        System.Assert.areEqual('Submitted', [SELECT Status__c FROM Expense_Report__c WHERE Id = :foreignReportId].Status__c);
+        System.Assert.areEqual('Changes Requested', [SELECT Status__c FROM Expense_Report__c WHERE Id = :reportId].Status__c);
+    }
+
+    @IsTest
+    static void aReportOfAWizardWhoseOwnerLeftIsTheSubmitters() {
+        List<User> people = ExpenseReportTestData.employeeAndManager(EXPENSE_SETS);
+        User employee = people[0];
+        User manager = people[1];
+        Id wizardId;
+        System.runAs(employee) {
+            wizardId = ExpenseReportTestData.insertWizard(ExpenseReportTestData.validModel(), 'ACTIVE').Id;
+        }
+        System.runAs(new User(Id = UserInfo.getUserId())) {
+            update new User(Id = employee.Id, IsActive = false);
+        }
+        System.runAs(manager) {
+            ExpenseReportController.submitReport(wizardId, true);
+        }
+        Expense_Report__c report = [SELECT Id, OwnerId, Status__c FROM Expense_Report__c WHERE Wizard__c = :wizardId];
+        System.Assert.areEqual(manager.Id, report.OwnerId);
+        System.Assert.areEqual('Submitted', report.Status__c);
+        System.Assert.areEqual(expenseCount(), [SELECT COUNT() FROM Expense_Line__c WHERE Expense_Report__c = :report.Id]);
+        // his own report now: he may not review it
+        System.runAs(manager) {
+            System.Assert.isTrue(ExpenseReviewController.getReview(report.Id).ownReport);
+        }
+    }
+
+    @IsTest
+    static void aReportOfAWizardWhoseOwnerMayNotReadReportsIsTheSubmitters() {
+        // the wizard's owner has the framework but not the expense example (an integration user)
+        User owner = userWith('olga', new List<String>{ 'Wizard_Framework_User' });
+        User submitter = userWith('sam', EXPENSE_SETS);
+        Id wizardId;
+        System.runAs(owner) {
+            wizardId = ExpenseReportTestData.insertWizard(ExpenseReportTestData.validModel(), 'ACTIVE').Id;
+        }
+        insert new prolet__Wizard__Share(ParentId = wizardId, UserOrGroupId = submitter.Id, AccessLevel = 'Edit');
+        System.runAs(submitter) {
+            ExpenseReportController.submitReport(wizardId, true);
+        }
+        Expense_Report__c report = [SELECT Id, OwnerId, Status__c FROM Expense_Report__c WHERE Wizard__c = :wizardId];
+        System.Assert.areEqual(submitter.Id, report.OwnerId);
+        System.Assert.areEqual('Submitted', report.Status__c);
+        System.Assert.areEqual(expenseCount(), [SELECT COUNT() FROM Expense_Line__c WHERE Expense_Report__c = :report.Id]);
     }
 }
