@@ -78,6 +78,7 @@ The examples with Apex have their tests in `classes/tests` (clubMembership also 
 
 ## Installing and Upgrading
 
+- The org needs **Lightning Web Security** (Setup › Session Settings, on by default in new orgs). With Lightning Locker the framework's table does not load in Lightning Experience: see [Troubleshooting](troubleshooting.md).
 - 0.2.0 is not an upgrade of the 0.1.0 beta: a beta cannot be upgraded. Uninstall 0.1.0 first (that removes its wizards too), then install 0.2.0.
 - `prolet__Wizard_Type__c` is a text field: a new type needs only its `Wizard_Setup__mdt` record.
 - `prolet__Wizard__c` is Private: a user sees their own wizards. Give `prolet__Wizard_Framework_Back_Office` to the people who must read everyone's.

@@ -15,7 +15,7 @@ Common errors, what they mean, and what to do.
 
 ## "Component Error": "LWC1503: Dynamic imports are not allowed" (`elemDatatableCell.js`)
 
-The org runs Lightning Locker. The framework's table loads the component of a `component` column with a dynamic `import()`, which only Lightning Web Security allows, so with Locker Lightning Experience does not compile the table, nor any component or wizard that contains it (an App page with one cannot even be saved). Switch on Lightning Web Security in Setup › Session Settings; the package requires it. Then reload in a new private window or clear the site data of the org in the browser: Lightning keeps the components it compiled before the switch.
+The org runs Lightning Locker. The framework's table loads the component of a `component` column with a dynamic `import()`, which only Lightning Web Security allows, so with Locker Lightning Experience does not compile the table, nor any component or wizard that contains it (an App page with one cannot even be saved or deployed: "We couldn't retrieve the design time component information"). Switch on Lightning Web Security in Setup › Session Settings; the package requires it. The setting is for the whole org and also changes how its other Lightning components run, custom and packaged, so try it in a sandbox first. Then reload in a new private window or clear the site data of the org in the browser: Lightning keeps the components it compiled before the switch.
 
 ## "Wizard not found, id= ..."
 

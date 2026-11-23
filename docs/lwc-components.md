@@ -87,6 +87,8 @@ Every lookup runs as the user (`USER_MODE`: sharing and field access), returns a
 
 ## A Table: `<prolet-elem-datatable>`
 
+The table needs Lightning Web Security, with or without a `component` column: see [Troubleshooting](troubleshooting.md).
+
 | Attribute                                                              | Default | What it does                         |
 | ---------------------------------------------------------------------- | :-----: | ------------------------------------ |
 | `columns`                                                              |  `[]`   | The columns (required)               |
@@ -98,7 +100,7 @@ Every lookup runs as the user (`USER_MODE`: sharing and field access), returns a
 | `hide-pagination`                                                      | `false` | No pages                             |
 | `total`                                                                |         | Server-side paging (`page` event)    |
 
-A column: `fieldName`, `label`, `type`, `typeData`, `align`, `sortable`, `width`, `classname`, `style`. Types: `text` (default), `number`, `boolean`, `date`, `time`, `datetime`, `richtext`, `url` (`{ icon, disabled }`), `link` (`{ url, callback, dataField, disabled, target }`), `icon` (`{ icon, title, dataField, callback, disabled }`), `chip` (`{ chipItems: [{ value, color, icon }] }`), `component` (`{ component: "c/myCell" }`: a component of your org draws the cell). The cell loads it with a dynamic `import()`, which needs Lightning Web Security (the Lightning Web Security checkbox in Setup › Session Settings). With Lightning Locker, Lightning Experience does not compile the table at all ("LWC1503: Dynamic imports are not allowed"), with or without a `component` column, so the package requires Lightning Web Security.
+A column: `fieldName`, `label`, `type`, `typeData`, `align`, `sortable`, `width`, `classname`, `style`. Types: `text` (default), `number`, `boolean`, `date`, `time`, `datetime`, `richtext`, `url` (`{ icon, disabled }`), `link` (`{ url, callback, dataField, disabled, target }`), `icon` (`{ icon, title, dataField, callback, disabled }`), `chip` (`{ chipItems: [{ value, color, icon }] }`), `component` (`{ component: "c/myCell" }`: a component of your org draws the cell).
 
 A `component` cell gets `value`, `row` and `col` (its `typeData` holds anything else you put there); a `change` or `cellclick` it sends reaches the table as `cellchange` / `cellclick`:
 
@@ -119,10 +121,11 @@ columns = [
 ];
 ```
 
-The cell loads `c/myCell` with a dynamic `import()`, which needs Lightning Web Security. Checked with 0.2.0.4:
+The cell loads `c/myCell` with a dynamic `import()`, which needs Lightning Web Security (the checkbox in Setup › Session Settings). Checked with 0.2.0.4, and with Locker on 0.2.0.5:
 
 - **Lightning Experience** (an App page): the cell loads, and its `change` reaches the page as `cellchange`.
 - **An LWR site**: the site publishes only the components its pages use, and one that only a cell names is not among them. The cell stays empty, and the console says `LWR3008: Error loading ... c%2FmyCell`. Put the cell component on a page of the site once, so that it is published: in its `js-meta.xml` give it the target `lightningCommunity__Page`, drop it on a page (a hidden spot or a page nobody visits is fine) and publish the site. Then the cell loads, also with `cellchange`.
+- **Lightning Locker** (0.2.0.5): Lightning Experience does not compile the table at all ("LWC1503: Dynamic imports are not allowed"), with or without a `component` column, so the package requires Lightning Web Security. An LWR site still showed the table.
 
 Links open only for `http:`, `https:`, `mailto:`, `tel:` and paths of the site; anything else is shown as text. Events: `sort` (`{ sortBy, direction }`), `page` (`{ rowOffset, pageSize, total }`).
 
