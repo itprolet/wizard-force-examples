@@ -13,6 +13,10 @@ Common errors, what they mean, and what to do.
 - [LWC Components](lwc-components.md) · [Themes](themes.md) · [Locked Wizards](locked-wizards.md) · [Namespace](namespace.md)
 - [Deployment, Security, and Testing](deployment-security-testing.md) · [Troubleshooting](troubleshooting.md) · [GitHub Pages Setup](github-pages-setup.md)
 
+## "Component Error": "LWC1503: Dynamic imports are not allowed" (`elemDatatableCell.js`)
+
+The org runs Lightning Locker. The framework's table loads the component of a `component` column with a dynamic `import()`, which only Lightning Web Security allows, so with Locker Lightning Experience does not compile the table, nor any component or wizard that contains it (an App page with one cannot even be saved or deployed: "We couldn't retrieve the design time component information"). Switch on Lightning Web Security in Setup › Session Settings; the package requires it. The setting is for the whole org and also changes how its other Lightning components run, custom and packaged, so try it in a sandbox first. Then reload in a new private window or clear the site data of the org in the browser: Lightning keeps the components it compiled before the switch.
+
 ## "Wizard not found, id= ..."
 
 The user cannot see the wizard: it was deleted, or the org's sharing does not give it to them. `prolet__Wizard__c` is **Private**: a user sees only their own wizards, unless the role hierarchy, a sharing rule, manual sharing or View All gives them others. People who must read every wizard need `prolet__Wizard_Framework_Back_Office`. With `wizard-type-config`, a link to someone else's wizard starts a new one instead.
