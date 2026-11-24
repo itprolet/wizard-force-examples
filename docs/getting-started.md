@@ -15,10 +15,15 @@ The smallest working wizard: install the package, deploy the vacation example, p
 
 ## 1. Install the Package
 
-Install the latest version of the Wizard Framework package into a sandbox, a developer org or a scratch org, from its install link or with the CLI. The org needs **Lightning Web Security** (Setup › Session Settings › "Use Lightning Web Security for Lightning web components and Aura components", on by default in new orgs): with Lightning Locker, the framework's table does not load in Lightning Experience, and neither does a wizard with a table on one of its pages (see [Troubleshooting](troubleshooting.md)). The vacation example of this page has no table, so it does not show the problem: the first to fail is the feedback wizard of [Build a Wizard](build-a-wizard.md).
+Install the Wizard Framework package, version 0.2.0 (`04tgK000000blftQAA`), into a sandbox, a developer org or a scratch org, from its install link or with the CLI:
+
+- a production or developer org: [https://login.salesforce.com/packaging/installPackage.apexp?p0=04tgK000000blftQAA](https://login.salesforce.com/packaging/installPackage.apexp?p0=04tgK000000blftQAA)
+- a sandbox: [https://test.salesforce.com/packaging/installPackage.apexp?p0=04tgK000000blftQAA](https://test.salesforce.com/packaging/installPackage.apexp?p0=04tgK000000blftQAA)
+
+The org needs **Lightning Web Security** (Setup › Session Settings › "Use Lightning Web Security for Lightning web components and Aura components", on by default in new orgs): with Lightning Locker no wizard loads in Lightning Experience, with or without a table (see [Troubleshooting](troubleshooting.md)).
 
 ```bash
-sf package install --target-org <your org> --package <04t... id of the version> --wait 20
+sf package install --target-org <your org> --package 04tgK000000blftQAA --wait 20
 ```
 
 The package's namespace is `prolet`. Then give the users who fill in wizards the package's permission set:

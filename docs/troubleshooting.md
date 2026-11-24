@@ -13,9 +13,9 @@ Common errors, what they mean, and what to do.
 - [LWC Components](lwc-components.md) · [Themes](themes.md) · [Locked Wizards](locked-wizards.md) · [Namespace](namespace.md)
 - [Deployment, Security, and Testing](deployment-security-testing.md) · [Troubleshooting](troubleshooting.md) · [GitHub Pages Setup](github-pages-setup.md)
 
-## "Component Error": "LWC1503: Dynamic imports are not allowed" (`elemDatatableCell.js`)
+## "Component Error": "LWC1503: Dynamic imports are not allowed" (`wizard.js`, `elemDatatableCell.js`)
 
-The org runs Lightning Locker. The framework's table loads the component of a `component` column with a dynamic `import()`, which only Lightning Web Security allows, so with Locker Lightning Experience does not compile the table, nor any component or wizard that contains it (an App page with one cannot even be saved or deployed: "We couldn't retrieve the design time component information"). Switch on Lightning Web Security in Setup › Session Settings; the package requires it. The setting is for the whole org and also changes how its other Lightning components run, custom and packaged, so try it in a sandbox first. Then reload in a new private window or clear the site data of the org in the browser: Lightning keeps the components it compiled before the switch.
+The org runs Lightning Locker, and with Locker no wizard loads in Lightning Experience, with or without a table. The wizard and the framework's table use a dynamic `import()`, and the wizard shows its pages as dynamic components (`lwc:component`); Locker allows neither, only Lightning Web Security does. An App page with a wizard or a table cannot even be saved or deployed with Locker ("We couldn't retrieve the design time component information"). Switch on Lightning Web Security in Setup › Session Settings; the package requires it. The setting is for the whole org and also changes how its other Lightning components run, custom and packaged, so try it in a sandbox first. Then reload in a new private window or clear the site data of the org in the browser: Lightning keeps the components it compiled before the switch.
 
 ## "Wizard not found, id= ..."
 
@@ -31,11 +31,14 @@ The plan has a mistake, listed in the message: a step without a page, a conditio
 
 ## "You do not have access to this form. ..." (`Wizard_err_no_access`)
 
-The user may call the package's classes, but their permissions refused the read or the write of `prolet__Wizard__c` or one of its fields: the classes come from the profile or another permission set, and `prolet__Wizard_Framework_User` is missing or a field was taken away. Assign the permission set. The exact field is in the user's debug log.
+The user does not have `prolet__Wizard_Framework_User`, or a field was taken away. Assign the permission set. On a site, its users can get it too from 0.2.0.5 (up to 0.2.0.4 their license refuses it, because it gives the Wizard app); its guests cannot use a wizard at all.
+
+- **Without the permission set at all**, Salesforce refuses the wizard's controller before the package's code runs, and the wizard shows this message instead of the platform's. The platform's text is in the browser console: "You do not have access to the Apex class named 'WizardController'." in Lightning Experience and on an Aura site, "The Apex request is invalid." on an LWR site. A user who has the set and still sees this message on an LWR site has another cause: look at the console.
+- **With the classes from the profile or another permission set**, but without the object or one of its fields, the package refuses the read or the write. The exact field is in the user's debug log.
 
 ## "The Apex request is invalid" / "You do not have access to the Apex class named ..."
 
-Salesforce's own message, before the package's code runs: the user may not call the wizard's controller. Assign `prolet__Wizard_Framework_User` (it gives the classes). On a site, its users can get it too from 0.2.0.5 (up to 0.2.0.4 their license refuses it, because it gives the Wizard app); its guests cannot use a wizard at all.
+Up to the 0.2.0.5 beta the wizard showed Salesforce's own message when the user may not call its controller. From 0.2.0 it shows `Wizard_err_no_access` (above). Another component of yours that calls the package's classes still gets the platform's text: assign `prolet__Wizard_Framework_User` (it gives the classes).
 
 ## "You can view this form but not change it." (`Wizard_err_read_only`)
 
