@@ -32,7 +32,7 @@ A wizard holds one user's answers, often personal data, so it is **private**:
 
 A user's request reads and writes `prolet__Wizard__c` **as the user** (`USER_MODE`): their object and field permissions and sharing apply.
 
-- A user without `prolet__Wizard_Framework_User` is refused. Without the permission set at all, Salesforce refuses before the package's code, because the user may not call the controller class: the message is the platform's ("The Apex request is invalid" on an LWR site). A user who may call the classes (by their profile, say) but not read or write `prolet__Wizard__c` or one of its fields gets "You do not have access to this form. Ask your administrator for the permission set Wizard Framework User." (`Wizard_err_no_access`).
+- A user without `prolet__Wizard_Framework_User` is refused with "You do not have access to this form. Ask your administrator for the permission set Wizard Framework User." (`Wizard_err_no_access`). Without the permission set at all, Salesforce refuses before the package's code, because the user may not call the controller class; the wizard reads that refusal and shows the same message (the platform's own text is in the browser console, see [Troubleshooting](troubleshooting.md)). A user who may call the classes (by their profile, say) but not read or write `prolet__Wizard__c` or one of its fields gets it from the package.
 - A wizard shared with a user to read only opens, but a move is refused: "You can view this form but not change it." (`Wizard_err_read_only`).
 - `prolet.WizardApi`, `prolet.WizardVersionChange.startChange` and `prolet.WizardSelector` work in system mode, also when your Apex calls them within a user's request (a validator, a submit): your code decides who may do what.
 - This protects the fields from **the user**, not from your org's Apex: Apex in system mode can still write them with plain DML. Use `WizardApi` for the state and the context, so the version and the lock stay right.
@@ -78,7 +78,7 @@ The examples with Apex have their tests in `classes/tests` (clubMembership also 
 
 ## Installing and Upgrading
 
-- The org needs **Lightning Web Security** (Setup › Session Settings, on by default in new orgs). With Lightning Locker the framework's table does not load in Lightning Experience: see [Troubleshooting](troubleshooting.md).
+- The org needs **Lightning Web Security** (Setup › Session Settings, on by default in new orgs). With Lightning Locker no wizard loads in Lightning Experience, with or without a table: see [Troubleshooting](troubleshooting.md).
 - 0.2.0 is not an upgrade of the 0.1.0 beta: a beta cannot be upgraded. Uninstall 0.1.0 first (that removes its wizards too), then install 0.2.0.
 - `prolet__Wizard_Type__c` is a text field: a new type needs only its `Wizard_Setup__mdt` record.
 - `prolet__Wizard__c` is Private: a user sees their own wizards. Give `prolet__Wizard_Framework_Back_Office` to the people who must read everyone's.

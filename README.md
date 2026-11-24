@@ -9,6 +9,7 @@ This repository is for Salesforce developers who want to evaluate the package an
 The documentation is published with GitHub Pages from the `docs/` folder.
 
 - Start here: [docs/index.md](docs/index.md)
+- Install the package (0.2.0): [https://login.salesforce.com/packaging/installPackage.apexp?p0=04tgK000000blftQAA](https://login.salesforce.com/packaging/installPackage.apexp?p0=04tgK000000blftQAA) (a sandbox: `test.salesforce.com` instead of `login.salesforce.com`). It needs Lightning Web Security.
 - Install and run a first wizard: [docs/getting-started.md](docs/getting-started.md)
 - Which names need `prolet`: [docs/namespace.md](docs/namespace.md)
 
